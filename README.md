@@ -1,11 +1,11 @@
 # GW-Addons
 
 # Issues
-* Duplicated System Text with both the addon and the framework displaying messages (Safestart)
-* Fix Equipment Box Static Weapons Retrieval and Packing Of Statics.</br>
-* Update ACE Settings.</br>
-* Update TFAR Settings.</br>
-* Pack Addon.
+- [] Duplicated System Text with both the addon and the framework displaying messages (Safestart)
+- [] Fix Equipment Box Static Weapons Retrieval and Packing Of Statics.</br>
+- [x] Update ACE Settings.</br>
+- [] Update TFAR Settings.</br>
+- [] Pack Addon.
 
 # Main
 
