@@ -1,6 +1,6 @@
 
 if (isNil "TF_freq_west") then {
-	TF_freq_west =    [0 ,TF_Default_RadioVolume, ["10","20","30","40","50.1","50.2","50.3","50.5"],0, nil, -1, 0];
+	TF_freq_west = [0 ,TF_Default_RadioVolume, ["10","20","30","40","50.1","50.2","50.3","50.5"],0, nil, -1, 0];
 };
 if (isNil "TF_freq_west_lr") then {
 	TF_freq_west_lr = [4 ,TF_Default_RadioVolume, ["10","20","30","40","50.1","50.2","50.3","50.4","50.5"],0, nil, -1, 0];
