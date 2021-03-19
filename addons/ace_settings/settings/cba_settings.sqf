@@ -299,10 +299,10 @@ force ace_zeus_zeusAscension = false;
 force ace_zeus_zeusBird = false;
 
 // Task Force Radio - Global Settings
-/*
+
 force TFAR_AICanHearPlayer = true;
 force TFAR_AICanHearSpeaker = false;
-force TFAR_allowDebugging = true;
+force TFAR_allowDebugging = false;
 TFAR_curatorCamEars = true;
 force TFAR_defaultIntercomSlot = 0;
 force TFAR_enableIntercom = true;
@@ -314,14 +314,14 @@ force TFAR_givePersonalRadioToRegularSoldier = true;
 force TFAR_globalRadioRangeCoef = 1;
 force TFAR_instantiate_instantiateAtBriefing = false;
 TFAR_noAutomoveSpectator = false;
-force TFAR_objectInterceptionEnabled = true;
+force TFAR_objectInterceptionEnabled = false;
 force TFAR_objectInterceptionStrength = 400;
 force tfar_radiocode_east = "_opfor";
 force tfar_radiocode_independent = "_independent";
 force tfar_radiocode_west = "_bluefor";
 force tfar_radioCodesDisabled = false;
-force TFAR_SameLRFrequenciesForSide = false;
-force TFAR_SameSRFrequenciesForSide = false;
+force TFAR_SameLRFrequenciesForSide = true;
+force TFAR_SameSRFrequenciesForSide = true;
 TFAR_setting_defaultFrequencies_lr_east = "";
 TFAR_setting_defaultFrequencies_lr_independent = "";
 TFAR_setting_defaultFrequencies_lr_west = "";
@@ -347,4 +347,3 @@ force TFAR_Teamspeak_Channel_Name = "TaskForceRadio";
 force TFAR_Teamspeak_Channel_Password = "123";
 force tfar_terrain_interception_coefficient = 7;
 force TFAR_voiceCone = true;
-*/
