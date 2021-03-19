@@ -299,7 +299,7 @@ force ace_zeus_zeusAscension = false;
 force ace_zeus_zeusBird = false;
 
 // Task Force Radio - Global Settings
-
+/*
 force TFAR_AICanHearPlayer = true;
 force TFAR_AICanHearSpeaker = false;
 force TFAR_allowDebugging = true;
@@ -347,3 +347,4 @@ force TFAR_Teamspeak_Channel_Name = "TaskForceRadio";
 force TFAR_Teamspeak_Channel_Password = "123";
 force tfar_terrain_interception_coefficient = 7;
 force TFAR_voiceCone = true;
+*/
