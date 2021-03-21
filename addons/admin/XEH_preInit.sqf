@@ -7,8 +7,8 @@ GVARMAIN(isAdmin) = false;
 GVARMAIN(isSuperAdmin) = false;
 GVARMAIN(isActiveAdmin) = false;
 GVARMAIN(activeAdmins) = [];
-GVARMAIN(adminList) = ["_SP_PLAYER_", GUZZENVONLIDL, ARROW, OKSMAN, R4IDER, FILTHY, PARKER, JASON];
-GVARMAIN(superAdminList) = ["_SP_PLAYER_", GUZZENVONLIDL, ARROW];
+GVARMAIN(adminList) = ["_SP_PLAYER_", GUZZENVONLIDL, ARROW, OKSMAN, BLU, MALLEY, THEC, HOOFED];
+GVARMAIN(superAdminList) = ["_SP_PLAYER_", GUZZENVONLIDL, OKSMAN, BLU];
 GVARMAIN(adminCurators) = [];
 
 GVARMAIN(canUseDevConsole) = false;
