@@ -5,7 +5,9 @@
 - [] Fix Equipment Box Static Weapons Retrieval and Packing Of Statics.</br>
 - [x] Update ACE Settings.</br>
 - [] Update TFAR Settings.</br>
-- [] Pack Addon.
+- [] Pack Addon.</br>
+- [] Fix TFAR Error of no sound & ACE Self interact error.
+
 
 # Main
 
