@@ -45,7 +45,7 @@ force ace_medical_treatment_medicSurgicalKit = 1;
 force ace_medical_treatment_timeCoefficientPAK = 1;
 
 // ACE Medical - GUI ----------------------------------------------------------------
-force ace_medical_gui_enableActions = 1;
+ace_medical_gui_enableActions = 2;
 ace_medical_gui_enableMedicalMenu = 1;
 force ace_medical_gui_enableSelfActions = true;
 force ace_medical_gui_maxDistance = 6.5;
@@ -53,4 +53,4 @@ ace_medical_gui_openAfterTreatment = true;
 
 // ACE Medical - AI -----------------------------------------------------------------
 force ace_medical_ai_enabledFor = 1;
-force ace_medical_AIDamageThreshold = 0.5;
+force ace_medical_AIDamageThreshold = 1;
