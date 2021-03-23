@@ -11,7 +11,7 @@ force ace_medical_fractures = 0;
 force ace_medical_ivFlowRate = 2;
 force ace_medical_limping = 0;
 force ace_medical_painCoefficient = 1;
-force ace_medical_playerDamageThreshold = 3;
+force ace_medical_playerDamageThreshold = 1.2;
 force ace_medical_spontaneousWakeUpChance = 0.4;
 force ace_medical_spontaneousWakeUpEpinephrineBoost = 3;
 force ace_medical_statemachine_AIUnconsciousness = true;
@@ -53,4 +53,4 @@ ace_medical_gui_openAfterTreatment = true;
 
 // ACE Medical - AI -----------------------------------------------------------------
 force ace_medical_ai_enabledFor = 1;
-force ace_medical_AIDamageThreshold = 1;
+force ace_medical_AIDamageThreshold = 0.8;
