@@ -5,8 +5,8 @@ if (!GVARMAIN(mod_ACE3)) exitWith {false};
 #include "XEH_PREP.sqf"
 #include "initSettings.sqf"
 
-ACE_MaxWeightDrag = 100000;
-ACE_MaxWeightCarry = 10000;
+ACE_MaxWeightDrag = 800;
+ACE_MaxWeightCarry = 600;
 
 /*
 ["CBA_beforeSettingsInitialized", {
@@ -70,9 +70,9 @@ ACE_MaxWeightCarry = 10000;
 ["CBA_settingsInitializedDelayed", {
 	private _configList = "";
 	if (GVARMAIN(mod_ACE3_Med_New)) then {
-		
+
 		_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new.sqf");
-		
+
 		if (EGVAR(settings_ACE,medical_level) isEqualTo 2) then {
 			_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new_adv.sqf");
 		};
