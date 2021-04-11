@@ -26,7 +26,7 @@ class GW_loadingScreen {
 		class Picture : RscPicture {
 			h = 1.0;
 			style = 48 + 0x800;
-			text = "\x\gw\addons\3den\data\Logo_GOL_1.paa";
+			text = "\x\gw\addons\3den\data\Logo_Type_1.paa";
 			w = 1.0;
 			x = (safezoneX + safezoneW/2 - 0.5);
 			y = (safezoneY + safezoneH/2 - 0.5);

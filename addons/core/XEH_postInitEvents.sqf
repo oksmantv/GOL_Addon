@@ -24,7 +24,7 @@
 				<br/>	==============================================
 				<br/>
 				<br/>	Framework by: GuzzenVonLidl
-				<br/>	Version: "+GVARMAIN(Version)+"
+				<br/>	Version: "+(getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version"))+"
 				<br/>
 				<br/>	==============================================
 				<br/>

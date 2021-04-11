@@ -25,7 +25,6 @@ GVARMAIN(mod_CTAB) 			= isClass (configFile >> "CfgPatches" >> "cTab");
 GVARMAIN(mod_RHS)	 		= isClass (configFile >> "CfgPatches" >> "rhsusf_main");
 GVARMAIN(mod_TFAR) 			= isClass (configFile >> "CfgPatches" >> "Task_Force_Radio");
 GVARMAIN(mod_TFAR_CORE) 	= isClass (configFile >> "CfgPatches" >> "TFAR_Core");
-GVARMAIN(Version)			= getText (missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version");
 
 enableSaving [false, false];
 
@@ -38,7 +37,7 @@ if (isServer) then {
 
 	GVARMAIN(ZeuzModuleAdminLogged) = _moduleGroup createUnit ["ModuleCurator_F",[0,0,1000],[],0,"CAN_COLLIDE"];
 	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Owner", "#adminLogged", true];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Name", "AdminZeus", true];
+	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Name", "AdminZeusLogged", true];
 	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Addons", 3, true];
 	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Forced", 0, true];
 	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["birdType", "", true];
@@ -49,7 +48,6 @@ if (isServer) then {
 	} forEach ["place","edit","delete","destroy","group","synchronize"];
 
 	publicVariable QGVARMAIN(ZeuzModuleAdminLogged);
-//	[{}, [], 1] call CBA_fnc_waitAndExecute;
 };
 
 if !(isClass(missionConfigFile >> "GW_FRAMEWORK")) exitWith {false};

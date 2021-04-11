@@ -1,13 +1,13 @@
 #include "script_component.hpp"
 
 [QGVARMAIN(playerReady), {
-	if (((getArray(ConfigFile >> "CfgPatches" >> "CBA_Main" >> "versionAr")) select 1) > 9) then {
+	if (((getArray(ConfigFile >> "CfgPatches" >> "CBA_Main" >> "versionAr")) select 1) > 9) then { //	Dirty fix for number counting 3.9 > 3.13 || 13 > 9
 		[[QUOTE(PREFIX), "Admin"], "flexi_InteractSelfAdmin", "Admin Menu", {
 			if (ISADMIN) then {
 				["player",[],100, [QUOTE(call FUNC(flexi_InteractSelf)),"main"]] call cba_fnc_fleximenu_openMenuByDef;
 			} else {
 				systemChat format ["ShameList: %1 trying to access admin menu", player];
-				[QGVAR(shameList), [2, player], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+				[QGVAR(shameList), [2, player], ACTIVE_LIST] call CBA_fnc_targetEvent;
 			};
 		}, {}, [DIK_INSERT,[true,false,true]], false] call CBA_fnc_addKeybind;
 
@@ -16,7 +16,7 @@
 				[2, 1, true] call EFUNC(MonitorMap,Handler);
 			} else {
 				systemChat format ["ShameList: %1 trying to access admin menu", player];
-				[QGVAR(shameList), [2, player], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+				[QGVAR(shameList), [2, player], ACTIVE_LIST] call CBA_fnc_targetEvent;
 			};
 		}, {}, [DIK_HOME,[true,false,true]], false] call CBA_fnc_addKeybind;
 
@@ -25,7 +25,7 @@
 				[] call EFUNC(MonitorServer,Toggle);
 			} else {
 				systemChat format ["ShameList: %1 trying to access admin menu", player];
-				[QGVAR(shameList), [2, player], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+				[QGVAR(shameList), [2, player], ACTIVE_LIST] call CBA_fnc_targetEvent;
 			};
 		}, {}, [DIK_END,[true,false,true]], false] call CBA_fnc_addKeybind;
 	} else {
@@ -34,7 +34,7 @@
 				["player",[],100, [QUOTE(call FUNC(flexi_InteractSelf)),"main"]] call cba_fnc_fleximenu_openMenuByDef;
 			} else {
 				systemChat format ["ShameList: %1 trying to access admin menu", player];
-				[QGVAR(shameList), [2, player], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+				[QGVAR(shameList), [2, player], ACTIVE_LIST] call CBA_fnc_targetEvent;
 			};
 		}, {}, [DIK_INSERT,[true,false,true]], false] call CBA_fnc_addKeybind;
 	};
@@ -42,6 +42,13 @@
 
 [{
 	if (hasInterface) then {
+		[{
+			GVARMAIN(ZeuzModuleAdminLogged) addEventHandler ["CuratorPinged", {
+				params ["_curator", "_unit"];
+				[QGVAR(shameList), [0, _unit], ACTIVE_LIST] call CBA_fnc_targetEvent;
+			}];
+		},	[], 5] call CBA_fnc_waitAndExecute;
+
 		if ((getPlayerUID player) in GVARMAIN(adminList)) then {
 			[QGVARMAIN(AddAdmin), player] call CBA_fnc_localEvent;
 			if ((getPlayerUID player) in GVARMAIN(superAdminList)) then {
@@ -64,18 +71,17 @@
 	if (isServer) then {
 		if (isMultiplayer) then {
 			GVARMAIN(activeAdmins_PFH) = [{
-				_list = (GVARMAIN(activeAdmins) + [getAssignedCuratorUnit GW_ZeuzModuleAdminLogged]);
 				if (diag_fps < 25) then {
-					[QGVARMAIN(sendMessage), format ["Warning: Server low fps %1", diag_fps], _list] call CBA_fnc_targetEvent;
+					[QGVARMAIN(sendMessage), format ["Warning: Server low fps %1", diag_fps], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 				if (((count allUnits) - (count allPlayers)) > 150) then {
-					[QGVARMAIN(sendMessage), format ["Warning: High unit count %1", ((count allUnits) - (count allPlayers))], _list] call CBA_fnc_targetEvent;
+					[QGVARMAIN(sendMessage), format ["Warning: High unit count %1", ((count allUnits) - (count allPlayers))], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 				if ((count allGroups) > 125) then {
-					[QGVARMAIN(sendMessage), format ["Warning: High group count %1", (count allGroups)], _list] call CBA_fnc_targetEvent;
+					[QGVARMAIN(sendMessage), format ["Warning: High group count %1", (count allGroups)], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 				if ((count allDead) > 50) then {
-					[QGVARMAIN(sendMessage), format ["Warning: High dead count %1", (count allDead)], _list] call CBA_fnc_targetEvent;
+					[QGVARMAIN(sendMessage), format ["Warning: High dead count %1", (count allDead)], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 			}, 30, []] call CBA_fnc_addPerFrameHandler;
 		};
@@ -89,41 +95,27 @@
 
 			false
 		}];
-	};
 
-	["ModuleCurator_F", "init", {
-		[{
-			params ["_ZeuzModule"];
-			if (isServer) then {
-				_ZeuzModule setCuratorWaypointCost 0;
+		["ModuleCurator_F", "init", {
+			[{
+				params ["_ZeuzModule"];
 
 				{
-					_ZeuzModule setCuratorCoef [_x, 0];
-				} forEach ["place","edit","delete","destroy","group","synchronize"];
+					_ZeuzModule addCuratorEditableObjects [[_x],true];
+				} forEach (allUnits + vehicles);
 
-				[{
-					{
-						(_this select 0) addCuratorEditableObjects [[_x],true];
-					} forEach (allUnits + vehicles);
-				}, [_ZeuzModule], 5] call CBA_fnc_waitAndExecute;
-
-				if !(toLower(_ZeuzModule getVariable ["Name", ""]) isEqualTo "adminzeus") then {
-					[QGVAR(shameList), [1, (getAssignedCuratorUnit _ZeuzModule)], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+				if !(toLower(_ZeuzModule getVariable ["Name", ""]) isEqualTo "AdminZeusLogged") then {
+					[QGVAR(shameList), [1, (getAssignedCuratorUnit _ZeuzModule)], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
-			} else {
-				_ZeuzModule addEventHandler ["CuratorPinged", {
-					params ["_curator", "_unit"];
-					[QGVAR(shameList), [0, _unit], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
-				}];
-			};
-		},	_this, 5] call CBA_fnc_waitAndExecute;
-	}, true, [], true] call CBA_fnc_addClassEventHandler;
+			},	_this, 5] call CBA_fnc_waitAndExecute;
+		}, true, [], true] call CBA_fnc_addClassEventHandler;
+	};
 }, [], 1] call CBA_fnc_waitAndExecute;
 
 ["GW_pauseMenuOpened", {
 	params ["_display"];
 	if !(ISADMIN) then {
-		_admin = (_display displayCtrl 256101);
+		_admin = (_display displayCtrl 256101);	//	GW_MainMenu_Admin_base
 		_admin ctrlEnable false;
 //		_admin ctrlShow false;
 	};
@@ -161,6 +153,8 @@
 	};
 }] call CBA_fnc_addEventHandler;
 
+
+// Active Admin
 [QGVARMAIN(AddActiveAdmin), {
 	params ["_admin"];
 	GVARMAIN(isActiveAdmin) = true;
@@ -185,8 +179,11 @@
 	params ["_admin"];
 	if (_admin in GVARMAIN(activeAdmins)) then {
 		GVARMAIN(activeAdmins) deleteAt (GVARMAIN(activeAdmins) find _admin);
+		publicVariable QGVARMAIN(activeAdmins);
 	};
 }] call CBA_fnc_addEventHandler;
+
+
 
 [QGVAR(AssignCurator), {
 	_this spawn {
@@ -203,7 +200,7 @@
 	if !(isNull (getAssignedCuratorLogic _unit)) exitWith {
 		systemChat "Player already assigned to a curator";
 	};
-	_zeus = allCurators select {(isNull (getAssignedCuratorUnit _x)) && !((_x getVariable ["Name", ""]) isEqualTo "AdminZeus")};
+	_zeus = allCurators select {(isNull (getAssignedCuratorUnit _x)) && !((_x getVariable ["Name", ""]) isEqualTo "AdminZeusLogged")};
 	if (count _zeus > 0) then {
 		_unit assignCurator (_zeus select 0);
 		systemChat format ["Curator found, Assigning player to %1", (_zeus select 0)];
@@ -213,7 +210,7 @@
 		private _ZeuzModule = _moduleGroup createUnit ["ModuleCurator_F",[0,0,0],[],0,"NONE"];
 		_ZeuzModule setVariable ["Owner", "", true];
 		_ZeuzModule setVariable ["Name", format ["GW_Admin_Curator_%1", count GVARMAIN(adminCurators)], true];
-		_ZeuzModule setVariable ["Addons", 3, true];
+		_ZeuzModule setVariable ["Addons", 0, true];
 		_ZeuzModule setVariable ["Forced", 0, true];
 		_ZeuzModule setVariable ["birdType", "", true];
 		_ZeuzModule setVariable ["showNotification", false, true];
@@ -225,6 +222,10 @@
 		{
 			_ZeuzModule setCuratorCoef [_x,0];
 		} forEach ["place","edit","delete","destroy","group","synchronize"];
+
+		[{
+			GVARMAIN(ZeuzModuleAdminLogged) addCuratorAddons (activatedAddons);
+		}, [], 30] call CBA_fnc_waitAndExecute;
 
 		GVARMAIN(adminCurators) pushBack _ZeuzModule;
 		_unit assignCurator _ZeuzModule;
@@ -307,12 +308,18 @@
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(treatmentAdvanced_CPRLocal), {
-	_this call (treatmentAdvanced_CPRLocal);
+	if (getNumber(configFile >> "CfgPatches" >> "ACE_Common" >> "version") < 3.13) then {
+		_this call (treatmentAdvanced_CPRLocal);
+	};
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(fullHeal), {
 	params ["_unit"];
-	[_unit, _unit] call ACE_medical_fnc_treatmentAdvanced_fullHealLocal;
+	if (getNumber(configFile >> "CfgPatches" >> "ACE_Common" >> "version") >= 3.13) then {
+		[_unit] call ace_medical_treatment_fnc_fullHealLocal
+	} else {
+		[_unit, _unit] call ACE_medical_fnc_treatmentAdvanced_fullHealLocal;
+	};
 }] call CBA_fnc_addEventHandler;
 
 #include "ChatCommands.sqf"

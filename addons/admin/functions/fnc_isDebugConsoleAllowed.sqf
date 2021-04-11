@@ -1,6 +1,6 @@
 #include "script_Component.hpp"
 
-if (isServer || serverCommandAvailable "#kick") exitWith {true};
+if (isServer || serverCommandAvailable "#missions") exitWith {true};
 
 if (str missionConfigFile == "A3\Missions_F_Bootcamp\Scenarios\Arsenal.VR\description.ext") exitWith {true};
 

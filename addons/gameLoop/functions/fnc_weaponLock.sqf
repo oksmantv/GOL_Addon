@@ -43,10 +43,12 @@ if (_toggle) then {
 	};
 	if (isNil QGVAR(BlockVehicle)) then {
 		GVAR(BlockVehicle) = player addEventHandler ["GetInMan", {
-			params ["_unit", "_role", "_vehicle", "_turret"];
-			_unit action ["Eject", _vehicle];
-			moveOut _unit;
-			["You cant get in to vehicles while safeMode is active", 5] call GW_Common_Fnc_Hint;
+			if (GVAR(SafeMode_blockVeh)) then {
+				params ["_unit", "_role", "_vehicle", "_turret"];
+				_unit action ["Eject", _vehicle];
+				moveOut _unit;
+				["You cant get in to vehicles while safeMode is active", 5] call GW_Common_Fnc_Hint;
+			};
 		}];
 	};
 	if (time > 2 && _displayText) then {

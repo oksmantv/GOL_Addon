@@ -1,8 +1,7 @@
 #include "script_component.hpp"
 
 if !(ISADMIN) exitWith {
-
-	[QGVAR(shameList), [2, player], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+	[QGVAR(shameList), [2, player], ACTIVE_LIST] call CBA_fnc_targetEvent;
 	false
 };
 
@@ -234,7 +233,7 @@ if (_menuName isEqualTo "player") then {
 				"Remove Zeus",
 				{[QGVAR(removeZeus), player] call CBA_fnc_serverEvent;},
 				[true] call FUNC(getCheckBoxIcon),
-				"", "", -1, true,
+				"", "", -1, (!(serverCommandAvailable "#kick") && (isMultiplayer)),
 				!(isNull (getAssignedCuratorLogic player))
 			],
 			["Open Virtual Aresnal", {['Open', true] call BIS_fnc_arsenal}]

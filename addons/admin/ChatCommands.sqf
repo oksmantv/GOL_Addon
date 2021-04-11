@@ -4,7 +4,7 @@
 }, "all"] call CBA_fnc_registerChatCommand;
 
 ["admin", {
-	[QGVAR(helpMsg), [(_this select 0), player], GVARMAIN(activeAdmins)] call CBA_fnc_targetEvent;
+	[QGVAR(helpMsg), [(_this select 0), player], ACTIVE_LIST] call CBA_fnc_targetEvent;
 }, "all"] call CBA_fnc_registerChatCommand;
 
 ["send", {

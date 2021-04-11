@@ -8,7 +8,7 @@
 
 [QGVAR(civiKillTracker), "CHECKBOX", ["Display Civilians Killed", "Globaly displays a chat message when a civilian is killed"], [QUOTE(ADDON), "General"], false, CBA_SERVEROVERWRITE, {}, CBA_NEEDRESTART] call CBA_settings_fnc_init;
 
-private _index = -1;
+private _index = 0;
 if ((isClass(missionConfigFile >> "GW_FRAMEWORK")) && !(isClass(missionConfigFile >> "GW_Modules" >> "StartUp"))) then {
 	_index = 1;
 };
@@ -16,7 +16,7 @@ if ((isClass(missionConfigFile >> "GW_FRAMEWORK")) && !(isClass(missionConfigFil
 [
 	QGVAR(SafeMode_useType), "LIST",
 	["Safe Start Mode", ""],
-	[QUOTE(ADDON), "SafeMode"], [[-1,1,2], ["Disabled", "Countdown", "Admin Only"], _index],
+	[QUOTE(ADDON), "SafeMode"], [[0,1,2], ["Disabled", "Countdown", "Admin Only"], _index],
 	CBA_SERVEROVERWRITE, {}, CBA_NEEDRESTART
 ] call CBA_settings_fnc_init;
 
@@ -27,4 +27,4 @@ if ((isClass(missionConfigFile >> "GW_FRAMEWORK")) && !(isClass(missionConfigFil
 	CBA_SERVEROVERWRITE, {}, CBA_NEEDRESTART
 ] call CBA_settings_fnc_init;
 
-
+[QGVAR(SafeMode_blockVeh), "CHECKBOX", ["Block Vehicles", "Kicks player out of vehicles while safeStart is enabled"], [QUOTE(ADDON), "SafeMode"], false, CBA_SERVEROVERWRITE, {}] call CBA_settings_fnc_init;
