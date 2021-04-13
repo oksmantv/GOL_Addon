@@ -236,7 +236,10 @@ if (_menuName isEqualTo "player") then {
 				"", "", -1, (!(serverCommandAvailable "#kick") && (isMultiplayer)),
 				!(isNull (getAssignedCuratorLogic player))
 			],
-			["Open Virtual Arsenal", {['Open', true] call BIS_fnc_arsenal}]
+			["Open Virtual Arsenal",
+			{['Open', true] call BIS_fnc_arsenal}],
+
+			["Open ACE Arsenal", {[player, player, true] call ace_arsenal_fnc_openBox}]
 		]
 	];
 };
