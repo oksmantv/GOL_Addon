@@ -114,8 +114,8 @@ if (_menuName isEqualTo "actions") then {
 					[_radio, 7, "50.3"] call TFAR_fnc_SetChannelFrequency;
 					[_radio, 8, "50.4"] call TFAR_fnc_SetChannelFrequency;
 					[_radio, 9, "50.5"] call TFAR_fnc_SetChannelFrequency;
-					[(_radio select 0), (_radio select 1), 0] call TFAR_fnc_setLrChannel;
-					[(_radio select 0), (_radio select 1), 7] call TFAR_fnc_setLrVolume;
+					[_radio, 0] call TFAR_fnc_setLrChannel;
+					[_radio, 7] call TFAR_fnc_setLrVolume;
 					TF_MAX_LR_CHANNELS = 8;
 					TF_MIN_ASIP_FREQ = 10;
 					TF_MAX_ASIP_FREQ = 100;
