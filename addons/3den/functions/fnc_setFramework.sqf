@@ -62,9 +62,9 @@ collect3DENHistory {
 		[] spawn {
 			((findDisplay 313) call CBA_settings_fnc_openSettingsMenu);
 			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\cba_settings.sqf"), "mission"] call CBA_settings_fnc_import;
-			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_Legacy.sqf"), "mission"] call CBA_settings_fnc_import;
+			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new.sqf"), "mission"] call CBA_settings_fnc_import;
 			if (EGVAR(settings_ACE,medical_level) isEqualTo 2) then {
-				[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_Legacy_adv.sqf"), "mission"] call CBA_settings_fnc_import;
+				[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new_adv.sqf"), "mission"] call CBA_settings_fnc_import;
 			};
 			[] call CBA_settings_fnc_gui_saveTempData;
 			(uiNamespace getVariable "RscDisplayGameOptions") closeDisplay 1;
