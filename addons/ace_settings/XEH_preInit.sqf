@@ -71,15 +71,15 @@ ACE_MaxWeightCarry = 600;
 	private _configList = "";
 	if (GVARMAIN(mod_ACE3_Med_New)) then {
 
-		_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new.sqf");
+		//_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new.sqf");
 
 		if (EGVAR(settings_ACE,medical_level) isEqualTo 2) then {
-			_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new_adv.sqf");
+			//_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new_adv.sqf");
 		};
 	} else {
 //		_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_Legacy_basic.sqf");
 		if (EGVAR(settings_ACE,medical_level) isEqualTo 2) then {
-			_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_Legacy_adv.sqf");
+			//_configList = (preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_Legacy_adv.sqf");
 		};
 	};
 
@@ -97,9 +97,9 @@ ACE_MaxWeightCarry = 600;
 	params ["_name","_value"];
 	if (_name isEqualTo "ace_medical_painEffectType") then {
 		if (ace_medical_painEffectType == 0) then {
-			ace_medical_painCoefficient = (["ace_medical_painCoefficient", "priority"] call CBA_settings_fnc_get);
+			//ace_medical_painCoefficient = (["ace_medical_painCoefficient", "priority"] call CBA_settings_fnc_get);
 		} else {
-			ace_medical_painCoefficient = (["ace_medical_painCoefficient", "priority"] call CBA_settings_fnc_get) * 0.7;
+			//ace_medical_painCoefficient = (["ace_medical_painCoefficient", "priority"] call CBA_settings_fnc_get) * 0.7;
 		};
 	};
 }] call CBA_fnc_addEventHandler;
