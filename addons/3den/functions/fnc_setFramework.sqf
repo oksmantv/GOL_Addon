@@ -56,7 +56,7 @@ collect3DENHistory {
 		"GW_MissionPreferences" set3DENMissionAttribute ["GW_isConfigured", true];
 		LOG("fnc_addEH_onMessage: GW_isConfigured");
 	};
-
+/*
 	if (GVARMAIN(mod_ACE3) && !("GW_MissionPreferences" get3DENMissionAttribute "GW_isConfigured_ACE")) then {
 		disableUserInput true;
 		[] spawn {
@@ -77,7 +77,7 @@ collect3DENHistory {
 			};
 		};
 	};
-
+*/
 	if (isclass (configfile >> "CfgPatches" >> "3denEnhanced")) then {
 		set3DENMissionAttributes[["Multiplayer", "Enh_DynamicGroups", false]];
 		set3DENMissionAttributes[["Multiplayer", "Enh_SaveLoadout", false]];
