@@ -107,7 +107,7 @@ class CfgAmmo {
 		timeToLive = 93;
 	};
 	class SmokeShellArty: SmokeShell {
-		effectsSmoke="GW_SmokeShellWhiteSmall";
+		effectsSmoke="SmokeShellWhiteSmall";
 	};
 	class F_20mm_Green;
 	class F_20mm_Red;
