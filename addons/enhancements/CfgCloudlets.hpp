@@ -15,8 +15,7 @@ class CfgCloudlets {
 		sizeVar = 0.8;
 //		weight = 1.3;
 	};
-	class SmokeShellWhiteSmall;
-	class GW_SmokeShellWhiteSmall: SmokeShellWhiteSmall {
+	class SmokeShellWhiteSmall {
 		animationSpeedCoef = 1.2;
 		blockAIVisibility = 1;
 //		bounceOnSurface = -1;
