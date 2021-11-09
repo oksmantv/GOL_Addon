@@ -106,6 +106,9 @@ class CfgAmmo {
 		intensity = 150000;
 		timeToLive = 93;
 	};
+	class SmokeShellArty: SmokeShell {
+		effectsSmoke="GW_SmokeShellWhiteSmall";
+	};
 	class F_20mm_Green;
 	class F_20mm_Red;
 	class F_20mm_Yellow;
