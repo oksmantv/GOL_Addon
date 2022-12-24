@@ -18,7 +18,7 @@ class MENU_SUB(Copy,AllObjects) {
 };
 
 class MENU_SUB(Copy,Loadout) {
-	text = "Loadout... (Experimenatal)";
+	text = "Loadout... (Experimental)";
 	action = "[] call GW_3DEN_fnc_copyLoadout";
 	shortcuts[] = {INPUT_SHIFT_OFFSET + DIK_4};
 };
