@@ -56,3 +56,10 @@ UI:
 * Map should have new contour lines.
 * Removed "Statistics" from map screen.
 * Added gol logo to Insignias.
+
+Packing Instructions:
+* Using Mikero's pboProject
+* place the gw folder into a path: (P:/x/gw)
+* also include a copy of CBA in (P:/x/cba)
+* Make sure a copy of A3 unbinarized addons are located in the root directory of P:
+* Finally, due to TacOps still being encrypted by BI, remove the 'retexturing' module from packing and copy the pbo into the final upload once everything else is packed.
