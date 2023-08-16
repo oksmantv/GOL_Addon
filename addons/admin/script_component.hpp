@@ -11,6 +11,8 @@
 
 #include "\x\gw\addons\main\script_macros.hpp"
 
+#define	GUZZENVONLIDL	"76561197993196728"
+#define	ARROW "76561197971568283"
 #define	OKSMAN	"76561198013929549"
 #define BLU	"76561198086056020"
 #define FILTH "76561198014971848"
