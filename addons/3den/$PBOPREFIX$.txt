@@ -1,0 +1,2 @@
+x\gw\addons\3den
+version=GuzzenVonLidl

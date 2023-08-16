@@ -110,6 +110,10 @@ if ((count _grps) > 1) then {
 	if (_type isEqualTo "Transport UNLOAD") then {
 		_type = "TR UNLOAD";
 	};
+	if (_type isEqualTo "lambs_danger_CQB") then {
+		_type = "SCRIPTED";
+		// Insert LAMBS CQB WP Code
+	};
 	_waypointSettings pushBack [0,_type];
 
 	if !(GETATTRIBUTE("behaviour") isEqualTo "UNCHANGED") then {
