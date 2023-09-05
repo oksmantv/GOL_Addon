@@ -1,4 +1,3 @@
-/*
 class CfgWeapons {
 	class ItemCore;
 	class InventoryFirstAidKitItem_Base_F;
@@ -15,4 +14,3 @@ class CfgWeapons {
 		};
 	};
 };
-*/
