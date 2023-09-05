@@ -36,13 +36,13 @@ if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
 		_output pushBack [_approved,"GameMode"];
 	};
 
-	if !((toLower(getText(missionConfigFile >> "briefingName")) find "framework") isEqualTo -1) then {
+	if !((toLower(getText(missionConfigFile >> "briefingName")) find "Mission Name") isEqualTo -1) then {
 		_output pushBack [_error,"Mission has no name or is named framework", "Without a name you cant select the mission! Make sure you edit this in the description.ext", [5], "Opens Description.ext", "Folder >"];
 	} else {
 		_output pushBack [_approved,"Name Okay"];
 	};
 
-	if (((SETTING("Author")) isEqualTo "") || (toLower(SETTING("Author")) isEqualTo "guzzenvonlidl")) then {
+	if (((SETTING("Author")) isEqualTo "") || (toLower(SETTING("Author")) isEqualTo "Editor")) then {
 		_output pushBack [_error,"Author not configured", "Make sure you edit this in the description.ext", [5], "Opens Description.ext", "Folder >"];
 	} else {
 		_output pushBack [_approved,"Author Configured"];
