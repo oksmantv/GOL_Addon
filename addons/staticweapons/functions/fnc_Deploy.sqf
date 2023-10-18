@@ -10,9 +10,8 @@ if (primaryWeapon player != "") then {
 	private _type = (_unit getVariable [QGVAR(type), ""]);
 	private _objectRemoved = true;
 	private _dir = (getDir _unit);
-	private _pos = (player getRelPos [2, 0]);
+	private _pos = (player getRelPos [0.6, 0]);
 	_pos set [2, ((getPosATL player) select 2)];
-
 
 	{
 		if !(_x isEqualTo "GW_Item_StaticDummy") exitWith {
@@ -23,9 +22,12 @@ if (primaryWeapon player != "") then {
 
 	if (_objectRemoved && !(_type isEqualTo "")) then {
 		private _object = createVehicle [_type, [0,0,0], [], 0, "NONE"];
+		
+		_object enableWeaponDisassembly false;
 		_object setPosATL _pos;
 		_object setDir _dir;
 		_unit setVariable [QGVAR(type), ""];
+		[_unit, _object] call ace_dragging_fnc_startCarry;
 	};
 
 	true
