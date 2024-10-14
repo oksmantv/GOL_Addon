@@ -75,7 +75,7 @@ class CfgAmmo {
 		simulation = "shotSmoke";
 		smokeColor[] = {1,1,1,1};
 		timeToLive = 45;
-	}
+	};
 
 	class FlareCore;
 	class FlareBase: FlareCore {

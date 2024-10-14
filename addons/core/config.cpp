@@ -1,21 +1,24 @@
 #include "script_component.hpp"
+#include "CfgEventHandlers.hpp"
 
 class CfgPatches {
 	class ADDON {
-		author = "GuzzenVonlidl";
 		name = "GW - Core Component";
+		author = "GuzzenVonlidl";
 		url = "https://github.com/GuzzenVonLidl/";
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = REQUIRED_VERSION;
-		requiredAddons[] = {
+		requiredAddons[]={
 			"GW_Main",
 			"A3_Functions_F",
 			"A3_UI_F"
 		};
-		version = VERSION;
-		authors[] = {"GuzzenVonlidl"};
+		version=VERSION;
+		authors[]={
+			"GuzzenVonlidl",
+			"Blu.",
+			"OksmanTV"
+		};
 	};
 };
-
-#include "CfgEventHandlers.hpp"

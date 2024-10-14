@@ -1,3 +1,4 @@
+/*
 
 class CfgVehicles {
 	class Man;
@@ -30,3 +31,5 @@ class CfgVehicles {
 		};
 	};
 };
+
+*/

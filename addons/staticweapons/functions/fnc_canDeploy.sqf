@@ -1,3 +1,4 @@
+/*
 #include "script_component.hpp"
 
 params [
@@ -5,3 +6,4 @@ params [
 ];
 
 (!((_unit getVariable [QGVAR(type), ""]) isEqualTo "") && ("GW_Item_StaticDummy" in (itemsWithMagazines player)))
+*/

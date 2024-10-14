@@ -8,7 +8,9 @@
 #define VERSION_AR MAJOR,MINOR,PATCHLVL,BUILD
 #define VERSION_CONFIG version = VERSION; versionStr = QUOTE(VERSION); versionAr[] = {VERSION_AR}
 
-#define REQUIRED_VERSION 1.78
+#define ADDON DOUBLES(PREFIX,COMPONENT)
+
+#define REQUIRED_VERSION 1.0
 
 // Set a default debug mode for the component here (See documentation on how to default to each of the modes).
 /*

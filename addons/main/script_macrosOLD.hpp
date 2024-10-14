@@ -2,12 +2,10 @@
 
 #ifdef DISABLE_COMPILE_CACHE
 	#undef PREP
-	#undef PREPMAIN
 	#define PREP(fncName) QFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
 	#define PREPMAIN(fncName) QFUNCMAIN(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
 #else
 	#undef PREP
-	#undef PREPMAIN
 	#define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
 	#define PREPMAIN(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNCMAIN(fncName)] call CBA_fnc_compileFunction
 #endif
@@ -76,7 +74,6 @@ Group: Debugging
 #endif
 
 #ifdef DEBUG_MODE_NORMAL
-	#undef WARNING
 	#define WARNING(MESSAGE) [__LINE__, #COMPONENT, MESSAGE, "WARNING", false] call GW_fnc_log
 	#define WARNING_ADMIN(MESSAGE) [__LINE__, #COMPONENT, MESSAGE, "WARNING", true] call GW_fnc_log
 #else	// disabled
@@ -84,15 +81,8 @@ Group: Debugging
 	#define WARNING_ADMIN(MESSAGE)
 #endif
 
-#ifdef ERROR
-	#undef ERROR
-	#define ERROR(MESSAGE) [__LINE__, #COMPONENT, MESSAGE, "ERROR", false] call GW_fnc_log
-	#define ERROR_ADMIN(MESSAGE) [__LINE__, #COMPONENT, MESSAGE, "ERROR", true] call GW_fnc_log
-#else
-	#undef ERROR
-	#define ERROR(MESSAGE)
-	#define ERROR_ADMIN(MESSAGE)
-#endif
+#define ERROR(MESSAGE) [__LINE__, #COMPONENT, MESSAGE, "ERROR", false] call GW_fnc_log
+#define ERROR_ADMIN(MESSAGE) [__LINE__, #COMPONENT, MESSAGE, "ERROR", true] call GW_fnc_log
 
 #ifdef DEBUG_MODE_FULL
 	#define TRACE_1(MESSAGE,A) LOG(PFORMAT_1(MESSAGE,A));

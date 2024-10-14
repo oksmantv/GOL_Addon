@@ -64,6 +64,7 @@ private _return = [];
 
 	_return = _return + toArray(format ["%3// %1 - %2", (typeOf _x), _x, endl]);
 	_return = _return + toArray(format ["%1// Equipment %1", endl]);
+	_return = _return + toArray(format ["_insignia = %1; %2", str([_x] call BIS_fnc_getUnitInsignia), endl]);
 	_return = _return + toArray(format ["_goggles = %1; %2", str(goggles _x), endl]);
 	_return = _return + toArray(format ["_helmet = %1; %2", str(headgear _x), endl]);
 	_return = _return + toArray(format ["_uniform = %1; %2", str(uniform _x), endl]);

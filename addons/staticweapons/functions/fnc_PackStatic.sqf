@@ -1,3 +1,4 @@
+/*
 #include "script_component.hpp"
 
 if (primaryWeapon player != "") then {
@@ -26,3 +27,4 @@ if (primaryWeapon player != "") then {
 }, _this] call CBA_fnc_progressBar;
 
 true
+*/
