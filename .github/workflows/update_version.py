@@ -1,42 +1,30 @@
-import os
-import datetime
+from datetime import date
+
+def replace_line(filename, line_number):
+    with open(filename) as file:
+        lines = file.readlines()
+    
+    if (line_number <= len(lines)):
+        year = date.today().year.__str__()[2:4]
+        buildNum = f"{date.today().day}{date.today().month}{year}"
+
+        if lines[line_number - 1].__contains__(buildNum):
+            line_number = 4
+            patchLvl = int(lines[line_number - 1][len(lines[line_number - 1])]) + 1
+            line_text = f"#define PATCHLVL {patchLvl}"
+        else:  
+            line_text = f"#define BUILD 	// We will use the DATE for the BUILD# in the format DDMMYY"
+
+        lines[line_number - 1] = line_text + "\n"
+
+        with open(filename, "w") as file:
+            for line in lines:
+                file.write(line)
+
 
 rootdir = '/addons/main'
 
 hppFile = '/addons/main/script_mod.hpp'
 
-SCRIPT_MOD = open(hppFile, 'w')
+replace_line(hppFile, 5)
 
-possible_BUILD = ["BUILD"]
-
-for subdir, dirs, files in os.walk(rootdir):
-
-  for file in files:
-
-    if str(file).endswith(".hpp"):
-
-      open_file = open(os.path.join(subdir, file), 'r')
-      line_counter = 0
-      for line in open_file:
-
-        for item in possible_BUILD:
-
-          if line.__contains__(item):
-
-            line = line.strip()
-
-            TODO_file.write("File Name: " + file + "\n")
-            TODO_file.write("Line Number: " + str(line_counter) + "\n")
-            TODO_file.write(line + "\n" + "\n")
-            break
-        line_counter += 1
-      # Closes open_file       
-      open_file.close()
-            
-
-# end of all for loops
-
-# Prints the last date modified for convenience. 
-TODO_file.write("Last modified: " + str(datetime.datetime.now()))
-# Closes the TODO_file
-TODO_file.close()
