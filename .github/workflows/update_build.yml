@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Run a one-line script
       run: python ../.github/workflows/update_version.py
     - name: switching from HTTPS to SSH
