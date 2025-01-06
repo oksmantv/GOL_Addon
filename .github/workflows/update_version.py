@@ -24,7 +24,7 @@ def replace_line(filename, line_number):
 
 rootdir = '/addons/main'
 
-hppFile = '/addons/main/script_mod.hpp'
+hppFile = '././addons/main/script_mod.hpp'
 
 replace_line(hppFile, 5)
 
