@@ -26,6 +26,7 @@ The GuzzenWorks addon (GW) was made specifically for the Guerrillas Of Liberatio
 ## Contributers
 The main author [GuzzenVonLidl](https://github.com/GuzzenVonLidl) is responsible for the majority of the addon's creation. After they discontinued maintainance of the addon, members from the GOL have taken over maintaining the addon.
 
+- GuzzenVonLidl - Original Creator
 - Oksman - Repo owner, Scripting
 - Blu. - Maintainance, Scripting
 
