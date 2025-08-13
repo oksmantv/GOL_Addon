@@ -129,7 +129,7 @@ class Cfg3DEN {
 							data = "ar";
 						};
 						class loadout_crew {
-							text = "Crew memeber";
+							text = "Crew Member";
 							data = "crew";
 						};
 						class loadout_p {
