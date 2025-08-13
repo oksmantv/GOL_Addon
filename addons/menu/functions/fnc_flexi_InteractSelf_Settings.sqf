@@ -79,37 +79,37 @@ if (_menuName isEqualTo "settings_viewDistance") then {
 			],
 			[
 				"2000",
-				"setViewDistance 2000; setObjectViewDistance 1300;",
+				"setViewDistance 2000; setObjectViewDistance 1500;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 2000)
 			],
 			[
 				"3000",
-				"setViewDistance 3000; setObjectViewDistance 1750;",
+				"setViewDistance 3000; setObjectViewDistance 2500;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 3000)
 			],
 			[
 				"4000",
-				"setViewDistance 4000; setObjectViewDistance 2200;",
+				"setViewDistance 4000; setObjectViewDistance 3600;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 4000)
 			],
 			[
 				"6000",
-				"setViewDistance 6000; setObjectViewDistance 3100;",
+				"setViewDistance 6000; setObjectViewDistance 5400;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 6000)
 			],
 			[
 				"8000",
-				"setViewDistance 8000; setObjectViewDistance 4000;",
+				"setViewDistance 8000; setObjectViewDistance 7200;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 8000)
 			],
 			[
 				"10000",
-				"setViewDistance 10000; setObjectViewDistance 4900;",
+				"setViewDistance 10000; setObjectViewDistance 9000;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 10000)
 			]
