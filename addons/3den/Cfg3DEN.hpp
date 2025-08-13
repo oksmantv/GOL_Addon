@@ -492,7 +492,7 @@ class Cfg3DEN {
 						tooltip = "Disables Auto Transfer Group to Headless Client   (Requires GW Framework)";
 						property = "GW_DisableHC";
 						control = "Checkbox";
-						expression = "(group _this) setVariable ['GW_HeadlessController_BlackList', _value, true];";
+						expression = "(group _this) setVariable ['GW_HeadlessController_BlackList', _value, true]; (group _this) setVariable ['acex_headless_blacklist', _value, true];";
 						defaultValue = "false";
 						condition = "objectBrain";
 					};
@@ -501,7 +501,7 @@ class Cfg3DEN {
 						tooltip = "Disables Auto Gear Select for Group (Requires GW Framework)";
 						property = "GW_DisableGearInit";
 						control = "Checkbox";
-						expression = "_this setVariable ['GW_Gear_BlackList', _value];";
+						expression = "_this setVariable ['GW_Gear_BlackList', _value, false];";
 						defaultValue = "false";
 						condition = "objectBrain";
 					};
@@ -510,7 +510,7 @@ class Cfg3DEN {
 						tooltip = "Disables Auto setSkill (Requires GW Framework)";
 						property = "GW_DisableSkill";
 						control = "Checkbox";
-						expression = "_this setVariable ['GW_SetDifficulty_BlackList', _value];";
+						expression = "_this setVariable ['GW_SetDifficulty_BlackList', _value, false];";
 						defaultValue = "false";
 						condition = "objectBrain";
 					};
