@@ -59,9 +59,16 @@ private _vehicles = [];
 				_crew = (fullCrew [_x, "", true]);
 			} else {
 				{
-					if (_x select 4) then {	// Force FFV to cargo instead of turret
+					if (
+						_x select 4 && // isTurretValue is true
+						!(_x select 1) in ["gunner","commander"] && // If slot is not gunner or commander
+						!(["gunner", (_x select 6)] call BIS_fnc_inString) // If positionName is not gunner
+						!(["commander", (_x select 6)] call BIS_fnc_inString) // If positionName is not commander
+					) then {	
+						// Force FFV to cargo instead of turret
 						_crewList pushBack ["cargo", (_x select 2), (_x select 3)];
 					} else {
+						// Use defined crew position
 						_crewList pushBack [(_x select 1), (_x select 2), (_x select 3)];
 					};
 				} forEach _crew;
