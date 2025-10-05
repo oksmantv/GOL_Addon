@@ -90,7 +90,7 @@ switch (_type) do {
 			_side = "independent";
 		};
 
-		_return = (str([_side, _units, _vehicles, []]) + (" call GW_Common_fnc_addToSpawnList;"));
+		_return = (str([_units, _vehicles, [], _side]) + (" call GW_Common_fnc_spawnGroup;"));
 		TRACE_1("Units", _units);
 		TRACE_1("Vehicles", _vehicles);
 		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied", (count _units), (count _vehicles), _side];

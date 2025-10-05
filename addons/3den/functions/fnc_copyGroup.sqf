@@ -167,7 +167,7 @@ if (_side isEqualTo "GUER") then {
 	_side = "independent";
 };
 
-_return = (str([_side, _units, _vehicles, _groupWaypoint]) + (" call GW_Common_fnc_addToSpawnList;"));
+_return = (str([_units, _vehicles, _groupWaypoint, _side]) + (" call GW_Common_fnc_spawnGroup;"));
 
 if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
 	_delete = (get3DENSelected "object") + (get3DENSelected "waypoint") + (get3DENSelected "group");
