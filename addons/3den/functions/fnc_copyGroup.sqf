@@ -93,7 +93,12 @@ if ((count _grps) > 1) then {
 				} else {
 					_special = ([_x, false] call FUNC(getAttributes));
 				};
-				_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special];
+				if ("Preferences" get3DENMissionAttribute "GW_CopyRoles") then {
+					_role = [_x] call FUNC(getLoadoutClass);
+					_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special, _role];
+				} else {
+					_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special];
+				}
 			};
 		};
 	};
@@ -167,7 +172,7 @@ if (_side isEqualTo "GUER") then {
 	_side = "independent";
 };
 
-_return = (str([_side, _units, _vehicles, _groupWaypoint]) + (" call GW_Common_fnc_addToSpawnList;"));
+_return = (str([_units, _vehicles, _groupWaypoint, _side]) + (" call GW_Common_fnc_spawnGroup;"));
 
 if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
 	_delete = (get3DENSelected "object") + (get3DENSelected "waypoint") + (get3DENSelected "group");
@@ -189,6 +194,7 @@ if ("Preferences" get3DENMissionAttribute "GW_PrintToConsoleFile") then {
 [[],QFUNC(copyGroup)] call FUNC(uiSaveFunction);
 
 systemChat format ["Copy Group: %4, %1 units, %2 vehicles, %3 waypoints copied", (count _units), (count _vehicles), (count _groupWaypoint), _side];
+["ShowMessage", ["Copy Group", format ["%4: %1 units, %2 vehicles, %3 waypoints copied", (count _units), (count _vehicles), (count _groupWaypoint), _side]]] call BIS_fnc_3DENNotification;
 
 TRACE_1("Units", _units);
 TRACE_1("Waypoints", _groupWaypoint);

@@ -38,21 +38,23 @@ if (_getVersion isEqualTo 0) then {
 if (_copyGroup) then {
 	if (_getVersion >= 2.0) then {
 		[_copyType] call FUNC(copyGroup);
-	} else {
-		if (_getVersion >= 1.8) then {
-			[_copyType] call FUNC(copyGroupLegacy_08);
-		} else {
-			[_copyType] call FUNC(copyGroupLegacy_07);
-		};
-	};
+	}
+	//  else {
+	// 	if (_getVersion >= 1.8) then {
+	// 		[_copyType] call FUNC(copyGroupLegacy_08);
+	// 	} else {
+	// 		[_copyType] call FUNC(copyGroupLegacy_07);
+	// 	};
+	// };
 } else {
 	if (_getVersion >= 2.0) then {
 		[_copyType] call FUNC(copyStatic);
-	} else {
-		if (_getVersion >= 1.8) then {
-			[_copyType] call FUNC(copyStaticLegacy_08);
-		} else {
-			[_copyType] call FUNC(copyStaticLegacy_07);
-		};
-	};
+	}
+	// else {
+	// 	if (_getVersion >= 1.8) then {
+	// 		[_copyType] call FUNC(copyStaticLegacy_08);
+	// 	} else {
+	// 		[_copyType] call FUNC(copyStaticLegacy_07);
+	// 	};
+	// };
 };

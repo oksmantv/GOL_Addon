@@ -49,9 +49,13 @@ private _return = 0;
 
 				if (_x isKindOf "CAManBase") then {
 					private _stance = ["Up","Middle","Down","Auto"] select ((_x get3DENAttribute "UnitPos") select 0);
-
 					if ((isNull (objectParent _x)) || !((objectParent _x) in (get3DENSelected "object"))) then {
-						_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special];
+						if ("Preferences" get3DENMissionAttribute "GW_CopyRoles") then {
+							_role = [_x] call FUNC(getLoadoutClass);
+							_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special, _role];
+						} else {
+							_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special];
+						}	
 					};
 				};
 			};
@@ -90,15 +94,17 @@ switch (_type) do {
 			_side = "independent";
 		};
 
-		_return = (str([_side, _units, _vehicles, []]) + (" call GW_Common_fnc_addToSpawnList;"));
+		_return = (str([_units, _vehicles, [], _side]) + (" call GW_Common_fnc_spawnGroup;"));
 		TRACE_1("Units", _units);
 		TRACE_1("Vehicles", _vehicles);
 		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied", (count _units), (count _vehicles), _side];
+		["ShowMessage", ["Copy Static", format ["%3: %1 units, %2 vehicles copied", (count _units), (count _vehicles), _side]]] call BIS_fnc_3DENNotification;
 	};
 	case 2: {
 		_return = (str(_objects) + (" call GW_Common_fnc_spawnObjects;"));
 		TRACE_1("Objects", _objects);
 		systemChat format ["Copy Objects: %1 objects copied", (count _objects)];
+		["ShowMessage", ["Copy Objects", format ["%1 objects copied", (count _objects)]]] call BIS_fnc_3DENNotification;
 	};
 };
 
