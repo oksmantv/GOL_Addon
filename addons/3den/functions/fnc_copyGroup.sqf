@@ -93,8 +93,12 @@ if ((count _grps) > 1) then {
 				} else {
 					_special = ([_x, false] call FUNC(getAttributes));
 				};
-				private _role = [_x] call FUNC(getLoadoutClass);
-				_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special, _role];
+				if ("Preferences" get3DENMissionAttribute "GW_CopyRoles") then {
+					_role = [_x] call FUNC(getLoadoutClass);
+					_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special, _role];
+				} else {
+					_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special];
+				}
 			};
 		};
 	};

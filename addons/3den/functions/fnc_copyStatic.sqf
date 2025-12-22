@@ -49,9 +49,13 @@ private _return = 0;
 
 				if (_x isKindOf "CAManBase") then {
 					private _stance = ["Up","Middle","Down","Auto"] select ((_x get3DENAttribute "UnitPos") select 0);
-					private _role = [_x] call FUNC(getLoadoutClass);
 					if ((isNull (objectParent _x)) || !((objectParent _x) in (get3DENSelected "object"))) then {
-						_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special, _role];
+						if ("Preferences" get3DENMissionAttribute "GW_CopyRoles") then {
+							_role = [_x] call FUNC(getLoadoutClass);
+							_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special, _role];
+						} else {
+							_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special];
+						}	
 					};
 				};
 			};
