@@ -1,32 +1,3 @@
-
-class Display3DEN {
-    class ContextMenu {
-        class Items {
-            items[] += {"GOL_FRAMEWORK_SCRIPTS"};
-            class GOL_FRAMEWORK_SCRIPTS {
-                text = "GOL FRAMEWORK";
-				picture = "\x\gw\addons\3den\data\gwlogo.paa";
-                value = 0;
-            };
-            class GOL_FRAMEWORK_COPYROLE {
-                text = "Copy Options";
-                value = 0;
-                items[] = {"GOL_FRAMEWORK_COPYROLE_ON","GOL_FRAMEWORK_COPYROLE_OFF"};
-            };
-            class GOL_FRAMEWORK_COPYROLE_ON {
-                text = "Copy Roles: On";
-                action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', true]]; systemChat 'Copy Roles: Enabled'; ['ShowMessage', ['Copy Roles', 'Role copying enabled']] call BIS_fnc_3DENNotification;";
-                conditionShow = "!('Preferences' get3DENMissionAttribute 'GW_CopyRoles')";
-            };            
-            class GOL_FRAMEWORK_COPYROLE_OFF {
-                text = "Copy Roles: Off";
-                action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', false]]; systemChat 'Copy Roles: Disabled'; ['ShowMessage', ['Copy Roles', 'Role copying disabled']] call BIS_fnc_3DENNotification;";
-                conditionShow = "('Preferences' get3DENMissionAttribute 'GW_CopyRoles')";
-            };
-        };
-    };
-};
-
 class Cfg3DEN {
 	class Group {
 		class AttributeCategories {
