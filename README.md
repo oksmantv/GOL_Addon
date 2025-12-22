@@ -85,3 +85,6 @@ The GW addon was previously compiled by Guzzen's own custom file. However, since
 6. Make sure a copy of A3 unbinarized addons are located in the root directory of P:
    - This can be achieved using ArmA III Tools and executing the respective command.
 7. Finally, due to TacOps still being encrypted by BI, remove the 'retexturing' module from packing and copy the pbo into the final upload once everything else is packed.
+
+<img width="778" height="608" alt="{42EABD0B-629C-4E86-971D-F459D1222C76}" src="https://github.com/user-attachments/assets/91df3e9b-a657-424b-8aff-6218c2ce4a8a" />
+
