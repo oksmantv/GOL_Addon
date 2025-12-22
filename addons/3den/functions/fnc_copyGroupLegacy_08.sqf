@@ -47,6 +47,7 @@
 private _units = [];
 private _groupWaypoint = [];
 private _vehicles = [];
+private _side = nil;
 
 {
 	if (_x isKindOf "AllVehicles") then {
@@ -59,9 +60,17 @@ private _vehicles = [];
 				_crew = (fullCrew [_x, "", true]);
 			} else {
 				{
-					if (_x select 4) then {	// Force FFV to cargo instead of turret
+					_side = side (_X select 0);
+					if (
+						_x select 4 && // isTurretValue is true
+						!(_x select 1) in ["gunner","commander"] && // If slot is not gunner or commander
+						!(["gunner", (_x select 6)] call BIS_fnc_inString) // If positionName is not gunner
+						!(["commander", (_x select 6)] call BIS_fnc_inString) // If positionName is not commander
+					) then {	
+						// Force FFV to cargo instead of turret
 						_crewList pushBack ["cargo", (_x select 2), (_x select 3)];
 					} else {
+						// Use defined crew position
 						_crewList pushBack [(_x select 1), (_x select 2), (_x select 3)];
 					};
 				} forEach _crew;
@@ -78,6 +87,7 @@ private _vehicles = [];
 				} else {
 					_special = ([_x, false] call FUNC(getAttributesLegacy));
 				};
+				_side = side (_X select 0);
 				_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special];
 			};
 		};
@@ -131,7 +141,7 @@ private _vehicles = [];
 	_groupWaypoint pushBack ([(GETATTRIBUTE("position"))] + [_waypointSettings]);
 } forEach get3DENSelected "waypoint";
 
-_return = (str([_units, _vehicles, _groupWaypoint]) + (" call GW_Common_fnc_spawnGroup;"));
+_return = (str([_units, _vehicles, _groupWaypoint,_side]) + (" call GW_Common_fnc_spawnGroup;"));
 
 if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
 	_delete = (get3DENSelected "object") + (get3DENSelected "waypoint") + (get3DENSelected "group");
