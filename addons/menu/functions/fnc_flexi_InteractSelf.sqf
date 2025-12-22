@@ -13,6 +13,45 @@ if (typeName _params isEqualTo typeName []) then {
 	_menuName = _params;
 };
 
+// Old Actions (Archived)
+// [
+// 		"<t color='#B22400'>Parachute Jump</t>",
+// 		{ [player] call GW_Menu_fnc_doParadrop },
+// 		QPATHTOF(DATA\parachute_icon.paa),
+// 		"","",-1,true,
+// 		(!(isNull (objectParent player)) && (getPosATL (vehicle player) select 2 > GVAR(ParadropHaloHeight)))
+// 	],
+// [
+// 		"<t color='#B22400'>Get Out Left</t>", {
+// 			_veh = (objectParent player);
+// 			(boundingBoxReal _veh) params ["_p1","_p2"];
+// 			_maxWidth = abs ((_p2 select 0) - (_p1 select 0));
+// 			_pos = (_veh getRelPos [((_maxWidth/2) + 2), 270]);
+// 			_pos set [2, ((getPosATL _veh) select 2)];
+
+// 			player action ["Eject", _veh];
+// 			moveOut player;
+// 			player setPosATL _pos;
+// 			player setDir ((getDir _veh) + 270);
+// 		}, "","","",-1,true,
+// 		(!(isNull (objectParent player)) && ((speed (objectParent player)) < 7))
+// 	],
+// 	[
+// 		"<t color='#B22400'>Get Out Right</t>", {
+// 			_veh = (objectParent player);
+// 			(boundingBoxReal _veh) params ["_p1","_p2"];
+// 			_maxWidth = abs ((_p2 select 0) - (_p1 select 0));
+// 			_pos = (_veh getRelPos [((_maxWidth/2) + 2), 90]);
+// 			_pos set [2, ((getPosATL _veh) select 2)];
+
+// 			player action ["Eject", _veh];
+// 			moveOut player;
+// 			player setPosATL _pos;
+// 			player setDir ((getDir _veh) + 90);
+// 		}, "","","",-1,true,
+// 		(!(isNull (objectParent player)) && ((speed (objectParent player)) < 7))
+// 	]
+
 private _allmenus = [
 	[
 		"<t color='#DF9100'>Player Menu ></t>",
@@ -26,43 +65,6 @@ private _allmenus = [
 	],
 	[
 		"----------------------------------", "","","","",-1,false, !(isNull (objectParent player))
-	],
-	[
-		"<t color='#B22400'>Parachute Jump</t>",
-		{ [player] call GW_Menu_fnc_doParadrop },
-		QPATHTOF(DATA\parachute_icon.paa),
-		"","",-1,true,
-		(!(isNull (objectParent player)) && (getPosATL (vehicle player) select 2 > GVAR(ParadropHaloHeight)))
-	],
-	[
-		"<t color='#B22400'>Get Out Left</t>", {
-			_veh = (objectParent player);
-			(boundingBoxReal _veh) params ["_p1","_p2"];
-			_maxWidth = abs ((_p2 select 0) - (_p1 select 0));
-			_pos = (_veh getRelPos [((_maxWidth/2) + 2), 270]);
-			_pos set [2, ((getPosATL _veh) select 2)];
-
-			player action ["Eject", _veh];
-			moveOut player;
-			player setPosATL _pos;
-			player setDir ((getDir _veh) + 270);
-		}, "","","",-1,true,
-		(!(isNull (objectParent player)) && ((speed (objectParent player)) < 7))
-	],
-	[
-		"<t color='#B22400'>Get Out Right</t>", {
-			_veh = (objectParent player);
-			(boundingBoxReal _veh) params ["_p1","_p2"];
-			_maxWidth = abs ((_p2 select 0) - (_p1 select 0));
-			_pos = (_veh getRelPos [((_maxWidth/2) + 2), 90]);
-			_pos set [2, ((getPosATL _veh) select 2)];
-
-			player action ["Eject", _veh];
-			moveOut player;
-			player setPosATL _pos;
-			player setDir ((getDir _veh) + 90);
-		}, "","","",-1,true,
-		(!(isNull (objectParent player)) && ((speed (objectParent player)) < 7))
 	]
 ];
 
@@ -121,13 +123,6 @@ if (_menuName isEqualTo "actions") then {
 					TF_MAX_ASIP_FREQ = 100;
 					titleText ["Radio Frencency Reset!", "PLAIN DOWN"];
 				},"","","",-1,true, (call TFAR_fnc_haveLRRadio)
-			],
-			[
-				"Fix Diver Radio", {
-				TF_dd_frequency = 10;
-				TF_MIN_DD_FREQ = 10;
-				TF_MAX_DD_FREQ = 100;
-			},"","","",-1,true, (call TFAR_fnc_haveDDRadio)
 			]
 		]
 	];

@@ -1,4 +1,4 @@
-#define COMPONENT main
+#define COMPONENT Main
 #include "\x\gw\addons\main\script_mod.hpp"
 
 #ifdef DEBUG_ENABLED_MAIN

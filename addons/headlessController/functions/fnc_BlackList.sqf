@@ -22,5 +22,6 @@ params ["_unit",["_toggle", true]];
 _group = _unit call CBA_fnc_getGroup;
 
 _group setVariable [QGVAR(BlackList), _toggle, true];
+_group setVariable ['acex_headless_blacklist', _toggle, true];
 
 _toggle

@@ -310,7 +310,7 @@ if (_menuName isEqualTo "loadouts") then {
 				["Grenadier",{ [player, "g"] call GW_Gear_Fnc_Handler; }],
 				["Asst. Gunner",{ [player, "ag"] call GW_Gear_Fnc_Handler; }],
 				["Automatic Rifleman",{ [player, "ar"] call GW_Gear_Fnc_Handler; }],
-				["Crew memeber",{ [player, "crew"] call GW_Gear_Fnc_Handler; }],
+				["Crew Member",{ [player, "crew"] call GW_Gear_Fnc_Handler; }],
 				["Pilot",{ [player, "p"] call GW_Gear_Fnc_Handler; }],
 				["Asst. Medium AT",{ [player, "amat"] call GW_Gear_Fnc_Handler; }],
 				["Medium AT",{ [player, "mat"] call GW_Gear_Fnc_Handler; }],

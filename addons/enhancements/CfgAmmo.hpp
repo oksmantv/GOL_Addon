@@ -179,4 +179,10 @@ class CfgAmmo {
 	class Sh_125mm_HEAT: Sh_125mm_HE {
 		cost = 100;
 	};
+
+	class ammo_Missile_s750;
+    class ace_missile_sam_s400: ammo_Missile_s750 {
+        maxSpeed = 650;
+        airFriction = 0.12;
+    };
 };

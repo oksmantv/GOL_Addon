@@ -9,7 +9,7 @@ class CfgMods {
 		hidePicture=1;
 		name="GuzzenWorks";
 		overview="GW-Addons is a collection of addons containing enhancements for Infantry, Mission Editing and more";
-		picture = "\x\gw\addons\3den\data\Logo_GOL_1.paa";
+		picture = "\x\gw\addons\main\data\Logo_GOL_1.paa";
 		tooltip="GW-Addons";
 		tooltipOwned="GW-Addons";
 	};
