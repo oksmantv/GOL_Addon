@@ -93,7 +93,8 @@ if ((count _grps) > 1) then {
 				} else {
 					_special = ([_x, false] call FUNC(getAttributes));
 				};
-				_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special];
+				private _role = [_x] call FUNC(getLoadoutClass);
+				_units pushBack [GETATTRIBUTE("position"),round(GETATTRIBUTE("rotation") select 2), _special, _role];
 			};
 		};
 	};
@@ -189,6 +190,7 @@ if ("Preferences" get3DENMissionAttribute "GW_PrintToConsoleFile") then {
 [[],QFUNC(copyGroup)] call FUNC(uiSaveFunction);
 
 systemChat format ["Copy Group: %4, %1 units, %2 vehicles, %3 waypoints copied", (count _units), (count _vehicles), (count _groupWaypoint), _side];
+["ShowMessage", ["Copy Group", format ["%4: %1 units, %2 vehicles, %3 waypoints copied", (count _units), (count _vehicles), (count _groupWaypoint), _side]]] call BIS_fnc_3DENNotification;
 
 TRACE_1("Units", _units);
 TRACE_1("Waypoints", _groupWaypoint);

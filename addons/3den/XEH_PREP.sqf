@@ -18,6 +18,7 @@ PREP(doAction);
 PREP(doActionMisc);
 PREP(getAttributes);
 PREP(getAttributesLegacy);
+PREP(getLoadoutClass);
 PREP(getCorrectVersion);
 PREP(getVersion);
 PREP(isNil3DENEntity);
