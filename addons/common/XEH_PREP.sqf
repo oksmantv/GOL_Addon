@@ -30,6 +30,5 @@ PREP(setName);			// Legacy
 PREP(quickRepair);
 
 if ((getNumber(missionConfigFile >> "GW_Modules" >> "Common" >> "version")) >= 2.0) then {
-	PREP(getGroupType);
 	PREP(simpleRoster);
 };

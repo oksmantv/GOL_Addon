@@ -1,4 +1,3 @@
-
 class Cfg3DEN {
 	class Group {
 		class AttributeCategories {
@@ -6,8 +5,6 @@ class Cfg3DEN {
 				class Attributes {
 					delete Behaviour;
 					delete CombatMode;
-//					delete DeleteWhenEmpty;
-//					delete DynamicSimulation;
 					delete Formation;
 					delete SpeedMode;
 				};
@@ -30,7 +27,6 @@ class Cfg3DEN {
 
 		class GW_AutoTest_Box : Toolbox {
 			attributeLoad = "_this call GW_3den_fnc_AutoTest";
-//			attributeLoad = "_this call GW_fnc_AutoTest";
 			attributeSave = "";
 			w = (ATTRIBUTE_TITLE_W + ATTRIBUTE_CONTENT_W) * GRID_W;
 			h = 23 * SIZE_M * GRID_H;
@@ -63,7 +59,6 @@ class Cfg3DEN {
                     idcLeft = -1;
                     idcRight = -1;
 					disableOverflow = 1;
-//					onLBDblClick = "_this spawn GW_3den_fnc_AutoTest_Events; false";
 					onLBSelChanged = "_this spawn {(_this select 0) lbSetCurSel -1}; false";
 				};
 				class ActionListButton: ctrlListBox {
@@ -181,16 +176,6 @@ class Cfg3DEN {
 							text = "Framework (0.8 or higher)";
 							data = "0.8";
 							default = 1;
-						};
-						class legacy08 {
-//							text = "Copy version 1.8";
-							text = "Framework Legacy (0.6)";
-							data = "0.6";
-						};
-						class legacy07 {
-//							text = "Copy version 1.5";
-							text = "Framework Legacy (0.5 or less)";
-							data = "0.5";
 						};
 					};
 				};
@@ -322,6 +307,14 @@ class Cfg3DEN {
 				class GW_Options_Copy {
 					displayName = "GW Tools: Copy Settings";
 					class Attributes {
+						class GW_CopyRoles {
+							displayName = "Copy Roles";
+							tooltip = "Include unit roles when copying groups (if disabled, units will use random roles)";
+							property = "GW_CopyRoles";
+							control = "Checkbox";
+							defaultValue = "true";
+							expression = "true";
+						};
 						class GW_DeleteOnCopy {
 							displayName = "Delete on copy";
 							tooltip = "Delete all selected things successful upon copying";
