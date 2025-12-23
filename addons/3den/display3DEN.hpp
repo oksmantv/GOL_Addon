@@ -9,6 +9,8 @@ class Display3DEN {
 				items[] += {"LogVectors"};
 			};
 
+			items[] += {"GOL_FRAMEWORK_SCRIPTS"};
+
 			class LogVectors {
 				action = "[] call GW_3DEN_fnc_logVector;";
 				conditionShow = "selectedObject";
@@ -16,6 +18,26 @@ class Display3DEN {
 				text = "Log Vector Up and Dir to Clipboard";
 				value = 0;
 			};
+
+            class GOL_FRAMEWORK_SCRIPTS {
+                text = "GOL FRAMEWORK";
+				picture = "\x\gw\addons\3den\data\gwlogo.paa";
+                value = 0;
+				items[] += {"GOL_FRAMEWORK_COPYROLE"};
+            };
+            class GOL_FRAMEWORK_COPYROLE {
+                text = "Copy Options";
+                value = 0;
+                items[] = {"GOL_FRAMEWORK_COPYROLE_ON","GOL_FRAMEWORK_COPYROLE_OFF"};
+            };
+            class GOL_FRAMEWORK_COPYROLE_ON {
+                text = "Copy Roles: On";
+                action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', true]]; systemChat 'Copy Roles: Enabled'; ['Copy Static/Group: Role copying enabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+            };            
+            class GOL_FRAMEWORK_COPYROLE_OFF {
+                text = "Copy Roles: Off";
+                action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', false]]; systemChat 'Copy Roles: Disabled'; ['Copy Static/Group: Role copying disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+            };
 		};
 	};
 

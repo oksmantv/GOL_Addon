@@ -29,7 +29,8 @@ private _return = 0;
 {
 	private _special = [];
 	switch (_type) do {
-		case 1: { // Units && Vehicles
+		case 1: {
+			// Units && Vehicles
 			if (_x isKindOf "AllVehicles") then {
 				private _special = ([_x] call FUNC(getAttributes));
 
@@ -61,7 +62,8 @@ private _return = 0;
 			};
 		};
 
-		case 2: { // Objects
+		case 2: {
+			// Objects
 			if ((_x isKindOf "All") && !(_x isKindOf "CAManBase")) then {
 				private _special = ([_x] call FUNC(getAttributes));
 
@@ -69,7 +71,6 @@ private _return = 0;
 				(vectorUp _x) params ["_upX","_upY","_upZ"];
 
 				_objects pushBack [GETATTRIBUTE("itemClass"), (getPosWorld _x), [((_x call BIS_fnc_getPitchBank) + [(getDir _x)]), GETATTRIBUTE("rotation")], _special, GETATTRIBUTE("objectIsSimple")];
-//				_objects pushBack [GETATTRIBUTE("itemClass"), (getPosWorld _x), [CUT_XYZ(_dirX,_dirY,_dirZ), CUT_XYZ(_upX,_upY,_upZ)], _special, GETATTRIBUTE("objectIsSimple")];
 			};
 		};
 	};
@@ -78,34 +79,40 @@ private _return = 0;
 switch (_type) do {
 	case 1: {
 		_objects = (get3DENSelected "object") select {(_x isKindOf "CAManBase")};
-		_side = "civilian";
+		_side = civilian;
 		if (_objects isEqualTo []) then {
 			_crew = (get3DENSelected "object") select {count (crew _x) > 0};
 			if !(_crew isEqualTo []) then {
-				_side = str(side (_crew select 0));
+				_side = side (_crew select 0);
 			};
 		} else {
-			_side = str(side(_objects select 0));
-		};
-		if (_side isEqualTo "CIV") then {
-			_side = "civilian";
-		};
-		if (_side isEqualTo "GUER") then {
-			_side = "independent";
+			_side = side (_objects select 0);
 		};
 
-		_return = (str([_units, _vehicles, [], _side]) + (" call GW_Common_fnc_spawnGroup;"));
+		_sideStr = switch (_side) do {
+			case west: {"west"};
+			case east: {"east"};
+			case independent: {"independent"};
+			case civilian: {"civilian"};
+			default {"civilian"};
+		};
+
+		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), _sideStr];
 		TRACE_1("Units", _units);
 		TRACE_1("Vehicles", _vehicles);
-		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied", (count _units), (count _vehicles), _side];
-		["ShowMessage", ["Copy Static", format ["%3: %1 units, %2 vehicles copied", (count _units), (count _vehicles), _side]]] call BIS_fnc_3DENNotification;
+		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied", (count _units), (count _vehicles), _sideStr];
+		[format["Copy Static: %3: %1 units, %2 vehicles copied", (count _units), (count _vehicles), _sideStr], 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	case 2: {
 		_return = (str(_objects) + (" call GW_Common_fnc_spawnObjects;"));
 		TRACE_1("Objects", _objects);
 		systemChat format ["Copy Objects: %1 objects copied", (count _objects)];
-		["ShowMessage", ["Copy Objects", format ["%1 objects copied", (count _objects)]]] call BIS_fnc_3DENNotification;
+		[format["Copy Objects: %1 objects copied", (count _objects)], 0, 5, true] call BIS_fnc_3DENNotification;
 	};
+	default {
+		systemChat "Copy Static: No valid copy mode selected!";
+		[format["Copy Static: No valid copy mode selected!", (count _objects)], 0, 5, true] call BIS_fnc_3DENNotification;
+	}
 };
 
 if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
@@ -114,6 +121,9 @@ if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
 };
 
 if ("Preferences" get3DENMissionAttribute "GW_CopyToClipboard") then {
+	if(_return isEqualTo 0) exitWith {
+		systemChat "Copy Static: Nothing to copy to clipboard!";
+	};
 	copyToClipboard _return;
 };
 
