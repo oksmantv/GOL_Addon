@@ -4,7 +4,6 @@ private _output = [];
 private _approved = 0;
 private _warning = 1;
 private _error = 2;
-private _legacyVersion = ((getNumber(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version")) < 0.8);
 
 if (call EFUNC(Common,isDevBuild)) then {
 	_output pushBack [_warning,"Debug mode is enabled", "", [-1]];
@@ -31,125 +30,71 @@ _allPlayable = ((all3DENEntities select 0) select {((_x get3DENAttribute "Contro
 _west = (_allPlayable select {(side _x) isEqualTo blufor});
 _east = (_allPlayable select {(side _x) isEqualTo opfor});
 _indep = (_allPlayable select {(side _x) isEqualTo independent});
+_respawneast = [];
+_respawnwest = [];
+_respawnindep = [];
 
-if (_legacyVersion) then {
-	if !((count _west) isEqualTo 0) then {
-		_respawn = ((all3DENEntities select 5) select {!((_x find "respawn_west") isEqualTo -1)});
-		if ((count _respawn) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn marker found for BLUFOR", "If this is not fixed BLUFOR can not respawn!, Either consider adding the marker or removing any playable units on this side", [-1]];
-		} else {
-			if ((count _respawn) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn markers found for BLUFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_west select 0);
-				_distance = (_unit distance2D (((_respawn select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["BLUFOR Respawn marker is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawn select 0)], "Move To .."];
-				};
-			};
-		};
-	};
-
-	if !((count _east) isEqualTo 0) then {
-		_respawn = ((all3DENEntities select 5) select {!((_x find "respawn_east") isEqualTo -1)});
-		if ((count _respawn) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn marker found for OPFOR", "If this is not fixed OPFOR can not respawn!, Either consider adding the marker or removing any playable units on this side", [-1]];
-		} else {
-			if ((count _respawn) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn markers found for OPFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_east select 0);
-				_distance = (_unit distance2D (((_respawn select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["OPFOR Respawn marker is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawn select 0)], "Move To .."];
-				};
-			};
-		};
-	};
-
-	if !((count _indep) isEqualTo 0) then {
-		_respawn = ((all3DENEntities select 5) select {!((_x find "respawn_resistance") isEqualTo -1)});
-		if ((count _respawn) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn marker found for INDEPENDENT", "If this is not fixed INDEPENDENT can not respawn!, Either consider adding the marker or removing any playable units on this side", [-1]];
-		} else {
-			if ((count _respawn) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn markers found for INDEPENDENT", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_indep select 0);
-				_distance = (_unit distance2D (((_respawn select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["INDEPENDENT Respawn marker is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawn select 0)], "Move To .."];
-				};
-			};
-		};
-	};
-} else {
-	_respawneast = [];
-	_respawnwest = [];
-	_respawnindep = [];
-
+{
+	_x params ["_object"];
+	_init = (toLower((_object get3DENAttribute "init") select 0));
+	_strArr = (_init splitString "[],");
+	_index = ((_strArr find """gw_isrespawnpos""") + 1);
+	_sideArr = ((_strArr select _index) splitString """");
 	{
-		_x params ["_object"];
-		_init = (toLower((_object get3DENAttribute "init") select 0));
-		_strArr = (_init splitString "[],");
-		_index = ((_strArr find """gw_isrespawnpos""") + 1);
-		_sideArr = ((_strArr select _index) splitString """");
-		{
-			if (_x isEqualTo "east") then {
-				_respawneast pushBack _object;
-			};
-			if (_x isEqualTo "west") then {
-				_respawnwest pushBack _object;
-			};
-			if (_x isEqualTo "independent") then {
-				_respawnindep pushBack _object;
-			};
-		} forEach _sideArr;
-	} forEach ((all3DENEntities select 3) select {((typeOf _x) isEqualTo "LocationRespawnPoint_F")});
+		if (_x isEqualTo "east") then {
+			_respawneast pushBack _object;
+		};
+		if (_x isEqualTo "west") then {
+			_respawnwest pushBack _object;
+		};
+		if (_x isEqualTo "independent") then {
+			_respawnindep pushBack _object;
+		};
+	} forEach _sideArr;
+} forEach ((all3DENEntities select 3) select {((typeOf _x) isEqualTo "LocationRespawnPoint_F")});
 
 
-	if ((count _west) > 0) then {
-		if ((count _respawnwest) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn object found for BLUFOR", "If this is not fixed BLUFOR will respawn at starting location", [7]];
+if ((count _west) > 0) then {
+	if ((count _respawnwest) isEqualTo 0) then {
+		_output pushBack [_error,"No Respawn object found for BLUFOR", "If this is not fixed BLUFOR will respawn at starting location", [7]];
+	} else {
+		if ((count _respawnwest) > 1) then {
+			_output pushBack [_warning, "Multiple Respawn objects found for BLUFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
 		} else {
-			if ((count _respawnwest) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn objects found for BLUFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_west select 0);
-				_distance = (_unit distance2D (((_respawnwest select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["BLUFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnwest select 0)], "Move To .."];
-				};
+			_unit = (_west select 0);
+			_distance = (_unit distance2D (((_respawnwest select 0) get3DENAttribute "position") select 0));
+			if (_distance >= 100) then {
+				_output pushBack [_warning, format ["BLUFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnwest select 0)], "Move To .."];
 			};
 		};
 	};
-	if ((count _east) > 0) then {
-		if ((count _respawneast) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn object found for OPFOR", "If this is not fixed OPFOR will respawn at starting location", [8]];
+};
+if ((count _east) > 0) then {
+	if ((count _respawneast) isEqualTo 0) then {
+		_output pushBack [_error,"No Respawn object found for OPFOR", "If this is not fixed OPFOR will respawn at starting location", [8]];
+	} else {
+		if ((count _respawneast) > 1) then {
+			_output pushBack [_warning, "Multiple Respawn objects found for OPFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
 		} else {
-			if ((count _respawneast) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn objects found for OPFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_east select 0);
-				_distance = (_unit distance2D (((_respawneast select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["OPFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawneast select 0)], "Move To .."];
-				};
+			_unit = (_east select 0);
+			_distance = (_unit distance2D (((_respawneast select 0) get3DENAttribute "position") select 0));
+			if (_distance >= 100) then {
+				_output pushBack [_warning, format ["OPFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawneast select 0)], "Move To .."];
 			};
 		};
 	};
-	if ((count _indep) > 0) then {
-		if ((count _respawnindep) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn object found for INDEPENDENT", "If this is not fixed INDEPENDENT will respawn at starting location", [9]];
+};
+if ((count _indep) > 0) then {
+	if ((count _respawnindep) isEqualTo 0) then {
+		_output pushBack [_error,"No Respawn object found for INDEPENDENT", "If this is not fixed INDEPENDENT will respawn at starting location", [9]];
+	} else {
+		if ((count _respawnindep) > 1) then {
+			_output pushBack [_warning, "Multiple Respawn objects found for INDEPENDENT", "If there is more then one, players will randomly spawn at one of them", [-1]];
 		} else {
-			if ((count _respawnindep) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn objects found for INDEPENDENT", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_indep select 0);
-				_distance = (_unit distance2D (((_respawnindep select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["INDEPENDENT Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnindep select 0)], "Move To .."];
-				};
+			_unit = (_indep select 0);
+			_distance = (_unit distance2D (((_respawnindep select 0) get3DENAttribute "position") select 0));
+			if (_distance >= 100) then {
+				_output pushBack [_warning, format ["INDEPENDENT Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnindep select 0)], "Move To .."];
 			};
 		};
 	};
@@ -193,6 +138,45 @@ if (_aiCount > 100) then {
 	} else {
 		_output pushBack [_error,format["%1 Units placed in the senario. You may wish to consider the performance impact.",_aiCount], "", [-1]];
 	};
+};
+
+// Check for critical framework objects
+_allObjects = all3DENEntities select 0;
+
+_HasGearBox = ({(typeOf _x) find "GOL_GearBox" > -1} count _allObjects > 0);
+if !(_HasGearBox) then {
+	_output pushBack [_error, "Gear Box not found", "Missing GOL_GearBox object in mission", [-1]];
+};
+
+_HasResupplyStation = ({(typeOf _x) find "GOL_ResupplyStation" > -1} count _allObjects > 0);
+if !(_HasResupplyStation) then {
+	_output pushBack [_error, "Resupply Station not found", "Missing GOL_ResupplyStation object in mission", [-1]];
+};
+
+_HasAacServiceHelipad = ({(typeOf _x) == "GOL_Helipad"} count _allObjects > 0);
+if !(_HasAacServiceHelipad) then {
+	_output pushBack [_warning, "AAC Service Helipad not found", "Missing GOL_Helipad object in mission", [-1]];
+};
+
+_HasMobileHQ = ({((_x get3DENAttribute "name") select 0) == "Mobile_HQ"} count _allObjects > 0);
+if !(_HasMobileHQ) then {
+	_output pushBack [_warning, "Mobile HQ not found", "Missing respawn point 'Mobile_HQ' in mission", [-1]];
+};
+
+_Flag_1 = ({((_x get3DENAttribute "name") select 0) find "flag_" > -1 && ((_x get3DENAttribute "name") select 0) find "_1" > -1} count _allObjects > 0);
+if !(_Flag_1) then {
+	_output pushBack [_warning, "Flag Staging Area not found", "Missing flag object with name containing 'flag_' and '_1'", [-1]];
+};
+
+_Flag_2 = ({((_x get3DENAttribute "name") select 0) find "flag_" > -1 && ((_x get3DENAttribute "name") select 0) find "_2" > -1} count _allObjects > 0);
+if !(_Flag_2) then {
+	_output pushBack [_warning, "Flag FARP not found", "Missing flag object with name containing 'flag_' and '_2'", [-1]];
+};
+
+_allLogics = all3DENEntities select 3;
+_HasHeadless = ({((_x get3DENAttribute "name") select 0) in ["HC","HC2","HC3"]} count _allLogics > 0);
+if !(_HasHeadless) then {
+	_output pushBack [_error, "Headless Clients not found", "Missing logic entities named 'HC', 'HC2', or 'HC3' in mission", [-1]];
 };
 
 {

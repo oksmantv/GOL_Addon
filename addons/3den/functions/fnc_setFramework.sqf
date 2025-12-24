@@ -17,11 +17,17 @@
 collect3DENHistory {
 	if !("GW_MissionPreferences" get3DENMissionAttribute "GW_isConfigured") then {
 		if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
+			// Get Framework version and update overviewText
+			_frameworkVersion = getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version");
+			_overviewText = format["Framework Version %1", _frameworkVersion];
+			
 			set3DENMissionAttributes [
 				["Scenario", "Author", getText(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "Author")],
 				["Scenario", "IntelBriefingName", getText(missionConfigFile >> "briefingName")],
+				["Scenario", "OverviewText", _overviewText],
 				["Scenario", "OnLoadMission", ""],
-				["Scenario", "LoadScreen", ""]
+				["Scenario", "LoadScreen", ""],
+				["Intel", "OverviewText", _overviewText]
 			];
 
 			if ((getNumber(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "isPVPMode")) isEqualTo 0) then {
