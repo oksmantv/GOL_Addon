@@ -31,8 +31,10 @@ collect3DENHistory {
 				["Scenario", "Author", getText(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "Author")],
 				["Scenario", "IntelBriefingName", _missionName],
 				["Scenario", "OverviewText", _overviewText],
+				["Scenario", "OverviewPicture", "\OKS_GOL_Misc\data\images\loadImage.jpg"],
+				["Scenario", "OverviewPictureLocked", "\OKS_GOL_Misc\data\images\loadImage.jpg"],
 				["Scenario", "OnLoadMission", ""],
-				["Scenario", "LoadScreen", ""],
+				["Scenario", "LoadScreen", "\OKS_GOL_Misc\data\images\loadImage.jpg"],
 				["Multiplayer", "IntelOverviewText", _overviewText]
 			];
 

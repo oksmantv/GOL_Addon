@@ -7,7 +7,8 @@
 
 #define VERSION GW_VERSION
 #define VERSION_AR GW_VERSION_AR
-#define VERSION_CONFIG version = VERSION; versionStr = QUOTE(VERSION); versionAr[] = {VERSION_AR}
+#define EXPAND_VERSION(var1) var1
+#define VERSION_CONFIG version = VERSION; versionStr = QUOTE(EXPAND_VERSION(VERSION)); versionAr[] = {VERSION_AR}
 
 #define ADDON DOUBLES(PREFIX,COMPONENT)
 
