@@ -17,17 +17,28 @@
 collect3DENHistory {
 	if !("GW_MissionPreferences" get3DENMissionAttribute "GW_isConfigured") then {
 		if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
-			set3DENMissionAttributes [
+		// Get Framework version and update overviewText
+		_frameworkVersion = getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version");
+		_overviewText = format["Framework Version %1", _frameworkVersion];
+			
+		// Extract mission name from briefingName (removes "COOP@36 " prefix)
+		_fullName = getText(missionConfigFile >> "briefingName");
+		_nameParts = _fullName splitString " ";
+		_nameParts deleteAt 0; // Remove "COOP@36" part
+		_missionName = _nameParts joinString " ";
+		
+		set3DENMissionAttributes [
 				["Scenario", "Author", getText(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "Author")],
-				["Scenario", "IntelBriefingName", getText(missionConfigFile >> "briefingName")],
+				["Scenario", "IntelBriefingName", _missionName],
+				["Scenario", "OverviewText", _overviewText],
 				["Scenario", "OnLoadMission", ""],
-				["Scenario", "LoadScreen", ""]
+				["Scenario", "LoadScreen", ""],
+				["Multiplayer", "IntelOverviewText", _overviewText]
 			];
 
 			if ((getNumber(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "isPVPMode")) isEqualTo 0) then {
 				"Multiplayer" set3DENMissionAttribute ["GameType", "COOP"];
 			} else {
-	//			"Multiplayer" set3DENMissionAttribute ["GameType", "Unknown"];
 				"Multiplayer" set3DENMissionAttribute ["GameType", "Sandbox"];
 			};
 		};

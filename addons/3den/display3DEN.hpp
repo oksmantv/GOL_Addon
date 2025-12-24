@@ -19,8 +19,8 @@ class Display3DEN {
 				value = 0;
 			};
 
-            class GOL_FRAMEWORK_SCRIPTS {
-                text = "GOL FRAMEWORK";
+			class GOL_FRAMEWORK_SCRIPTS {
+                text = "GW FRAMEWORK";
 				picture = "\x\gw\addons\3den\data\gwlogo.paa";
                 value = 0;
 				items[] += {"GOL_FRAMEWORK_COPYROLE"};
