@@ -1,11 +1,9 @@
 
-
-/*
 class cfgPatches {
-	class ADDON {
+	class GW_CORE {
 		name = "GW - Core Component";
 		author = "GuzzenVonlidl";
-		url = "https://github.com/GuzzenVonLidl/";
+		url = "https://github.com/OksmanTV/";
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = REQUIRED_VERSION;
@@ -22,24 +20,6 @@ class cfgPatches {
 		};
 	};
 };
-*/
 
-class cfgPatches {
-	class GW_CORE {
-		author = "GuzzenVonlidl";
-		name = "GW - Core Component";
-		url = "https://github.com/GuzzenVonLidl/";
-		units[] = {};
-		weapons[] = {};
-		requiredVersion = 1.78;
-		requiredAddons[] = {
-			"GW_Main",
-			"A3_Functions_F",
-			"A3_UI_F"
-		};
-		version = 1;
-		authors[] = {"GuzzenVonlidl"};
-	};
-};
-
+#include "script_component.hpp"
 #include "CfgEventHandlers.hpp"

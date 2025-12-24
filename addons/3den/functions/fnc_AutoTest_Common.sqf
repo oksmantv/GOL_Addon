@@ -225,4 +225,29 @@ if !(isNil QEGVAR(Common,Faction)) then {
 };
 */
 
+// Check for player designated vehicles
+_HasPlayerVehicle = ({
+	private _name = toLower((_x get3DENAttribute "name") select 0);
+	(_name find "vehicle_") == 0
+} count _allObjects > 0);
+if !(_HasPlayerVehicle) then {
+	_output pushBack [_warning, "No player designated vehicles found", "No objects found with name pattern 'vehicle_X' where X is a number", [-1]];
+};
+
+_HasPlayerHelicopter = ({
+	private _name = toLower((_x get3DENAttribute "name") select 0);
+	(_name find "helicopter_") == 0
+} count _allObjects > 0);
+if !(_HasPlayerHelicopter) then {
+	_output pushBack [_warning, "No player designated helicopters found", "No objects found with name pattern 'helicopter_X' where X is a number", [-1]];
+};
+
+_HasPlayerJet = ({
+	private _name = toLower((_x get3DENAttribute "name") select 0);
+	(_name find "jet_") == 0
+} count _allObjects > 0);
+if !(_HasPlayerJet) then {
+	_output pushBack [_warning, "No player designated jets found", "No objects found with name pattern 'jet_X' where X is a number", [-1]];
+};
+
 _output
