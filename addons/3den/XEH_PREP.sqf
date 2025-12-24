@@ -17,6 +17,7 @@ PREP(getAttributesLegacy);
 PREP(getLoadoutClass);
 PREP(selectCopyFunction);
 PREP(getVersion);
+PREP(importCBASettings);
 PREP(isNil3DENEntity);
 PREP(logVector);
 PREP(perFrame);

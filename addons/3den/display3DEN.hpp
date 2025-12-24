@@ -23,7 +23,7 @@ class Display3DEN {
                 text = "GW FRAMEWORK";
 				picture = "\x\gw\addons\3den\data\gwlogo.paa";
                 value = 0;
-				items[] += {"GOL_FRAMEWORK_COPYROLE"};
+				items[] += {"GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_IMPORTCBA"};
             };
             class GOL_FRAMEWORK_COPYROLE {
                 text = "Copy Options";
@@ -37,6 +37,10 @@ class Display3DEN {
             class GOL_FRAMEWORK_COPYROLE_OFF {
                 text = "Copy Roles: Off";
                 action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', false]]; systemChat 'Copy Roles: Disabled'; ['Copy Static/Group: Role copying disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+            };
+            class GOL_FRAMEWORK_IMPORTCBA {
+                text = "Configure Framework";
+                action = "set3DENMissionAttributes [['GW_MissionPreferences', 'GW_isConfigured', false]]; [] call GW_3DEN_fnc_setFramework;";
             };
 		};
 	};

@@ -68,29 +68,11 @@ collect3DENHistory {
 
 		"GW_MissionPreferences" set3DENMissionAttribute ["GW_isConfigured", true];
 		LOG("fnc_addEH_onMessage: GW_isConfigured");
+		
+		// Import CBA settings automatically
+		[] spawn GW_3DEN_fnc_importCBASettings;
 	};
-/*
-	if (GVARMAIN(mod_ACE3) && !("GW_MissionPreferences" get3DENMissionAttribute "GW_isConfigured_ACE")) then {
-		disableUserInput true;
-		[] spawn {
-			((findDisplay 313) call CBA_settings_fnc_openSettingsMenu);
-			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\cba_settings.sqf"), "mission"] call CBA_settings_fnc_import;
-			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new.sqf"), "mission"] call CBA_settings_fnc_import;
-			if (EGVAR(settings_ACE,medical_level) isEqualTo 2) then {
-				[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new_adv.sqf"), "mission"] call CBA_settings_fnc_import;
-			};
-			[] call CBA_settings_fnc_gui_saveTempData;
-			(uiNamespace getVariable "RscDisplayGameOptions") closeDisplay 1;
-			"GW_MissionPreferences" set3DENMissionAttribute ["GW_isConfigured_ACE", true];
-			uisleep 0.5;
-			disableUserInput false;
-			uisleep 1;
-			if (userInputDisabled) then {
-				disableUserInput false;
-			};
-		};
-	};
-*/
+	
 	if (isclass (configfile >> "CfgPatches" >> "3denEnhanced")) then {
 		set3DENMissionAttributes[["Multiplayer", "Enh_DynamicGroups", false]];
 		set3DENMissionAttributes[["Multiplayer", "Enh_SaveLoadout", false]];
