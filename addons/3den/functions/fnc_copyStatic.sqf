@@ -98,16 +98,26 @@ switch (_type) do {
 		};
 
 		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), _sideStr];
+		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
+		if !(_cache isEqualType []) then { _cache = [] };
+		_cache pushBack _return;
+		uiNamespace setVariable ["OKS_3DEN_CLIPBOARD_CACHE", _cache];
+		private _cacheCount = count _cache;
 		TRACE_1("Units", _units);
 		TRACE_1("Vehicles", _vehicles);
-		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied", (count _units), (count _vehicles), _sideStr];
-		[format["Copy Static: %3: %1 units, %2 vehicles copied", (count _units), (count _vehicles), _sideStr], 0, 5, true] call BIS_fnc_3DENNotification;
+		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied (Cache=%4)", (count _units), (count _vehicles), _sideStr, _cacheCount];
+		[format["Copy Static: %3: %1 units, %2 vehicles copied (Cache=%4)", (count _units), (count _vehicles), _sideStr, _cacheCount], 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	case 2: {
 		_return = (str(_objects) + (" call GW_Common_fnc_spawnObjects;"));
+		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
+		if !(_cache isEqualType []) then { _cache = [] };
+		_cache pushBack _return;
+		uiNamespace setVariable ["OKS_3DEN_CLIPBOARD_CACHE", _cache];
+		private _cacheCount = count _cache;
 		TRACE_1("Objects", _objects);
-		systemChat format ["Copy Objects: %1 objects copied", (count _objects)];
-		[format["Copy Objects: %1 objects copied", (count _objects)], 0, 5, true] call BIS_fnc_3DENNotification;
+		systemChat format ["Copy Objects: %1 objects copied (Cache=%2)", (count _objects), _cacheCount];
+		[format["Copy Objects: %1 objects copied (Cache=%2)", (count _objects), _cacheCount], 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	default {
 		systemChat "Copy Static: No valid copy mode selected!";
@@ -115,7 +125,8 @@ switch (_type) do {
 	}
 };
 
-if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
+private _deleteOnCopy = uiNamespace getVariable ["GW_DeleteOnCopy", ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy")];
+if (_deleteOnCopy) then {
 	_delete = (get3DENSelected "object") + (get3DENSelected "group");
 	delete3DENEntities _delete;
 };

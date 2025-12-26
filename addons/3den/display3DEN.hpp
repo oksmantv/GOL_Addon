@@ -9,7 +9,7 @@ class Display3DEN {
 				items[] += {"LogVectors"};
 			};
 
-			items[] += {"GOL_FRAMEWORK_SCRIPTS"};
+			items[] += {"GW_GOL_EXPORTCACHE","GOL_FRAMEWORK_SCRIPTS","GW_GOL_CREATE_UNITS"};
 
 			class LogVectors {
 				action = "[] call GW_3DEN_fnc_logVector;";
@@ -25,19 +25,283 @@ class Display3DEN {
                 value = 0;
 				items[] += {"GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_IMPORTCBA"};
             };
+
+			class GW_GOL_EXPORTCACHE {
+				text = "Export & Clear Cache";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa";
+				action = "[] call OKS_fnc_EdenClipboardCacheExportClear;";
+				conditionShow = "1";
+				value = 0;
+			};
+
+			class GW_GOL_CREATE_UNITS {
+				text = "Create Units";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				value = 0;
+				items[] = {
+					"GW_GOL_CREATE_UNITS_STATIC",
+					"GW_GOL_CREATE_UNITS_GARRISON",
+					"GW_GOL_CREATE_UNITS_PATROL"
+				};
+			};
+
+			class GW_GOL_CREATE_UNITS_STATIC {
+				text = "Static Units";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_STATIC_WEST","GW_GOL_CREATE_UNITS_STATIC_EAST","GW_GOL_CREATE_UNITS_STATIC_INDEP"};
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_WEST {
+				text = "WEST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_STATIC_WEST_2","GW_GOL_CREATE_UNITS_STATIC_WEST_6","GW_GOL_CREATE_UNITS_STATIC_WEST_10"};
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_WEST_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 2] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_WEST_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 6] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_WEST_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 10] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_EAST {
+				text = "EAST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\o_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_STATIC_EAST_2","GW_GOL_CREATE_UNITS_STATIC_EAST_6","GW_GOL_CREATE_UNITS_STATIC_EAST_10"};
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_EAST_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 2] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_EAST_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 6] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_EAST_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 10] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_INDEP {
+				text = "INDEPENDENT";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\n_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_STATIC_INDEP_2","GW_GOL_CREATE_UNITS_STATIC_INDEP_6","GW_GOL_CREATE_UNITS_STATIC_INDEP_10"};
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_INDEP_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 2] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_INDEP_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 6] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_INDEP_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 10] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+
+			class GW_GOL_CREATE_UNITS_GARRISON {
+				text = "Static Garrison";
+				picture = "\a3\3den\Data\CfgWaypoints\guard_ca.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_GARRISON_WEST","GW_GOL_CREATE_UNITS_GARRISON_EAST","GW_GOL_CREATE_UNITS_GARRISON_INDEP"};
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_WEST {
+				text = "WEST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_GARRISON_WEST_2","GW_GOL_CREATE_UNITS_GARRISON_WEST_6","GW_GOL_CREATE_UNITS_GARRISON_WEST_10"};
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_WEST_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 2] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_WEST_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 6] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_WEST_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 10] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_EAST {
+				text = "EAST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\o_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_GARRISON_EAST_2","GW_GOL_CREATE_UNITS_GARRISON_EAST_6","GW_GOL_CREATE_UNITS_GARRISON_EAST_10"};
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_EAST_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 2] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_EAST_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 6] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_EAST_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 10] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_INDEP {
+				text = "INDEPENDENT";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\n_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_GARRISON_INDEP_2","GW_GOL_CREATE_UNITS_GARRISON_INDEP_6","GW_GOL_CREATE_UNITS_GARRISON_INDEP_10"};
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_INDEP_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 2] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_INDEP_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 6] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_INDEP_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 10] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+
+			class GW_GOL_CREATE_UNITS_PATROL {
+				text = "Patrol";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_PATROL_WEST","GW_GOL_CREATE_UNITS_PATROL_EAST","GW_GOL_CREATE_UNITS_PATROL_INDEP"};
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_WEST {
+				text = "WEST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_PATROL_WEST_2","GW_GOL_CREATE_UNITS_PATROL_WEST_6","GW_GOL_CREATE_UNITS_PATROL_WEST_10"};
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_WEST_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 2] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_WEST_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 6] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_WEST_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), west, 10] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_EAST {
+				text = "EAST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\o_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_PATROL_EAST_2","GW_GOL_CREATE_UNITS_PATROL_EAST_6","GW_GOL_CREATE_UNITS_PATROL_EAST_10"};
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_EAST_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 2] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_EAST_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 6] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_EAST_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), east, 10] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_INDEP {
+				text = "INDEPENDENT";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\n_inf.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_PATROL_INDEP_2","GW_GOL_CREATE_UNITS_PATROL_INDEP_6","GW_GOL_CREATE_UNITS_PATROL_INDEP_10"};
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_INDEP_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 2] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_INDEP_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 6] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_INDEP_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 10] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
             class GOL_FRAMEWORK_COPYROLE {
                 text = "Copy Options";
                 value = 0;
-                items[] = {"GOL_FRAMEWORK_COPYROLE_ON","GOL_FRAMEWORK_COPYROLE_OFF"};
+				items[] = {"GOL_FRAMEWORK_COPYROLE_ON","GOL_FRAMEWORK_COPYROLE_OFF","GOL_FRAMEWORK_DELETEONCOPY_ON","GOL_FRAMEWORK_DELETEONCOPY_OFF"};
             };
             class GOL_FRAMEWORK_COPYROLE_ON {
                 text = "Copy Roles: On";
-                action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', true]]; systemChat 'Copy Roles: Enabled'; ['Copy Static/Group: Role copying enabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+				action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', true]]; uiNamespace setVariable ['GW_CopyRoles', true]; systemChat 'Copy Roles: Enabled'; ['Copy Static/Group: Role copying enabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
             };            
             class GOL_FRAMEWORK_COPYROLE_OFF {
                 text = "Copy Roles: Off";
-                action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', false]]; systemChat 'Copy Roles: Disabled'; ['Copy Static/Group: Role copying disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+				action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', false]]; uiNamespace setVariable ['GW_CopyRoles', false]; systemChat 'Copy Roles: Disabled'; ['Copy Static/Group: Role copying disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
             };
+			class GOL_FRAMEWORK_DELETEONCOPY_ON {
+				text = "Delete on Copy: On";
+				action = "set3DENMissionAttributes [['Preferences', 'GW_DeleteOnCopy', true]]; uiNamespace setVariable ['GW_DeleteOnCopy', true]; systemChat 'Delete on Copy: Enabled'; ['Copy Static/Group: Delete-on-copy enabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GOL_FRAMEWORK_DELETEONCOPY_OFF {
+				text = "Delete on Copy: Off";
+				action = "set3DENMissionAttributes [['Preferences', 'GW_DeleteOnCopy', false]]; uiNamespace setVariable ['GW_DeleteOnCopy', false]; systemChat 'Delete on Copy: Disabled'; ['Copy Static/Group: Delete-on-copy disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
             class GOL_FRAMEWORK_IMPORTCBA {
                 text = "Configure Framework";
                 action = "set3DENMissionAttributes [['GW_MissionPreferences', 'GW_isConfigured', false]]; [] call GW_3DEN_fnc_setFramework;";
@@ -52,15 +316,13 @@ class Display3DEN {
 
 		class MenuStrip: ctrlMenuStrip {
 			class Items {
-				items[] += {"GW_Menu"};
+				items[] += {QUOTE(MENU(Copy)),"GW_Menu"};
 				class ViewRandom {
 					shortcuts[] = {};
 				};
 				class GW_Menu {
 					text = "GW Tools";
 					items[] = {
-						MENU(Copy),
-						"Separator",
 						MENU(doActions),
 						MENU(set3DENAttributes),
 						MENU(Misc),
@@ -93,6 +355,7 @@ class Display3DEN {
 					items[] = {
 						MENU_SUB(doActions,GarrisonBuildings),
 						MENU_SUB(doActions,createWaypoints),
+						MENU_SUB(doActions,createWaypointsFast),
 						"Separator",
 						MENU_SUB(doActions,ToggleTerrain),
 						MENU_SUB(doActions,pattern_Line),

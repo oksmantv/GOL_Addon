@@ -7,10 +7,16 @@ class MENU_SUB(doActions,GarrisonBuildings) {
 };
 
 class MENU_SUB(doActions,createWaypoints) {
-	action = "call GW_3den_fnc_createWaypoints";
-	Text = "Generate waypoints around group...";
+	action = "[objNull, 0.5, 'SLOW'] call GW_3den_fnc_createWaypoints";
+	Text = "Generate waypoints (Slow/Safe)...";
 	picture = "\a3\3den\Data\CfgWaypoints\cycle_ca.paa";
 	shortcuts[] = {INPUT_CTRL_OFFSET + DIK_6};
+};
+
+class MENU_SUB(doActions,createWaypointsFast) {
+	action = "[objNull, 0.5, 'FAST'] call GW_3den_fnc_createWaypoints";
+	Text = "Generate waypoints (Fast/Aware + File)...";
+	picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
 };
 
 class MENU_SUB(doActions,ToggleTerrain) {

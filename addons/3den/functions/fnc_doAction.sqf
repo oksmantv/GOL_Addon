@@ -109,7 +109,12 @@ switch (_case) do {
 	};
 
 	case 5: {
-		[getpos (selectRandom(get3DENSelected "object"))] call FUNC(setUnitGarrison);
+		private _sel = (get3DENSelected "object") select { _x isKindOf "CAManBase" };
+		if (_sel isEqualTo []) exitWith {
+			["No units selected", 1, 5, false] call BIS_fnc_3DENNotification;
+			false
+		};
+		[getPosATL (_sel select 0)] call FUNC(setUnitGarrison);
 	};
 
 	case 6: {	//	MissionExportMP
