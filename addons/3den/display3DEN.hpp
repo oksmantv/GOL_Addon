@@ -23,7 +23,7 @@ class Display3DEN {
                 text = "GW FRAMEWORK";
 				picture = "\x\gw\addons\3den\data\gwlogo.paa";
                 value = 0;
-				items[] += {"GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_IMPORTCBA"};
+				items[] += {"GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_IMPORTCBA","GOL_FRAMEWORK_MARKERS"};
             };
 
 			class GW_GOL_EXPORTCACHE {
@@ -306,6 +306,266 @@ class Display3DEN {
                 text = "Configure Framework";
                 action = "set3DENMissionAttributes [['GW_MissionPreferences', 'GW_isConfigured', false]]; [] call GW_3DEN_fnc_setFramework;";
             };
+
+			class GOL_FRAMEWORK_MARKERS {
+				text = "Markers";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH {
+				text = "Organisation Strength";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG {
+				text = "With Flag";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR {
+				text = "BLUFOR";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR {
+				text = "OPFOR";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP {
+				text = "INDEPENDENT";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG {
+				text = "Without Flag";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_FIRETEAM { text = "Fire Team"; action = "[""group_0"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_SQUAD { text = "Squad"; action = "[""group_1"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_SECTION { text = "Section"; action = "[""group_2"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_PLATOON { text = "Platoon"; action = "[""group_3"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_COMPANY { text = "Company"; action = "[""group_4"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_BATTALION { text = "Battalion"; action = "[""group_5"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_REGIMENT { text = "Regiment"; action = "[""group_6"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_BRIGADE { text = "Brigade"; action = "[""group_7"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_DIVISION { text = "Division"; action = "[""group_8"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_CORPS { text = "Corps"; action = "[""group_9"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_ARMY { text = "Army"; action = "[""group_10"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR_ARMYGROUP { text = "Army Group"; action = "[""group_11"", true, ""BLUFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_FIRETEAM { text = "Fire Team"; action = "[""group_0"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_SQUAD { text = "Squad"; action = "[""group_1"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_SECTION { text = "Section"; action = "[""group_2"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_PLATOON { text = "Platoon"; action = "[""group_3"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_COMPANY { text = "Company"; action = "[""group_4"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_BATTALION { text = "Battalion"; action = "[""group_5"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_REGIMENT { text = "Regiment"; action = "[""group_6"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_BRIGADE { text = "Brigade"; action = "[""group_7"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_DIVISION { text = "Division"; action = "[""group_8"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_CORPS { text = "Corps"; action = "[""group_9"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_ARMY { text = "Army"; action = "[""group_10"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR_ARMYGROUP { text = "Army Group"; action = "[""group_11"", true, ""OPFOR""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_FIRETEAM { text = "Fire Team"; action = "[""group_0"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_SQUAD { text = "Squad"; action = "[""group_1"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_SECTION { text = "Section"; action = "[""group_2"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_PLATOON { text = "Platoon"; action = "[""group_3"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_COMPANY { text = "Company"; action = "[""group_4"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_BATTALION { text = "Battalion"; action = "[""group_5"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_REGIMENT { text = "Regiment"; action = "[""group_6"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_BRIGADE { text = "Brigade"; action = "[""group_7"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_DIVISION { text = "Division"; action = "[""group_8"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_CORPS { text = "Corps"; action = "[""group_9"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_ARMY { text = "Army"; action = "[""group_10"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP_ARMYGROUP { text = "Army Group"; action = "[""group_11"", true, ""INDEP""] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_FIRETEAM { text = "Fire Team"; action = "[""group_0"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_SQUAD { text = "Squad"; action = "[""group_1"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_SECTION { text = "Section"; action = "[""group_2"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_PLATOON { text = "Platoon"; action = "[""group_3"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_COMPANY { text = "Company"; action = "[""group_4"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_BATTALION { text = "Battalion"; action = "[""group_5"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_REGIMENT { text = "Regiment"; action = "[""group_6"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_BRIGADE { text = "Brigade"; action = "[""group_7"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_DIVISION { text = "Division"; action = "[""group_8"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_CORPS { text = "Corps"; action = "[""group_9"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_ARMY { text = "Army"; action = "[""group_10"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_ARMYGROUP { text = "Army Group"; action = "[""group_11"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT {
+				text = "Frontline Double Rectangle";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST {
+				text = "WEST";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_250",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_500",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_750",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_1000"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST {
+				text = "EAST";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_250",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_500",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_750",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_1000"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER {
+				text = "GUER";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_250",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_500",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_750",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_1000"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_250 {
+				text = "250m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 250 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [250, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_500 {
+				text = "500m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 500 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [500, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_750 {
+				text = "750m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 750 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [750, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_1000 {
+				text = "1000m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 1000 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [1000, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_250 {
+				text = "250m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 250 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [250, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_500 {
+				text = "500m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 500 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [500, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_750 {
+				text = "750m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 750 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [750, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_1000 {
+				text = "1000m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 1000 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [1000, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_250 {
+				text = "250m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 250 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [250, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_500 {
+				text = "500m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 500 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [500, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_750 {
+				text = "750m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 750 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [750, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_1000 {
+				text = "1000m";
+				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 1000 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [1000, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+				conditionShow = "1";
+			};
 		};
 	};
 
