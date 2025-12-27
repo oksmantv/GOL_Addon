@@ -6,6 +6,71 @@
 if !(is3DEN) exitWith {false};
 clearRadio;
 
+// Default per-session marker options.
+if (isNil { uiNamespace getVariable "GW_FRAMEWORK_MARKER_ADD_FLAG" }) then {
+	uiNamespace setVariable ["GW_FRAMEWORK_MARKER_ADD_FLAG", false];
+};
+
+// Default the per-session "Global Side" selector from GW Common's configured AI spawn side (if present).
+// Falls back to EAST if the setting is unavailable.
+if (isNil { uiNamespace getVariable "GW_FRAMEWORK_GLOBAL_SIDE" }) then {
+	private _enemySideSetting = "";
+	private _src = "";
+
+	// Preferred: pull from CBA settings system (addon options)
+	private _cbaGetterName = "CBA" + "_settings_fnc_get";
+	private _cbaGet = missionNamespace getVariable [_cbaGetterName, objNull];
+	if (_cbaGet isEqualType {}) then {
+		private _vCBA = ["GW_Common_Faction"] call _cbaGet;
+		if (_vCBA isEqualType "") then {
+			_enemySideSetting = _vCBA;
+			_src = "missionNamespace." + _cbaGetterName;
+		};
+	};
+
+	// Canonical (CBA) setting name in GW: GW_Common_Faction
+	if (_enemySideSetting isEqualTo "") then {
+		private _v2 = missionNamespace getVariable ["GW_Common_Faction", ""];
+		if (_v2 isEqualType "") then {
+			_enemySideSetting = _v2;
+			_src = "missionNamespace.GW_Common_Faction";
+		};
+	};
+
+	// Backwards compatibility fallback
+	if (_enemySideSetting isEqualTo "") then {
+		private _v1 = missionNamespace getVariable ["gw_common_faction", ""];
+		if (_v1 isEqualType "") then {
+			_enemySideSetting = _v1;
+			_src = "missionNamespace.gw_common_faction";
+		};
+	};
+
+	private _k = toUpper _enemySideSetting;
+	private _defaultGlobal = switch (_k) do {
+		case "WEST": { "WEST" };
+		case "EAST": { "EAST" };
+		case "INDEPENDENT": { "INDEPENDENT" };
+		case "GUER": { "INDEPENDENT" };
+		default { "EAST" };
+	};
+
+	uiNamespace setVariable ["GW_FRAMEWORK_GLOBAL_SIDE", _defaultGlobal];
+	diag_log format ["[GW][3DEN][GlobalSide] default set | src=%1 value=%2 => GW_FRAMEWORK_GLOBAL_SIDE=%3", _src, _enemySideSetting, _defaultGlobal];
+};
+
+// Auto-renumber pasted OKS Frontline Node logics so copy/paste creates next nodes.
+add3DENEventHandler ["OnPaste", {
+	private _dbg = uiNamespace getVariable ["OKS_3DEN_DEBUG_FRONTLINE", true];
+	if (_dbg) then { diag_log format ["[GW][3DEN][FrontlineNodes][OnPaste] fired | this=%1", _this]; };
+	if (!isNil "OKS_fnc_EdenFrontlineNodeOnPasteRenumber") then {
+		if (_dbg) then { diag_log "[GW][3DEN][FrontlineNodes][OnPaste] calling OKS_fnc_EdenFrontlineNodeOnPasteRenumber"; };
+		_this call OKS_fnc_EdenFrontlineNodeOnPasteRenumber;
+	} else {
+		if (_dbg) then { diag_log "[GW][3DEN][FrontlineNodes][OnPaste] OKS_fnc_EdenFrontlineNodeOnPasteRenumber is NIL"; };
+	};
+}];
+
 GVAR(AutoTestEvents) = [];
 GVAR(ExportErrorCount) = 0;
 GVAR(hiddenTriggers) = [];

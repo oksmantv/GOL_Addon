@@ -23,8 +23,34 @@ class Display3DEN {
                 text = "GW FRAMEWORK";
 				picture = "\x\gw\addons\3den\data\gwlogo.paa";
                 value = 0;
-				items[] += {"GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_IMPORTCBA","GOL_FRAMEWORK_MARKERS"};
+				items[] += {"GOL_FRAMEWORK_IMPORTCBA","GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_MARKER_OPTIONS","GOL_FRAMEWORK_MARKERS"};
             };
+
+			class GOL_FRAMEWORK_GLOBAL_SIDE {
+				text = "Select Side";
+				picture = "\a3\ui_f\data\Map\Markers\Military\flag_CA.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_GLOBAL_SIDE_WEST",
+					"GOL_FRAMEWORK_GLOBAL_SIDE_EAST",
+					"GOL_FRAMEWORK_GLOBAL_SIDE_INDEPENDENT"
+				};
+			};
+			class GOL_FRAMEWORK_GLOBAL_SIDE_WEST {
+				text = "WEST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
+				action = "uiNamespace setVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; systemChat 'GW Framework side set: WEST';";
+			};
+			class GOL_FRAMEWORK_GLOBAL_SIDE_EAST {
+				text = "EAST";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\o_inf.paa";
+				action = "uiNamespace setVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; systemChat 'GW Framework side set: EAST';";
+			};
+			class GOL_FRAMEWORK_GLOBAL_SIDE_INDEPENDENT {
+				text = "INDEPENDENT";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\n_inf.paa";
+				action = "uiNamespace setVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'INDEPENDENT']; systemChat 'GW Framework side set: INDEPENDENT';";
+			};
 
 			class GW_GOL_EXPORTCACHE {
 				text = "Export & Clear Cache";
@@ -49,7 +75,25 @@ class Display3DEN {
 				text = "Static Units";
 				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
 				value = 0;
-				items[] = {"GW_GOL_CREATE_UNITS_STATIC_WEST","GW_GOL_CREATE_UNITS_STATIC_EAST","GW_GOL_CREATE_UNITS_STATIC_INDEP"};
+				items[] = {"GW_GOL_CREATE_UNITS_STATIC_2","GW_GOL_CREATE_UNITS_STATIC_6","GW_GOL_CREATE_UNITS_STATIC_10"};
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 2] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 6] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_STATIC_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 10] call OKS_fnc_EdenTemplateStaticUnits;";
+				conditionShow = "1";
 			};
 			class GW_GOL_CREATE_UNITS_STATIC_WEST {
 				text = "WEST";
@@ -128,7 +172,25 @@ class Display3DEN {
 				text = "Static Garrison";
 				picture = "\a3\3den\Data\CfgWaypoints\guard_ca.paa";
 				value = 0;
-				items[] = {"GW_GOL_CREATE_UNITS_GARRISON_WEST","GW_GOL_CREATE_UNITS_GARRISON_EAST","GW_GOL_CREATE_UNITS_GARRISON_INDEP"};
+				items[] = {"GW_GOL_CREATE_UNITS_GARRISON_2","GW_GOL_CREATE_UNITS_GARRISON_6","GW_GOL_CREATE_UNITS_GARRISON_10"};
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 2] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 6] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_GARRISON_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 10] call OKS_fnc_EdenTemplateStaticGarrison;";
+				conditionShow = "1";
 			};
 			class GW_GOL_CREATE_UNITS_GARRISON_WEST {
 				text = "WEST";
@@ -207,7 +269,25 @@ class Display3DEN {
 				text = "Patrol";
 				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
 				value = 0;
-				items[] = {"GW_GOL_CREATE_UNITS_PATROL_WEST","GW_GOL_CREATE_UNITS_PATROL_EAST","GW_GOL_CREATE_UNITS_PATROL_INDEP"};
+				items[] = {"GW_GOL_CREATE_UNITS_PATROL_2","GW_GOL_CREATE_UNITS_PATROL_6","GW_GOL_CREATE_UNITS_PATROL_10"};
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_2 {
+				text = "2 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\private_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 2] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_6 {
+				text = "6 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\corporal_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 6] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
+			};
+			class GW_GOL_CREATE_UNITS_PATROL_10 {
+				text = "10 MAN";
+				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				action = "private _s = toUpper (uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']); private _side = switch (_s) do { case 'EAST': { east }; case 'INDEPENDENT': { independent }; case 'GUER': { independent }; default { west }; }; [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side, 10] call OKS_fnc_EdenTemplatePatrol;";
+				conditionShow = "1";
 			};
 			class GW_GOL_CREATE_UNITS_PATROL_WEST {
 				text = "WEST";
@@ -283,56 +363,741 @@ class Display3DEN {
 			};
             class GOL_FRAMEWORK_COPYROLE {
                 text = "Copy Options";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\documents_ca.paa";
                 value = 0;
-				items[] = {"GOL_FRAMEWORK_COPYROLE_ON","GOL_FRAMEWORK_COPYROLE_OFF","GOL_FRAMEWORK_DELETEONCOPY_ON","GOL_FRAMEWORK_DELETEONCOPY_OFF"};
+				items[] = {"GOL_FRAMEWORK_GLOBAL_SIDE","GOL_FRAMEWORK_COPYROLE_ON","GOL_FRAMEWORK_COPYROLE_OFF","GOL_FRAMEWORK_DELETEONCOPY_ON","GOL_FRAMEWORK_DELETEONCOPY_OFF"};
             };
             class GOL_FRAMEWORK_COPYROLE_ON {
                 text = "Copy Roles: On";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\documents_ca.paa";
 				action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', true]]; uiNamespace setVariable ['GW_CopyRoles', true]; systemChat 'Copy Roles: Enabled'; ['Copy Static/Group: Role copying enabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
             };            
             class GOL_FRAMEWORK_COPYROLE_OFF {
                 text = "Copy Roles: Off";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa";
 				action = "set3DENMissionAttributes [['Preferences', 'GW_CopyRoles', false]]; uiNamespace setVariable ['GW_CopyRoles', false]; systemChat 'Copy Roles: Disabled'; ['Copy Static/Group: Role copying disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
             };
 			class GOL_FRAMEWORK_DELETEONCOPY_ON {
 				text = "Delete on Copy: On";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa";
 				action = "set3DENMissionAttributes [['Preferences', 'GW_DeleteOnCopy', true]]; uiNamespace setVariable ['GW_DeleteOnCopy', true]; systemChat 'Delete on Copy: Enabled'; ['Copy Static/Group: Delete-on-copy enabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
 			};
 			class GOL_FRAMEWORK_DELETEONCOPY_OFF {
 				text = "Delete on Copy: Off";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa";
 				action = "set3DENMissionAttributes [['Preferences', 'GW_DeleteOnCopy', false]]; uiNamespace setVariable ['GW_DeleteOnCopy', false]; systemChat 'Delete on Copy: Disabled'; ['Copy Static/Group: Delete-on-copy disabled', 0, 5, true, 0.5] call BIS_fnc_3DENNotification;";
 			};
             class GOL_FRAMEWORK_IMPORTCBA {
                 text = "Configure Framework";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\documents_ca.paa";
                 action = "set3DENMissionAttributes [['GW_MissionPreferences', 'GW_isConfigured', false]]; [] call GW_3DEN_fnc_setFramework;";
             };
 
-			class GOL_FRAMEWORK_MARKERS {
-				text = "Markers";
+			class GOL_FRAMEWORK_MARKER_OPTIONS {
+				text = "Marker Options";
+				picture = "\a3\ui_f\data\Map\Markers\Military\flag_CA.paa";
 				value = 0;
 				items[] = {
-					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT"
+					"GOL_FRAMEWORK_MARKER_OPTIONS_FLAG_ON",
+					"GOL_FRAMEWORK_MARKER_OPTIONS_FLAG_OFF"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_OPTIONS_FLAG_ON {
+				text = "Flags: On";
+				picture = "\a3\ui_f\data\Map\Markers\Military\flag_CA.paa";
+				action = "uiNamespace setVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', true]; systemChat 'GW Marker Options: Flags ON';";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_OPTIONS_FLAG_OFF {
+				text = "Flags: Off";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa";
+				action = "uiNamespace setVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; systemChat 'GW Marker Options: Flags OFF';";
+				conditionShow = "1";
+			};
+
+			class GOL_FRAMEWORK_MARKERS {
+				text = "Markers";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_FRONTLINE_UNITS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_UNITS",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_NODES"
 				};
 			};
 
 			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH {
 				text = "Organisation Strength";
+				picture = "\a3\ui_f\data\Map\Markers\Military\flag_CA.paa";
 				value = 0;
 				items[] = {
-					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG",
-					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG"
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_FRONTLINE_UNITS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_UNITS"
 				};
 			};
 
-			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG {
-				text = "With Flag";
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_FRONTLINE_UNITS {
+				text = "Front line units";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
 				value = 0;
 				items[] = {
-					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR",
-					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_OPFOR",
-					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_INDEP"
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL"
 				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_UNITS {
+				text = "Support units";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_support.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY {
+				text = "Artillery";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_art.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS {
+				text = "Mortars";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_mortar.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE {
+				text = "Service";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_service.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL {
+				text = "Naval";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_naval.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION {
+				text = "Installation";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_installation.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS {
+				text = "Logistics";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_service.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL {
+				text = "Medical";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_med.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON {
+				text = "Recon";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_recon.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA {
+				text = "AA";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_antiair.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER {
+				text = "Engineer";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_maint.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARTILLERY_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'ARTILLERY', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MORTARS_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'MORTARS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SERVICE_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'SERVICE', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_NAVAL_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'NAVAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INSTALLATION_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'INSTALLATION', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_LOGISTICS_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'LOGISTICS', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MEDICAL_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'MEDICAL', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_RECON_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'RECON', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AA_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'AA', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_0', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_1', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_2', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_3', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_4', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_5', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_6', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_7', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_8', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_9', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_10', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ENGINEER_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'EAST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'OPFOR' }; }; ['group_11', _addFlag, _f, 'ENGINEER', (uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY {
+				text = "Infantry";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_inf.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED {
+				text = "Motorised";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_motor_inf.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED {
+				text = "Mechanized";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_mech_inf.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED {
+				text = "Armored";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_armor.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR {
+				text = "Air";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_plane.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER {
+				text = "Helicopter";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_air.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_ARMYGROUP"
+				};
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT {
+				text = "Support";
+				picture = "\a3\ui_f\data\Map\Markers\NATO\b_support.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_FIRETEAM {
+				text = "Fire Team";
+				action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_INFANTRY_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'INFANTRY'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MOTORISED_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'MOTORISED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_MECHANIZED_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'MECHANIZED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_ARMORED_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'ARMORED'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_AIR_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'AIR'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_HELICOPTER_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'HELICOPTER'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_FIRETEAM { text = "Fire Team"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_SQUAD { text = "Squad"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_SECTION { text = "Section"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_PLATOON { text = "Platoon"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_COMPANY { text = "Company"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_BATTALION { text = "Battalion"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_REGIMENT { text = "Regiment"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_BRIGADE { text = "Brigade"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_DIVISION { text = "Division"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_CORPS { text = "Corps"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_ARMY { text = "Army"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_SUPPORT_ARMYGROUP { text = "Army Group"; action = "private _addFlag = uiNamespace getVariable ['GW_FRAMEWORK_MARKER_ADD_FLAG', false]; private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', _addFlag, _f, 'SUPPORT'] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG {
+				text = "With Flag";
+				picture = "\a3\ui_f\data\Map\Markers\Military\flag_CA.paa";
+				value = 0;
+				items[] = {
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_FIRETEAM",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_SQUAD",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_SECTION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_PLATOON",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_COMPANY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BATTALION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_REGIMENT",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BRIGADE",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_DIVISION",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_CORPS",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_ARMY",
+					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_ARMYGROUP"
+				};
+			};
+
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_FIRETEAM {
+				text = "Fire Team";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_0', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_SQUAD {
+				text = "Squad";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_1', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_SECTION {
+				text = "Section";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_2', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_PLATOON {
+				text = "Platoon";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_3', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_COMPANY {
+				text = "Company";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_4', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BATTALION {
+				text = "Battalion";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_5', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_REGIMENT {
+				text = "Regiment";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_6', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BRIGADE {
+				text = "Brigade";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_7', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_DIVISION {
+				text = "Division";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_8', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_CORPS {
+				text = "Corps";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_9', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_ARMY {
+				text = "Army";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_10', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
+			};
+			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_ARMYGROUP {
+				text = "Army Group";
+				action = "private _s = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; private _f = switch (toUpper _s) do { case 'WEST': { 'BLUFOR' }; case 'EAST': { 'OPFOR' }; case 'GUER': { 'INDEP' }; case 'INDEPENDENT': { 'INDEP' }; default { 'BLUFOR' }; }; ['group_11', true, _f] call OKS_fnc_EdenMarkOrgStrength;";
+				conditionShow = "1";
 			};
 
 			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHFLAG_BLUFOR {
@@ -394,6 +1159,7 @@ class Display3DEN {
 
 			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG {
 				text = "Without Flag";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
 				value = 0;
 				items[] = {
 					"GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_FIRETEAM",
@@ -463,107 +1229,33 @@ class Display3DEN {
 			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_ARMY { text = "Army"; action = "[""group_10"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
 			class GOL_FRAMEWORK_MARKER_ORGSTRENGTH_WITHOUTFLAG_ARMYGROUP { text = "Army Group"; action = "[""group_11"", false] call OKS_fnc_EdenMarkOrgStrength;"; conditionShow = "1"; };
 
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT {
-				text = "Frontline Double Rectangle";
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_NODES {
+				text = "Frontline Nodes";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
 				value = 0;
 				items[] = {
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER"
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_NODES_PLACE",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_NODES_CREATE_ROUNDED",
+					"GOL_FRAMEWORK_MARKER_FRONTLINE_NODES_CREATE_SHARP"
 				};
 			};
 
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST {
-				text = "WEST";
-				value = 0;
-				items[] = {
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_250",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_500",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_750",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_1000"
-				};
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST {
-				text = "EAST";
-				value = 0;
-				items[] = {
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_250",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_500",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_750",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_1000"
-				};
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER {
-				text = "GUER";
-				value = 0;
-				items[] = {
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_250",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_500",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_750",
-					"GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_1000"
-				};
-			};
-
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_250 {
-				text = "250m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 250 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [250, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_NODES_PLACE {
+				text = "Place Node";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "private _side = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; if (isNil 'OKS_fnc_EdenFrontlineNodePlace') then { systemChat 'Frontline Nodes: function NIL (OKS mod not loaded?)'; } else { [(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), _side] call OKS_fnc_EdenFrontlineNodePlace; };";
 				conditionShow = "1";
 			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_500 {
-				text = "500m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 500 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [500, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_NODES_CREATE_ROUNDED {
+				text = "Create Frontlines (Rounded)";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				action = "private _side = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; if (isNil 'OKS_fnc_EdenFrontlineCreateFromNodes') then { systemChat 'Frontline Nodes: function NIL (OKS mod not loaded?)'; } else { [_side, true, 30, 3] call OKS_fnc_EdenFrontlineCreateFromNodes; };";
 				conditionShow = "1";
 			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_750 {
-				text = "750m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 750 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [750, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_WEST_1000 {
-				text = "1000m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect WEST 1000 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [1000, 'WEST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_250 {
-				text = "250m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 250 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [250, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_500 {
-				text = "500m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 500 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [500, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_750 {
-				text = "750m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 750 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [750, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_EAST_1000 {
-				text = "1000m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect EAST 1000 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [1000, 'EAST'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_250 {
-				text = "250m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 250 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [250, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_500 {
-				text = "500m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 500 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [500, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_750 {
-				text = "750m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 750 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [750, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
-				conditionShow = "1";
-			};
-			class GOL_FRAMEWORK_MARKER_FRONTLINE_DOUBLERECT_GUER_1000 {
-				text = "1000m";
-				action = "diag_log '[GW][3DEN] FrontlineDoubleRect GUER 1000 action fired'; if (isNil 'OKS_fnc_EdenMarkFrontlineDoubleRect') then { diag_log '[GW][3DEN] OKS_fnc_EdenMarkFrontlineDoubleRect is NIL'; systemChat 'FrontlineDoubleRect: function NIL (OKS mod not loaded?)'; } else { [1000, 'GUER'] call OKS_fnc_EdenMarkFrontlineDoubleRect; };";
+			class GOL_FRAMEWORK_MARKER_FRONTLINE_NODES_CREATE_SHARP {
+				text = "Create Frontlines (Sharp)";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				action = "private _side = uiNamespace getVariable ['GW_FRAMEWORK_GLOBAL_SIDE', 'WEST']; if (isNil 'OKS_fnc_EdenFrontlineCreateFromNodes') then { systemChat 'Frontline Nodes: function NIL (OKS mod not loaded?)'; } else { [_side, false] call OKS_fnc_EdenFrontlineCreateFromNodes; };";
 				conditionShow = "1";
 			};
 		};
