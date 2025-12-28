@@ -153,6 +153,11 @@ if !(_HasResupplyStation) then {
 	_output pushBack [_error, "Resupply Station not found", "Missing GOL_ResupplyStation object in mission", [-1]];
 };
 
+_HasSupportBox = ({(typeOf _x) find "GOL_SupportBox" > -1} count _allObjects > 0);
+if !(_HasSupportBox) then {
+	_output pushBack [_warning, "Support Box not found", "No GOL_SupportBox object placed. This is optional (can be spawned via the Resupply Station).", [-1]];
+};
+
 _HasAacServiceHelipad = ({(typeOf _x) == "GOL_Helipad"} count _allObjects > 0);
 if !(_HasAacServiceHelipad) then {
 	_output pushBack [_warning, "AAC Service Helipad not found", "Missing GOL_Helipad object in mission", [-1]];
