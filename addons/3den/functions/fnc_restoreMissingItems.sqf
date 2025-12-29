@@ -268,7 +268,6 @@ while { _pass < _maxPasses } do {
 		if (isNull _flag2Obj) then {
 			_missing pushBack ["Object", "FlagPole_F", _farpAnchorPos, [["name", _flag2], ["description", format ["Framework: FARP flag (%1). Keep with FARP marker + helipad + resupply station.", _sideLower]]]];
 		} else {
-			_flag2Obj set3DENAttribute ["position", _farpAnchorPos];
 			[_flag2Obj, [["description", format ["Framework: FARP flag (%1). Keep with FARP marker + helipad + resupply station.", _sideLower]]]] call _fnc_setEntityAttrs;
 		};
 
@@ -284,7 +283,6 @@ while { _pass < _maxPasses } do {
 		if (isNull _gearObj) then {
 			_missing pushBack ["Object", _gearClass, _gearPos, [["description", format ["Framework: Gear box (%1). Place near the Staging Point. Used for player gear/loadout access and mission resupply.", _suffix]]]];
 		} else {
-			_gearObj set3DENAttribute ["position", _gearPos];
 			[_gearObj, [["description", format ["Framework: Gear box (%1). Place near the Staging Point. Used for player gear/loadout access and mission resupply.", _suffix]]]] call _fnc_setEntityAttrs;
 		};
 
@@ -293,7 +291,6 @@ while { _pass < _maxPasses } do {
 		if (isNull _supportObj) then {
 			_missing pushBack ["Object", _supportClass, _supportPos, [["description", format ["Framework: Support box (%1). Place near the Staging Point. Used for support utilities/supplies depending on framework settings.", _suffix]]]];
 		} else {
-			_supportObj set3DENAttribute ["position", _supportPos];
 			[_supportObj, [["description", format ["Framework: Support box (%1). Place near the Staging Point. Used for support utilities/supplies depending on framework settings.", _suffix]]]] call _fnc_setEntityAttrs;
 		};
 
@@ -302,7 +299,6 @@ while { _pass < _maxPasses } do {
 		if (isNull _resupplyObj) then {
 			_missing pushBack ["Object", _resupplyClass, _resupplyPos, [["description", format ["Framework: Resupply/Service station (%1). Keep with the FARP cluster (helipad + flag_%2_2 + FARP marker).", _suffix, _sideLower]]]];
 		} else {
-			_resupplyObj set3DENAttribute ["position", _resupplyPos];
 			[_resupplyObj, [["description", format ["Framework: Resupply/Service station (%1). Keep with the FARP cluster (helipad + flag_%2_2 + FARP marker).", _suffix, _sideLower]]]] call _fnc_setEntityAttrs;
 		};
 
@@ -312,7 +308,6 @@ while { _pass < _maxPasses } do {
 			_missing pushBack ["Object", "GOL_Helipad", _helipadPos, [["description", "Framework: GOL Helipad. Part of the FARP cluster; keep with FARP marker + flag_side_2 + resupply station."]]];
 		} else {
 			private _hp = _nearHelipads select 0;
-			_hp set3DENAttribute ["position", _helipadPos];
 			[_hp, [["description", "Framework: GOL Helipad. Part of the FARP cluster; keep with FARP marker + flag_side_2 + resupply station."]]] call _fnc_setEntityAttrs;
 		};
 
@@ -322,7 +317,6 @@ while { _pass < _maxPasses } do {
 			private _init = format ["this setVariable [""GW_isRespawnPos"", ""%1"", true];", _sideLower];
 			_missing pushBack ["Logic", "LocationRespawnPoint_F", _respawnLogicPos, [["init", _init], ["description", format ["Framework: Respawn point (%1). Do not delete. Move together with respawn_%1 marker + flag_%1_1.", _sideLower]]]];
 		} else {
-			_respawnLogic set3DENAttribute ["position", _respawnLogicPos];
 			[_respawnLogic, [["description", format ["Framework: Respawn point (%1). Do not delete. Move together with respawn_%1 marker + flag_%1_1.", _sideLower]]]] call _fnc_setEntityAttrs;
 		};
 
@@ -350,7 +344,6 @@ while { _pass < _maxPasses } do {
 			["description", format ["Framework: Staging point marker (%1). Intended to be stacked with the respawn logic + flag_%1_1.", _sideLower]]
 		];
 		if (toLower _respawnMarkerName in _markerNamesLower) then {
-			_respawnMarkerName set3DENAttribute ["position", [_respawnLogicPos] call _fnc_markerPosOnGround];
 			[_respawnMarkerName, _respawnAttrs] call _fnc_applyMarkerAttrs;
 		} else {
 			_missing pushBack ["Marker", _respawnMarkerType, ([_respawnLogicPos] call _fnc_markerPosOnGround), _respawnAttrs];
@@ -375,7 +368,6 @@ while { _pass < _maxPasses } do {
 			["description", format ["Framework: FARP marker (%1). Keep with helipad + resupply station + flag_%1_2.", _sideLower]]
 		];
 		if (toLower _farpMarkerName in _markerNamesLower) then {
-			_farpMarkerName set3DENAttribute ["position", [_farpAnchorPos] call _fnc_markerPosOnGround];
 			[_farpMarkerName, _farpAttrs] call _fnc_applyMarkerAttrs;
 		} else {
 			_missing pushBack ["Marker", _farpMarkerType, ([_farpAnchorPos] call _fnc_markerPosOnGround), _farpAttrs];
@@ -400,7 +392,6 @@ while { _pass < _maxPasses } do {
 	if (isNull _mobileHQObj) then {
 		_missing pushBack ["Object", "RuggedTerminal_01_communications_F", _mobileHQPos, [["name", "Mobile_HQ"], ["description", "Framework: Mobile HQ terminal. Keep 5m north of the staging flag. Used as the mobile HQ/service point in templates."]]];
 	} else {
-		_mobileHQObj set3DENAttribute ["position", _mobileHQPos];
 		[_mobileHQObj, [["description", "Framework: Mobile HQ terminal. Keep 5m north of the staging flag. Used as the mobile HQ/service point in templates."]]] call _fnc_setEntityAttrs;
 	};
 
@@ -416,7 +407,6 @@ while { _pass < _maxPasses } do {
 	if (isNull _veh1) then {
 		_missing pushBack ["Object", "B_APC_Wheeled_01_cannon_F", _veh1Pos, [["name", "vehicle_1"], ["side", "Empty"], ["description", "Framework: Vehicle slot 1 (vehicle_1). Template convenience vehicle; keep near staging. Must be empty (no crew)."]]];
 	} else {
-		_veh1 set3DENAttribute ["position", _veh1Pos];
 		[_veh1, [["side", "Empty"], ["description", "Framework: Vehicle slot 1 (vehicle_1). Template convenience vehicle; keep near staging. Must be empty (no crew)."]]] call _fnc_setEntityAttrs;
 	};
 
@@ -427,7 +417,6 @@ while { _pass < _maxPasses } do {
 		// Template uses RHS_UH60M_ESSS_d; if RHS isn't loaded this will fail and be counted in failedTotal.
 		_missing pushBack ["Object", "RHS_UH60M_ESSS_d", _heli1Pos, [["name", "helicopter_1"], ["side", "Empty"], ["description", "Framework: Helicopter slot 1 (helicopter_1). Template convenience helicopter; placed on the helipad. Must be empty (no crew)."]]];
 	} else {
-		_heli1 set3DENAttribute ["position", _heli1Pos];
 		[_heli1, [["side", "Empty"], ["description", "Framework: Helicopter slot 1 (helicopter_1). Template convenience helicopter; placed on the helipad. Must be empty (no crew)."]]] call _fnc_setEntityAttrs;
 	};
 
@@ -448,7 +437,6 @@ while { _pass < _maxPasses } do {
 	if (isNull _orbat) then {
 		_missing pushBack ["Logic", "ModuleStrategicMapORBAT_F", _orbatPos, _orbatAttrs];
 	} else {
-		_orbat set3DENAttribute ["position", _orbatPos];
 		[_orbat, _orbatAttrs] call _fnc_setEntityAttrs;
 	};
 
@@ -466,19 +454,16 @@ while { _pass < _maxPasses } do {
 	if (isNull _hc) then {
 		_missing pushBack ["Logic", "HeadlessClient_F", _hcPos, [["name", "HC"], ["description", "Headless Client 1"], ["isPlayable", 1], ["ControlMP", true]]];
 	} else {
-		_hc set3DENAttribute ["position", _hcPos];
 		[_hc, [["description", "Headless Client 1"], ["isPlayable", 1], ["ControlMP", true]]] call _fnc_setEntityAttrs;
 	};
 	if (isNull _hc2) then {
 		_missing pushBack ["Logic", "HeadlessClient_F", _hc2Pos, [["name", "HC2"], ["description", "Headless Client 2"], ["isPlayable", 1], ["ControlMP", true]]];
 	} else {
-		_hc2 set3DENAttribute ["position", _hc2Pos];
 		[_hc2, [["description", "Headless Client 2"], ["isPlayable", 1], ["ControlMP", true]]] call _fnc_setEntityAttrs;
 	};
 	if (isNull _hc3) then {
 		_missing pushBack ["Logic", "HeadlessClient_F", _hc3Pos, [["name", "HC3"], ["description", "Headless Client 3"], ["isPlayable", 1], ["ControlMP", true]]];
 	} else {
-		_hc3 set3DENAttribute ["position", _hc3Pos];
 		[_hc3, [["description", "Headless Client 3"], ["isPlayable", 1], ["ControlMP", true]]] call _fnc_setEntityAttrs;
 	};
 	// Helicopter spawn/despawn markers anchored off the primary FARP
@@ -489,7 +474,6 @@ while { _pass < _maxPasses } do {
 	private _heliDespawnDesc = "AI Resupply: Helicopter Despawn point. Used as despawn position for resupply/pickup helicopters.";
 
 	if (("helicopter_spawn" in _markerNamesLower)) then {
-		"helicopter_spawn" set3DENAttribute ["position", [_heliSpawnPos] call _fnc_markerPosOnGround];
 		["helicopter_spawn", [
 			["markerName", "helicopter_spawn"],
 			["text", ""],
@@ -513,7 +497,6 @@ while { _pass < _maxPasses } do {
 		]];
 	};
 	if (("helicopter_despawn" in _markerNamesLower)) then {
-		"helicopter_despawn" set3DENAttribute ["position", [_heliDespawnPos] call _fnc_markerPosOnGround];
 		["helicopter_despawn", [
 			["markerName", "helicopter_despawn"],
 			["text", ""],
