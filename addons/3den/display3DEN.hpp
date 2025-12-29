@@ -23,8 +23,22 @@ class Display3DEN {
                 text = "GW FRAMEWORK";
 				picture = "\x\gw\addons\3den\data\gwlogo.paa";
                 value = 0;
-				items[] += {"GOL_FRAMEWORK_IMPORTCBA","GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_MARKER_OPTIONS","GOL_FRAMEWORK_MARKERS"};
+					items[] += {"GOL_FRAMEWORK_IMPORTCBA","GOL_FRAMEWORK_CONFIGURE_PLAYER_VEHICLES","GOL_FRAMEWORK_RESTORE_MISSING_ITEMS","GOL_FRAMEWORK_COPYROLE","GOL_FRAMEWORK_MARKER_OPTIONS","GOL_FRAMEWORK_MARKERS"};
             };
+
+			class GOL_FRAMEWORK_CONFIGURE_PLAYER_VEHICLES {
+				text = "Configure Player Vehicles";
+				picture = "\a3\ui_f\data\igui\cfg\actions\unloadVehicle_ca.paa";
+				action = "[] call GW_3DEN_fnc_configurePlayerVehicles;";
+				conditionShow = "selectedObject";
+			};
+
+			class GOL_FRAMEWORK_RESTORE_MISSING_ITEMS {
+				text = "Restore Missing Items";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\box_ca.paa";
+				action = "[] call GW_3DEN_fnc_restoreMissingItems;";
+				conditionShow = "1";
+			};
 
 			class GOL_FRAMEWORK_GLOBAL_SIDE {
 				text = "Select Side";

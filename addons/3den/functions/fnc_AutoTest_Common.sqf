@@ -100,11 +100,7 @@ if ((count _indep) > 0) then {
 	};
 };
 
-if (isClass(missionConfigFile >> "GW_Modules" >> "Respawn")) then {
-	if !("spectator" in (all3DENEntities select 5)) then {
-		_output pushBack [_error,"Spectator marker is missing, Create a new marker and name it 'spectator', place it on land and out of AO", "", [-1]];
-	};
-};
+
 
 if (isClass(missionConfigFile >> "GW_Modules" >> "MHQ")) then {
 	_MHQs = ((all3DENEntities select 0) select {((((_x get3DENAttribute "name") select 0) find "mhq") isEqualTo 0)});
@@ -166,6 +162,14 @@ if !(_HasAacServiceHelipad) then {
 _HasMobileHQ = ({((_x get3DENAttribute "name") select 0) == "Mobile_HQ"} count _allObjects > 0);
 if !(_HasMobileHQ) then {
 	_output pushBack [_warning, "Mobile HQ not found", "Missing respawn point 'Mobile_HQ' in mission", [-1]];
+};
+
+private _markersLower = (all3DENEntities select 5) apply { toLower _x };
+if !("helicopter_spawn" in _markersLower) then {
+	_output pushBack [_warning, "Helicopter spawn marker not found", "Missing marker 'helicopter_spawn' (AI resupply only)", [-1]];
+};
+if !("helicopter_despawn" in _markersLower) then {
+	_output pushBack [_warning, "Helicopter despawn marker not found", "Missing marker 'helicopter_despawn' (AI resupply only)", [-1]];
 };
 
 _Flag_1 = ({((_x get3DENAttribute "name") select 0) find "flag_" > -1 && ((_x get3DENAttribute "name") select 0) find "_1" > -1} count _allObjects > 0);
