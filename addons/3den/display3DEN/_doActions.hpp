@@ -19,6 +19,60 @@ class MENU_SUB(doActions,createWaypointsFast) {
 	picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
 };
 
+class MENU_SUB(doActions,createWaypointsPatternSlow) {
+	text = "Generate waypoints (Pattern Slow/Safe)...";
+	items[] = {
+		MENU_SUB(doActions_createWaypointsPatternSlow,circle),
+		MENU_SUB(doActions_createWaypointsPatternSlow,triangle),
+		MENU_SUB(doActions_createWaypointsPatternSlow,rectangle),
+		MENU_SUB(doActions_createWaypointsPatternSlow,column)
+	};
+};
+
+class MENU_SUB(doActions_createWaypointsPatternSlow,circle) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'CIRCLE']); [objNull, 0.5, 'SLOW', 'CIRCLE'] call GW_3den_fnc_createWaypoints";
+	text = "Circle";
+};
+class MENU_SUB(doActions_createWaypointsPatternSlow,triangle) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'TRIANGLE']); [objNull, 0.5, 'SLOW', 'TRIANGLE'] call GW_3den_fnc_createWaypoints";
+	text = "Triangle";
+};
+class MENU_SUB(doActions_createWaypointsPatternSlow,rectangle) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'RECTANGLE']); [objNull, 0.5, 'SLOW', 'RECTANGLE'] call GW_3den_fnc_createWaypoints";
+	text = "Rectangle";
+};
+class MENU_SUB(doActions_createWaypointsPatternSlow,column) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'COLUMN']); [objNull, 0.5, 'SLOW', 'COLUMN'] call GW_3den_fnc_createWaypoints";
+	text = "Column (Back-and-forth)";
+};
+
+class MENU_SUB(doActions,createWaypointsPatternFast) {
+	text = "Generate waypoints (Pattern Fast/Aware)...";
+	items[] = {
+		MENU_SUB(doActions_createWaypointsPatternFast,circle),
+		MENU_SUB(doActions_createWaypointsPatternFast,triangle),
+		MENU_SUB(doActions_createWaypointsPatternFast,rectangle),
+		MENU_SUB(doActions_createWaypointsPatternFast,column)
+	};
+};
+
+class MENU_SUB(doActions_createWaypointsPatternFast,circle) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'CIRCLE']); [objNull, 0.5, 'FAST', 'CIRCLE'] call GW_3den_fnc_createWaypoints";
+	text = "Circle";
+};
+class MENU_SUB(doActions_createWaypointsPatternFast,triangle) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'TRIANGLE']); [objNull, 0.5, 'FAST', 'TRIANGLE'] call GW_3den_fnc_createWaypoints";
+	text = "Triangle";
+};
+class MENU_SUB(doActions_createWaypointsPatternFast,rectangle) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'RECTANGLE']); [objNull, 0.5, 'FAST', 'RECTANGLE'] call GW_3den_fnc_createWaypoints";
+	text = "Rectangle";
+};
+class MENU_SUB(doActions_createWaypointsPatternFast,column) {
+	action = "('Preferences' set3DENMissionAttribute ['GW_WaypointPattern', 'COLUMN']); [objNull, 0.5, 'FAST', 'COLUMN'] call GW_3den_fnc_createWaypoints";
+	text = "Column (Back-and-forth)";
+};
+
 class MENU_SUB(doActions,ToggleTerrain) {
 	text = "Hide Terrain Objects...";
 	action = QUOTE(4 call FUNC(doAction));

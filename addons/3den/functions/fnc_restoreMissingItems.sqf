@@ -36,6 +36,67 @@ private _fnc_posFromMenuData = {
 	_p0
 };
 
+private _fnc_getOrCreateLayer = {
+	params ["_layerName"];
+	if (!is3DEN) exitWith { objNull };
+	if (_layerName isEqualTo "") exitWith { objNull };
+
+	private _cache = uiNamespace getVariable ["GW_3DEN_LAYER_CACHE", createHashMap];
+	private _cached = _cache getOrDefault [_layerName, nil];
+	if (!isNil "_cached") then {
+		private _cachedOk = false;
+		switch (typeName _cached) do {
+			case "OBJECT": { _cachedOk = !isNull _cached; };
+			case "SCALAR": { _cachedOk = _cached >= 0; };
+			default { _cachedOk = false; };
+		};
+		if (_cachedOk) exitWith { _cached };
+	};
+
+	private _layers = all3DENEntities select 6;
+	private _match = nil;
+	if (_layers isEqualType []) then {
+		{
+			private _n = "";
+			private _attr = _x get3DENAttribute "name";
+			if (_attr isEqualType [] && {(count _attr) > 0}) then { _n = _attr select 0; };
+			if (_n isEqualTo _layerName) exitWith { _match = _x; };
+		} forEach _layers;
+	};
+
+	private _layer = if (isNil "_match") then { (-1 add3DENLayer _layerName) } else { _match };
+	_cache set [_layerName, _layer];
+	uiNamespace setVariable ["GW_3DEN_LAYER_CACHE", _cache];
+	_layer
+};
+
+private _fnc_setLayerSafe = {
+	params ["_entity", "_layer"];
+	if (!is3DEN) exitWith { false };
+	if (isNil "_entity" || {isNil "_layer"}) exitWith { false };
+
+	_entity set3DENLayer _layer;
+
+	// Marker special-case: resolve marker entity and set layer on that too.
+	if ((typeName _entity) == "STRING") then {
+		private _markerName = _entity;
+		private _allMarkers = all3DENEntities select 5;
+		if (_allMarkers isEqualType []) then {
+			{
+				private _candidate = _x;
+				private _s = str _candidate;
+				if ((count _s) >= 2) then {
+					private _cleanName = _s select [1, (count _s) - 2];
+					if (_cleanName == _markerName) exitWith {
+						_candidate set3DENLayer _layer;
+					};
+				};
+			} forEach _allMarkers;
+		};
+	};
+	true
+};
+
 private _p0 = [_menuData] call _fnc_posFromMenuData;
 if !(
 	_p0 isEqualType []
@@ -196,6 +257,14 @@ private _createdTotal = 0;
 private _failedTotal = 0;
 private _pass = 0;
 
+private _restoredItemsLayer = ["Restored Items"] call _fnc_getOrCreateLayer;
+private _restoredItemsLayerOk = false;
+switch (typeName _restoredItemsLayer) do {
+	case "OBJECT": { _restoredItemsLayerOk = !isNull _restoredItemsLayer; };
+	case "SCALAR": { _restoredItemsLayerOk = _restoredItemsLayer >= 0; };
+	default { _restoredItemsLayerOk = false; };
+};
+
 while { _pass < _maxPasses } do {
 	private _allObjects = all3DENEntities select 0;
 	private _allLogics = all3DENEntities select 3;
@@ -259,9 +328,18 @@ while { _pass < _maxPasses } do {
 		};
 
 		private _flag2Obj = [_allObjects, toLower _flag2] call _fnc_getNamedEntity;
-		// FARP anchor: fixed position relative to staging (avoid reliance on any existing objects).
-		// Moved further north to reduce clipping.
-		private _farpAnchorPos = [_stagingAnchorPos select 0, (_stagingAnchorPos select 1) + 70, 0] call _fnc_pos;
+		// FARP anchor: prefer existing flag_<_side>_2 position when present (users often move the FARP cluster).
+		// Fallback: fixed position relative to staging.
+		private _farpAnchorPos = if (!isNull _flag2Obj) then {
+			private _p = [_flag2Obj] call _fnc_getEntityPos;
+			if (_p isEqualTo []) then {
+				[_stagingAnchorPos select 0, (_stagingAnchorPos select 1) + 70, 0] call _fnc_pos
+			} else {
+				_p
+			}
+		} else {
+			[_stagingAnchorPos select 0, (_stagingAnchorPos select 1) + 70, 0] call _fnc_pos
+		};
 
 		if (_forEachIndex == 0) then { _primaryFarpPos = _farpAnchorPos; };
 
@@ -303,7 +381,7 @@ while { _pass < _maxPasses } do {
 		};
 
 		// Helipad (per-side: if none exists near this FARP, create one)
-		private _nearHelipads = _allObjects select { (typeOf _x) isEqualTo "GOL_Helipad" && { (_x distance2D _farpAnchorPos) < 100 } };
+		private _nearHelipads = _allObjects select { (typeOf _x) isEqualTo "GOL_Helipad" && { (_x distance2D _farpAnchorPos) < 150 } };
 		if ((count _nearHelipads) == 0) then {
 			_missing pushBack ["Object", "GOL_Helipad", _helipadPos, [["description", "Framework: GOL Helipad. Part of the FARP cluster; keep with FARP marker + flag_side_2 + resupply station."]]];
 		} else {
@@ -401,23 +479,27 @@ while { _pass < _maxPasses } do {
 		_missing pushBack ["Object", "B_MRAP_01_F", _mhqVehPos, [["name", "mhq_1"], ["side", "Empty"], ["description", "Framework: MHQ vehicle (mhq_1). Only created when no mhq_* exists. Default class: B_MRAP_01_F. Must be empty (no crew)."]]];
 	};
 
-	// vehicle_1 (template helper)
+	// vehicle_1 (template helper) - only create when no vehicle_* exists
 	private _veh1 = [_allObjects, "vehicle_1"] call _fnc_getNamedEntity;
 	private _veh1Pos = [(_primaryStagingPos select 0) + 10, _primaryStagingPos select 1, 0] call _fnc_pos;
-	if (isNull _veh1) then {
+	if (isNull _veh1 && {!([_allObjects, "vehicle_"] call _fnc_anyNamePrefix)}) then {
 		_missing pushBack ["Object", "B_APC_Wheeled_01_cannon_F", _veh1Pos, [["name", "vehicle_1"], ["side", "Empty"], ["description", "Framework: Vehicle slot 1 (vehicle_1). Template convenience vehicle; keep near staging. Must be empty (no crew)."]]];
 	} else {
-		[_veh1, [["side", "Empty"], ["description", "Framework: Vehicle slot 1 (vehicle_1). Template convenience vehicle; keep near staging. Must be empty (no crew)."]]] call _fnc_setEntityAttrs;
+		if (!isNull _veh1) then {
+			[_veh1, [["side", "Empty"], ["description", "Framework: Vehicle slot 1 (vehicle_1). Template convenience vehicle; keep near staging. Must be empty (no crew)."]]] call _fnc_setEntityAttrs;
+		};
 	};
 
-	// helicopter_1 (template helper) - placed on primary helipad
+	// helicopter_1 (template helper) - placed on primary helipad (only create when no helicopter_* exists)
 	private _heli1 = [_allObjects, "helicopter_1"] call _fnc_getNamedEntity;
 	private _heli1Pos = [_primaryFarpPos select 0, (_primaryFarpPos select 1) - 20, 0] call _fnc_pos;
-	if (isNull _heli1) then {
+	if (isNull _heli1 && {!([_allObjects, "helicopter_"] call _fnc_anyNamePrefix)}) then {
 		// Template uses RHS_UH60M_ESSS_d; if RHS isn't loaded this will fail and be counted in failedTotal.
 		_missing pushBack ["Object", "RHS_UH60M_ESSS_d", _heli1Pos, [["name", "helicopter_1"], ["side", "Empty"], ["description", "Framework: Helicopter slot 1 (helicopter_1). Template convenience helicopter; placed on the helipad. Must be empty (no crew)."]]];
 	} else {
-		[_heli1, [["side", "Empty"], ["description", "Framework: Helicopter slot 1 (helicopter_1). Template convenience helicopter; placed on the helipad. Must be empty (no crew)."]]] call _fnc_setEntityAttrs;
+		if (!isNull _heli1) then {
+			[_heli1, [["side", "Empty"], ["description", "Framework: Helicopter slot 1 (helicopter_1). Template convenience helicopter; placed on the helipad. Must be empty (no crew)."]]] call _fnc_setEntityAttrs;
+		};
 	};
 
 	// ORBAT Viewer module (Strategic Map ORBAT)
@@ -558,6 +640,9 @@ while { _pass < _maxPasses } do {
 					_x params ["_key", "_val"];
 					if !(_key isEqualTo "markerName") then { _e set3DENAttribute [_key, _val]; };
 				} forEach _attrs;
+				if (_restoredItemsLayerOk) then {
+					[_e, _restoredItemsLayer] call _fnc_setLayerSafe;
+				};
 				_createdTotal = _createdTotal + 1;
 				_createdThisPass = _createdThisPass + 1;
 			} else {
@@ -566,6 +651,9 @@ while { _pass < _maxPasses } do {
 					if (!_hasInitOverride) then { _e set3DENAttribute ["init", ""]; };
 					_e set3DENAttribute ["position", _pos];
 					{ _x params ["_key", "_val"]; _e set3DENAttribute [_key, _val]; } forEach _attrs;
+					if (_restoredItemsLayerOk) then {
+						[_e, _restoredItemsLayer] call _fnc_setLayerSafe;
+					};
 					_createdTotal = _createdTotal + 1;
 					_createdThisPass = _createdThisPass + 1;
 				} else {

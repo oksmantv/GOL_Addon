@@ -167,6 +167,33 @@ class Cfg3DEN {
 			};
 		};
 
+		class GW_SelectWaypointPattern: Combo {
+			class Controls: Controls {
+				class Title: Title{};
+				class Value: Value {
+					class Items {
+						class gw_wp_circle {
+							text = "Circle";
+							data = "CIRCLE";
+							default = 1;
+						};
+						class gw_wp_triangle {
+							text = "Triangle";
+							data = "TRIANGLE";
+						};
+						class gw_wp_rectangle {
+							text = "Rectangle";
+							data = "RECTANGLE";
+						};
+						class gw_wp_column {
+							text = "Column (Back-and-forth)";
+							data = "COLUMN";
+						};
+					};
+				};
+			};
+		};
+
 		class GW_copyOnEmptyMode: GarbageCollectorMode {
 			class Controls: Controls {
 				class Title: Title{};
@@ -371,6 +398,12 @@ class Cfg3DEN {
 				class GW_Options_Waypoint {
 					displayName = "GW Tools: Generate Waypoint";
 					class Attributes {
+						class GW_WaypointPattern {
+							displayName = "Waypoint Pattern";
+							tooltip = "Shape used when generating waypoints";
+							property = "GW_WaypointPattern";
+							control = "GW_SelectWaypointPattern";
+						};
 						class GW_WaypointRadius {
 							displayName = "Waypoint Radius";
 							tooltip = "Places waypoints in a radius around right clicked";

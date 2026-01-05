@@ -9,7 +9,7 @@ class Display3DEN {
 				items[] += {"LogVectors"};
 			};
 
-			items[] += {"GW_GOL_EXPORTCACHE","GOL_FRAMEWORK_SCRIPTS","GW_GOL_CREATE_UNITS"};
+			items[] += {"GW_GOL_EXPORTCACHE","GOL_FRAMEWORK_SCRIPTS","GW_GOL_CREATE_UNITS","GW_GOL_SPAWN_LISTS"};
 
 			class LogVectors {
 				action = "[] call GW_3DEN_fnc_logVector;";
@@ -81,8 +81,31 @@ class Display3DEN {
 				items[] = {
 					"GW_GOL_CREATE_UNITS_STATIC",
 					"GW_GOL_CREATE_UNITS_GARRISON",
-					"GW_GOL_CREATE_UNITS_PATROL"
+					"GW_GOL_CREATE_UNITS_PATROL",
+					"GW_GOL_CREATE_UNITS_WAYPOINT_OPTIONS"
 				};
+			};
+
+			class GW_GOL_SPAWN_LISTS {
+				text = "Spawn Lists";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\box_ca.paa";
+				value = 0;
+				items[] = {
+					"GW_GOL_SPAWN_LISTS_CREATE_SPAWN_TRIGGER",
+					"GW_GOL_SPAWN_LISTS_CREATE_REACTION_TRIGGER"
+				};
+			};
+			class GW_GOL_SPAWN_LISTS_CREATE_SPAWN_TRIGGER {
+				text = "Create Spawn Trigger";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
+				action = "[(uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call GW_3DEN_fnc_createSpawnTrigger;";
+				conditionShow = "1";
+			};
+			class GW_GOL_SPAWN_LISTS_CREATE_REACTION_TRIGGER {
+				text = "Create Reaction Trigger";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\defend_ca.paa";
+				action = "[(uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call GW_3DEN_fnc_createReactionTrigger;";
+				conditionShow = "1";
 			};
 
 			class GW_GOL_CREATE_UNITS_STATIC {
@@ -374,6 +397,114 @@ class Display3DEN {
 				picture = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 				action = "[(uiNamespace getVariable 'BIS_fnc_3DENEntityMenu_data'), independent, 10] call OKS_fnc_EdenTemplatePatrol;";
 				conditionShow = "1";
+			};
+
+			class GW_GOL_CREATE_UNITS_WAYPOINT_OPTIONS {
+				text = "Waypoint Options";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_WP_PATTERN","GW_GOL_CREATE_UNITS_WP_RADIUS","GW_GOL_CREATE_UNITS_WP_COUNT"};
+			};
+
+			class GW_GOL_CREATE_UNITS_WP_PATTERN {
+				text = "Waypoint Pattern";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_WP_PATTERN_CIRCLE","GW_GOL_CREATE_UNITS_WP_PATTERN_TRIANGLE","GW_GOL_CREATE_UNITS_WP_PATTERN_RECTANGLE","GW_GOL_CREATE_UNITS_WP_PATTERN_COLUMN"};
+			};
+			class GW_GOL_CREATE_UNITS_WP_PATTERN_CIRCLE {
+				text = "Circle";
+				picture = "\a3\3den\Data\CfgWaypoints\cycle_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointPattern','CIRCLE']]; systemChat 'Waypoint Pattern: CIRCLE'; ['Waypoint Pattern set: Circle', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_PATTERN_TRIANGLE {
+				text = "Triangle";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointPattern','TRIANGLE']]; systemChat 'Waypoint Pattern: TRIANGLE'; ['Waypoint Pattern set: Triangle', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_PATTERN_RECTANGLE {
+				text = "Rectangle";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointPattern','RECTANGLE']]; systemChat 'Waypoint Pattern: RECTANGLE'; ['Waypoint Pattern set: Rectangle', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_PATTERN_COLUMN {
+				text = "Column (Back-and-forth)";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointPattern','COLUMN']]; systemChat 'Waypoint Pattern: COLUMN'; ['Waypoint Pattern set: Column', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+
+			class GW_GOL_CREATE_UNITS_WP_RADIUS {
+				text = "Waypoint Radius";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_WP_RADIUS_25","GW_GOL_CREATE_UNITS_WP_RADIUS_50","GW_GOL_CREATE_UNITS_WP_RADIUS_75","GW_GOL_CREATE_UNITS_WP_RADIUS_100","GW_GOL_CREATE_UNITS_WP_RADIUS_150","GW_GOL_CREATE_UNITS_WP_RADIUS_200"};
+			};
+			class GW_GOL_CREATE_UNITS_WP_RADIUS_25 {
+				text = "25m";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointRadius',25]]; systemChat 'Waypoint Radius: 25'; ['Waypoint Radius set: 25m', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_RADIUS_50 {
+				text = "50m";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointRadius',50]]; systemChat 'Waypoint Radius: 50'; ['Waypoint Radius set: 50m', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_RADIUS_75 {
+				text = "75m";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointRadius',75]]; systemChat 'Waypoint Radius: 75'; ['Waypoint Radius set: 75m', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_RADIUS_100 {
+				text = "100m";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointRadius',100]]; systemChat 'Waypoint Radius: 100'; ['Waypoint Radius set: 100m', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_RADIUS_150 {
+				text = "150m";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointRadius',150]]; systemChat 'Waypoint Radius: 150'; ['Waypoint Radius set: 150m', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_RADIUS_200 {
+				text = "200m";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointRadius',200]]; systemChat 'Waypoint Radius: 200'; ['Waypoint Radius set: 200m', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+
+			class GW_GOL_CREATE_UNITS_WP_COUNT {
+				text = "Waypoint Count";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				value = 0;
+				items[] = {"GW_GOL_CREATE_UNITS_WP_COUNT_4","GW_GOL_CREATE_UNITS_WP_COUNT_6","GW_GOL_CREATE_UNITS_WP_COUNT_8","GW_GOL_CREATE_UNITS_WP_COUNT_10","GW_GOL_CREATE_UNITS_WP_COUNT_12","GW_GOL_CREATE_UNITS_WP_COUNT_16"};
+			};
+			class GW_GOL_CREATE_UNITS_WP_COUNT_4 {
+				text = "4";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointCount',4]]; systemChat 'Waypoint Count: 4'; ['Waypoint Count set: 4', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_COUNT_6 {
+				text = "6";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointCount',6]]; systemChat 'Waypoint Count: 6'; ['Waypoint Count set: 6', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_COUNT_8 {
+				text = "8";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointCount',8]]; systemChat 'Waypoint Count: 8'; ['Waypoint Count set: 8', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_COUNT_10 {
+				text = "10";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointCount',10]]; systemChat 'Waypoint Count: 10'; ['Waypoint Count set: 10', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_COUNT_12 {
+				text = "12";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointCount',12]]; systemChat 'Waypoint Count: 12'; ['Waypoint Count set: 12', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
+			};
+			class GW_GOL_CREATE_UNITS_WP_COUNT_16 {
+				text = "16";
+				picture = "\a3\3den\Data\CfgWaypoints\move_ca.paa";
+				action = "set3DENMissionAttributes [['Preferences','GW_WaypointCount',16]]; systemChat 'Waypoint Count: 16'; ['Waypoint Count set: 16', 0, 4, true, 0.5] call BIS_fnc_3DENNotification;";
 			};
             class GOL_FRAMEWORK_COPYROLE {
                 text = "Copy Options";

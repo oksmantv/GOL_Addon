@@ -9,6 +9,8 @@ PREP(copyGroup);
 PREP(copyLoadout);
 PREP(copyStatic);
 PREP(configurePlayerVehicles);
+PREP(createSpawnTrigger);
+PREP(createReactionTrigger);
 PREP(createComposition);
 PREP(createWaypoints);
 PREP(doAction);
