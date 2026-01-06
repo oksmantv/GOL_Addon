@@ -92,7 +92,8 @@ class Display3DEN {
 				value = 0;
 				items[] = {
 					"GW_GOL_SPAWN_LISTS_CREATE_SPAWN_TRIGGER",
-					"GW_GOL_SPAWN_LISTS_CREATE_REACTION_TRIGGER"
+					"GW_GOL_SPAWN_LISTS_CREATE_REACTION_TRIGGER",
+					"GW_GOL_SPAWN_LISTS_PLACE_DYNAMIC_ZONE"
 				};
 			};
 			class GW_GOL_SPAWN_LISTS_CREATE_SPAWN_TRIGGER {
@@ -105,6 +106,12 @@ class Display3DEN {
 				text = "Create Reaction Trigger";
 				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\defend_ca.paa";
 				action = "[(uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call GW_3DEN_fnc_createReactionTrigger;";
+				conditionShow = "1";
+			};
+			class GW_GOL_SPAWN_LISTS_PLACE_DYNAMIC_ZONE {
+				text = "Place Dynamic Zone";
+				picture = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\map_ca.paa";
+				action = "[(uiNamespace getVariable ['BIS_fnc_3DENEntityMenu_data', []])] call GW_3DEN_fnc_placeDynamicZone;";
 				conditionShow = "1";
 			};
 

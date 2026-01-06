@@ -11,6 +11,7 @@ PREP(copyStatic);
 PREP(configurePlayerVehicles);
 PREP(createSpawnTrigger);
 PREP(createReactionTrigger);
+PREP(placeDynamicZone);
 PREP(createComposition);
 PREP(createWaypoints);
 PREP(doAction);
