@@ -20,13 +20,18 @@
 
 params ["_unit"];
 
-[{
-	params ["_unit"];
-	_unit enableSimulationGlobal false;
-}, _unit, 5] call CBA_fnc_waitAndExecute;
-
 if !(isClass(missionConfigFile >> "GW_FRAMEWORK")) exitWith {false};
 if (!(GVAR(UnitEnabled)) || ((isPlayer _unit) || (_unit getVariable [QGVARMAIN(isPlayer), false]))) exitWith {false};
+
+// Only disable simulation if the corpse is NOT inside a vehicle.
+// Disabling simulation on a dead body that still occupies a vehicle seat locks
+// that seat permanently — the body cannot be ejected or replaced while unsimulated.
+[{
+	params ["_unit"];
+	if (vehicle _unit isEqualTo _unit) then {
+		_unit enableSimulationGlobal false;
+	};
+}, _unit, 5] call CBA_fnc_waitAndExecute;
 
 {
 	_unit removeItem _x;

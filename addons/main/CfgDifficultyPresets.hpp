@@ -40,6 +40,7 @@ class CfgDifficultyPresets {
 			stanceIndicator=1;
 			tacticalPing = 0;
 			thirdPersonView=0;
+			targetLock=2;
 			visionAid=0;
 			vonID=0;
 			waypoints=0;
