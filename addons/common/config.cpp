@@ -18,6 +18,12 @@ class CfgPatches {
 
 #include "CfgEventHandlers.hpp"
 
+class GW_FRAMEWORK {
+	class SpawnUnits {
+		#include "CfgSpawnUnits.hpp"
+	};
+};
+
 class CfgFunctions {
 	class A3_Mark {
 		class Vehicles {

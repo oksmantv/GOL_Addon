@@ -1,6 +1,16 @@
 #include "script_component.hpp"
 
-if (hasInterface && ((getNumber(missionConfigFile >> "GW_Modules" >> "Common" >> "version")) >= 2.0)) then {
+diag_log "[GW][Common] XEH_postInit started";
+
+// Cache spawn multiplier from mission params
+GOL_SpawnMultiplier = 100;
+{
+	if (configName _x isEqualTo "SpawnMultiplier") exitWith {
+		GOL_SpawnMultiplier = paramsArray select _forEachIndex;
+	};
+} forEach (configProperties [missionConfigFile >> "Params", "isClass _x", true]);
+
+if (hasInterface) then {
 	[QGVAR(update), {
 		[{
 			[] call FUNC(simpleRoster);
@@ -16,7 +26,33 @@ if (hasInterface && ((getNumber(missionConfigFile >> "GW_Modules" >> "Common" >>
 	}] call CBA_fnc_addEventHandler;
 };
 
+diag_log "[GW][Common] XEH_postInit finished";
+
+[QGVAR(disableAICommand), {
+	params ["_unit"];
+	if (isNull _unit) exitWith {};
+	diag_log format ["[GW][Common] disableAICommand received for unit=%1", _unit];
+	[_unit] call FUNC(setAIStatic);
+}] call CBA_fnc_addEventHandler;
+
 [QGVARMAIN(playerReady), {
+	[player] call FUNC(setGroupColor);
+	if (leader (group player) isEqualTo player) then {
+		[player] call FUNC(setGroupId);
+	};
+	if (didJip) then {
+		[QGVAR(update), []] call CBA_fnc_globalEvent;
+	};
+	player setVariable [QGVARMAIN(isPlayer), true, true];
+	player assignTeam (player getVariable [QGVAR(GroupColor), "main"]);
+	if ((leader (group player)) isEqualTo (leader player)) then {
+		{
+			if !(isPlayer _x) then {
+				_x assignTeam (_x getVariable [QGVAR(GroupColor), "main"]);
+			};
+		} forEach (units (group player));
+	};
+
 	[QUOTE(PREFIX),QGVAR(Eject), "Eject", {
 		if (!(isNull (objectParent player))) then {
 			_vehicle = (vehicle player);
@@ -76,18 +112,7 @@ if (hasInterface && ((getNumber(missionConfigFile >> "GW_Modules" >> "Common" >>
 	};
 */
 
-	if ((getNumber(missionConfigFile >> "GW_Modules" >> "Common" >> "version")) > 2.0) then {
-		player assignTeam (player getVariable [QGVAR(GroupColor), "main"]);
-
-		if ((leader (group player)) isEqualTo (leader player)) then {
-			{
-				if !(isPlayer _x) then {
-					_x assignTeam (_x getVariable [QGVAR(GroupColor), "main"]);
-				};
-			} forEach (units (group player));
-		};
-
-		player addEventHandler ["InventoryOpened", {
+	player addEventHandler ["InventoryOpened", {
 			params ["_unit","_container","_secondaryContainer"];
 			if (GVAR(BlockAIGear)) then {
 				if (((_container isKindOf "CAManBase") && !(_container getVariable [QGVARMAIN(isPlayer), false])) || ((_secondaryContainer isKindOf "CAManBase") && (_secondaryContainer getVariable [QGVARMAIN(isPlayer), false]))) then {
@@ -97,10 +122,20 @@ if (hasInterface && ((getNumber(missionConfigFile >> "GW_Modules" >> "Common" >>
 				false
 			};
 		}];
-	};
 }] call CBA_fnc_addEventHandler;
 
 [QGVARMAIN(serverReady), {
+	if (GVAR(autoDelete)) then {
+		["CAManBase", "init", {
+			[{
+				params ["_unit"];
+				if ((_unit distance [0,0,0]) < 30) then {
+					deleteVehicle _unit;
+				};
+			}, _this, 10] call CBA_fnc_waitAndExecute;
+		}, true, [], true] call CBA_fnc_addClassEventHandler;
+	};
+
 	["AllVehicles", "init", {
 		params ["_veh"];
 

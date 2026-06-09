@@ -74,8 +74,8 @@
 				if (diag_fps < 25) then {
 					[QGVARMAIN(sendMessage), format ["Warning: Server low fps %1", diag_fps], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
-				if (((count allUnits) - (count allPlayers)) > 150) then {
-					[QGVARMAIN(sendMessage), format ["Warning: High unit count %1", ((count allUnits) - (count allPlayers))], ACTIVE_LIST] call CBA_fnc_targetEvent;
+				if ((({_x isKindOf "MAN"} count allUnits) - (count allPlayers)) > 150) then {
+					[QGVARMAIN(sendMessage), format ["Warning: High unit count %1", (({_x isKindOf "MAN"} count allUnits) - (count allPlayers))], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 				if ((count allGroups) > 125) then {
 					[QGVARMAIN(sendMessage), format ["Warning: High group count %1", (count allGroups)], ACTIVE_LIST] call CBA_fnc_targetEvent;
@@ -252,7 +252,13 @@
 	_pos = (_unit getRelPos [3, 0]);
 	_pos set [2, (getPosASL _unit) select 2];
 	_box setPos _pos;
+	_box allowDamage false;
 	[_box, [_type, toLower(str([_unit] call GW_Common_Fnc_getSide)), true]] call GW_Gear_Fnc_Handler;
+	[_box] spawn {
+		params ["_box"];
+		waitUntil {sleep 3; speed _X < 0.1};
+		_box allowDamage true;
+	};
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(shameList), {

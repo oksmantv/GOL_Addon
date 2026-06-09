@@ -18,6 +18,7 @@
 
 params ["_unit",["_dir", -1]];
 private _grp = (group _unit);
+diag_log format ["[GW][Common][Static] setAIStatic start unit=%1 dir=%2", _unit, _dir];
 _unit setVariable [QGVAR(disableAI_Path), true, true];
 
 if ((skill _unit) > 0.6) then {

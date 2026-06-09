@@ -45,6 +45,9 @@
 
 [{(getClientStateNumber >= 10) || !isMultiplayer}, {
 	[{
+		LOG("Event missionLoaded");
+		[QGVARMAIN(missionLoaded), []] call CBA_fnc_localEvent;
+
 		LOG("Event missionStarted");
 		[QGVARMAIN(missionStarted), []] call CBA_fnc_localEvent;
 

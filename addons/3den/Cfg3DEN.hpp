@@ -514,11 +514,11 @@ class Cfg3DEN {
 					};
 */
 					class GW_DisableHC {
-						displayName = "Disable HC Transfer";
-						tooltip = "Disables Auto Transfer Group to Headless Client   (Requires GW Framework)";
+						displayName = "Disable ACE HC Transfer";
+						tooltip = "Disables Auto Transfer Group to Headless Client (Requires GW Framework)";
 						property = "GW_DisableHC";
 						control = "Checkbox";
-						expression = "(group _this) setVariable ['GW_HeadlessController_BlackList', _value, true]; (group _this) setVariable ['acex_headless_blacklist', _value, true];";
+						expression = "(group _this) setVariable ['acex_headless_blacklist', _value, true];";
 						defaultValue = "false";
 						condition = "objectBrain";
 					};

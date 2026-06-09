@@ -4,6 +4,8 @@
 
 #include "initSettings.sqf"
 
+diag_log "[GW][SafeMode] XEH_preInit started";
+
 GVAR(Timer) = -1;	// useType == false
 
 GVAR(CiviKillCount) = 0;

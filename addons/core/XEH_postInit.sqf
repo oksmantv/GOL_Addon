@@ -1,24 +1,46 @@
 #include "script_component.hpp"
 
 LOG("postInit started");
+diag_log format ["[GW][Core] postInit entered isServer=%1 hasInterface=%2", isServer, hasInterface];
 
 if (isServer) then {
 	LOG("Loading Server Variables");
 	GVARMAIN(MACHINE) = "SERVER";
+	diag_log format ["[GW][Core] server postInit switchableUnits count=%1 devBuild=%2", count switchableUnits, (call EFUNC(Common,isDevBuild))];
 
 	if (call EFUNC(Common,isDevBuild)) then {
 		LOG("devBuild started");
 		{
+			diag_log format ["[GW][Core] devBuild deleting switchable unit=%1", _x];
 			deleteVehicle _x;
 		} forEach switchableUnits;
 	} else {
 		{
+			diag_log format ["[GW][Core] disabling AI on switchable unit=%1", _x];
 			_x disableAI "All";
 		} forEach switchableUnits;
 	};
+
+	// Local/hosted runs can hit postInit before switchableUnits is fully ready.
+	[{
+		private _isDev = call EFUNC(Common,isDevBuild);
+		diag_log format ["[GW][Core] delayed switchable pass count=%1 devBuild=%2", count switchableUnits, _isDev];
+		if (_isDev) then {
+			{
+				diag_log format ["[GW][Core] delayed devBuild deleting switchable unit=%1", _x];
+				deleteVehicle _x;
+			} forEach switchableUnits;
+		} else {
+			{
+				diag_log format ["[GW][Core] delayed disabling AI on switchable unit=%1", _x];
+				_x disableAI "All";
+			} forEach switchableUnits;
+		};
+	}, [], 2] call CBA_fnc_waitAndExecute;
 };
 
 if (hasInterface) then {
+	diag_log "[GW][Core] hasInterface branch entered";
 	player setVariable [QGVARMAIN(isPlayer), true, true];
 	player setVariable [QGVARMAIN(spawnLocation), (getPosASL player)];
 	GVARMAIN(MACHINE) = str(player);
@@ -87,16 +109,15 @@ if (isServer) then {
 	} forEach GVARMAIN(settingsLoad);
 };
 
-if (VERSION >= 0.8) then {
-	{
-		[] call compile preprocessFileLineNumbers ("Modules\" + (_x select 0) +"\" + (_x select 1));
-		LOG(FORMAT_1("Module postInit: %1", (_x select 0)));
-	} forEach GVARMAIN(postLoad);
-	LOG(FORMAT_1("Modules: %1", (count GVARMAIN(postLoad))));
-	GVARMAIN(postLoad) = nil;
+{
+	diag_log format ["[GW][Modules] PostInit executing: %1 -> %2%3", (_x select 0), (_x select 2), (_x select 1)];
+	[] call compile preprocessFileLineNumbers ((_x select 2) + (_x select 1));
+	diag_log format ["[GW][Modules] PostInit complete: %1", (_x select 0)];
+} forEach GVARMAIN(postLoad);
+diag_log format ["[GW][Modules] PostInit count: %1", (count GVARMAIN(postLoad))];
+GVARMAIN(postLoad) = nil;
 
-	#include "XEH_postInitEvents.sqf"
-};
+#include "XEH_postInitEvents.sqf"
 
 
 LOG("postInit finished");

@@ -118,20 +118,7 @@ if (_menuName isEqualTo "modules") then {
 						[QEGVAR(GameLoop,setSafetyMode), true] call CBA_fnc_globalEvent;
 					};
 				}, [EGVAR(GameLoop,SafeMode_Enabled)] call FUNC(getCheckBoxIcon),
-				"", "", -1, true,
-				!(isClass(missionConfigFile >> "GW_Modules" >> "StartUp"))
-			],
-			[	// Legacy
-				"Weapon Lock (Legacy)", {
-					if (EGVAR(StartUp,Enabled)) then {
-						[QEGVAR(StartUp,setSafetyMode), false] call CBA_fnc_globalEvent;
-						["GW_StartUp_setSafetyMode", false] call CBA_fnc_globalEvent;
-					} else {
-						[QEGVAR(StartUp,setSafetyMode), true] call CBA_fnc_globalEvent;
-					};
-				}, [EGVAR(StartUp,Enabled)] call FUNC(getCheckBoxIcon),
-				"", "", -1, true,
-				(isClass(missionConfigFile >> "GW_Modules" >> "StartUp"))
+				"", "", -1, true, true
 			],
 			[
 				"Toggle Gearbox Roles", {
@@ -253,7 +240,6 @@ if (_menuName isEqualTo "spawn") then {
 				"", "", "",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1]
 			],
-			["Open Attachment Menu",{ ["player", [], -100, ["_this call GW_Gear_Fnc_replaceAttachments","main"]] call cba_fnc_fleximenu_openMenuByDef; }],
 			["Gear Box",{[QGVAR(spawnBox), ["gearbox","Box_NATO_Equip_F", player]] call CBA_fnc_serverEvent;}],
 			["Ammo Box - Tiny",{[QGVAR(spawnBox), ["tiny_box","Box_Syndicate_Ammo_F", player]] call CBA_fnc_serverEvent;}],
 			["Ammo Box - Special Tiny",{[QGVAR(spawnBox), ["tiny_box_special","Box_Syndicate_Wps_F", player]] call CBA_fnc_serverEvent;}],

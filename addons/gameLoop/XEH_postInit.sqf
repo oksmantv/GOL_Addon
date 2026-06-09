@@ -1,18 +1,22 @@
 #include "script_Component.hpp"
 
-//	if !(isClass(missionConfigFile >> "GW_FRAMEWORK")) exitWith {false};
-if (isClass(missionConfigFile >> "GW_Modules" >> "StartUp")) exitWith {false};
+private _safeModeUseType = missionNamespace getVariable [QGVAR(SafeMode_useType), -999];
+private _safeModeTimer = missionNamespace getVariable [QGVAR(SafeMode_Timer), -999];
+private _safeModeBlockVeh = missionNamespace getVariable [QGVAR(SafeMode_blockVeh), false];
+diag_log format ["[GW][SafeMode] XEH_postInit loaded useType=%1 timer=%2 blockVeh=%3", _safeModeUseType, _safeModeTimer, _safeModeBlockVeh];
 
 if (isServer) then {
 	[QGVARMAIN(missionStarted), {
 		if (GVAR(SafeMode_useType) > 0) then {
 			GVAR(SafeMode_Enabled) = true;
 			publicVariable QGVAR(SafeMode_Enabled);
+			diag_log format ["[GW][SafeMode] missionStarted -> enabled=true useType=%1", GVAR(SafeMode_useType)];
 		};
 	}] call CBA_fnc_addEventHandler;
 };
 
 [QGVARMAIN(serverReady), {
+	diag_log format ["[GW][SafeMode] serverReady useType=%1 enabled=%2", GVAR(SafeMode_useType), GVAR(SafeMode_Enabled)];
 	if (GVAR(SafeMode_useType) > 0) then {
 		[] spawn {
 			_count = -1;
@@ -23,6 +27,7 @@ if (isServer) then {
 					_time = (GVAR(SafeMode_Timer) - _count);
 
 					if (GVAR(SafeMode_Timer) <= _count) then {
+						diag_log format ["[GW][SafeMode] countdown reached end at count=%1", _count];
 						[QGVAR(setSafetyMode), false] call CBA_fnc_globalEvent;
 					};
 				};
@@ -52,6 +57,7 @@ if (isServer) then {
 }] call CBA_fnc_addEventHandler;
 
 [QGVARMAIN(playerReady), {
+	diag_log format ["[GW][SafeMode] playerReady useType=%1 enabled=%2", GVAR(SafeMode_useType), GVAR(SafeMode_Enabled)];
 	if (GVAR(SafeMode_useType) isEqualTo 0) exitWith {false};
 
 	[QGVAR(setSafetyMode), GVAR(SafeMode_Enabled)] call CBA_fnc_localEvent;
@@ -112,6 +118,7 @@ if (isServer) then {
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(setSafetyMode), {
+	diag_log format ["[GW][SafeMode] setSafetyMode event value=%1 isServer=%2 hasInterface=%3", _this, isServer, hasInterface];
 	if (isServer) then {
 		GVAR(SafeMode_Enabled) = _this;
 		publicVariable QGVAR(SafeMode_Enabled);
@@ -119,6 +126,7 @@ if (isServer) then {
 	if (hasInterface) then {
 		TRACE_1("QGVAR(setSafetyMode)", _this);
 		[_this, false] call FUNC(WeaponLock);
+
 		if (!GVAR(SafeMode_Enabled) && (GVAR(SafeMode_useType) isEqualTo 2)) then {
 			systemChat "[SafeMode]: Weapons & Vehicles are now active";
 		};
