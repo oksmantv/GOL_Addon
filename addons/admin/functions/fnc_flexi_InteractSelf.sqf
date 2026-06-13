@@ -58,11 +58,6 @@ if (_menuName isEqualTo "actions") then {
 				-1, true,true
 			],
 			[
-				"Paradrop >",
-				"","","",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"paradrop", 1]
-			],
-			[
 				"MHQ >",
 				"","","",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"mhqlist", 1],
@@ -87,25 +82,6 @@ if (_menuName isEqualTo "mhqlist") then {
 	} forEach (vehicles select {alive _x});
 	_menus pushBack [["mhqlist", "MHQ List", _menuRsc],_mhqMenu];
 };
-
-if (_menuName isEqualTo "paradrop") then {
-	_menus pushBack [
-		["paradrop","Paradrop", _menuRsc],
-		[
-			[
-				"H.A.L.O",
-				{ [QEGVAR(menu,paradropMode), true] call CBA_fnc_GlobalEvent; },
-				[EGVAR(menu,ParadropHalo)] call FUNC(getCheckBoxIcon)
-			],
-			[
-				"Static Line",
-				{ [QEGVAR(menu,paradropMode), false] call CBA_fnc_GlobalEvent; },
-				[!EGVAR(menu,ParadropHalo)] call FUNC(getCheckBoxIcon)
-			]
-		]
-	];
-};
-
 if (_menuName isEqualTo "modules") then {
 	_menus pushBack [
 		["modules","Modules Menu", _menuRsc],
@@ -119,19 +95,6 @@ if (_menuName isEqualTo "modules") then {
 					};
 				}, [EGVAR(GameLoop,SafeMode_Enabled)] call FUNC(getCheckBoxIcon),
 				"", "", -1, true, true
-			],
-			[
-				"Toggle Gearbox Roles", {
-					if (EGVAR(Gear,GearboxActive)) then {
-						EGVAR(Gear,GearboxActive) = false;
-					} else {
-						EGVAR(Gear,GearboxActive) = true;
-					};
-					publicVariable QEGVAR(Gear,GearboxActive);
-				},
-				[EGVAR(Gear,GearboxActive)] call FUNC(getCheckBoxIcon),
-				"", "", -1, true,
-				(isClass(missionConfigFile >> "GW_Modules" >> "gear"))
 			],
 			[
 				"Heal All Players", {
@@ -223,9 +186,6 @@ if (_menuName isEqualTo "player") then {
 				"", "", -1, (!(serverCommandAvailable "#kick") && (isMultiplayer)),
 				!(isNull (getAssignedCuratorLogic player))
 			],
-			["Open Virtual Arsenal",
-			{['Open', true] call BIS_fnc_arsenal}],
-
 			["Open ACE Arsenal", {[player, player, true] call ace_arsenal_fnc_openBox}]
 		]
 	];
@@ -240,71 +200,76 @@ if (_menuName isEqualTo "spawn") then {
 				"", "", "",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1]
 			],
-			["Gear Box",{[QGVAR(spawnBox), ["gearbox","Box_NATO_Equip_F", player]] call CBA_fnc_serverEvent;}],
-			["Ammo Box - Tiny",{[QGVAR(spawnBox), ["tiny_box","Box_Syndicate_Ammo_F", player]] call CBA_fnc_serverEvent;}],
-			["Ammo Box - Special Tiny",{[QGVAR(spawnBox), ["tiny_box_special","Box_Syndicate_Wps_F", player]] call CBA_fnc_serverEvent;}],
-			["Ammo Box - Squad",{[QGVAR(spawnBox), ["small_box","Box_NATO_Ammo_F", player]] call CBA_fnc_serverEvent;}],
-			["Ammo Box - Platoon",{[QGVAR(spawnBox), ["big_box","B_CargoNet_01_ammo_F", player]] call CBA_fnc_serverEvent;}],
-			["Medical Box - Small",{[QGVAR(spawnBox), ["med_box_tiny","ACE_medicalSupplyCrate", player]] call CBA_fnc_serverEvent;}],
-			["Medical Box - Big",{[QGVAR(spawnBox), ["med_box","ACE_medicalSupplyCrate", player]] call CBA_fnc_serverEvent;}]
+			["Gear Box",{[QGVAR(spawnBox), ["GOL_GearBox_", player]] call CBA_fnc_serverEvent;}],
+			["Support Box",{[QGVAR(spawnBox), ["GOL_SupportBox_", player]] call CBA_fnc_serverEvent;}],	
+			["Ammo Box - Team",{[QGVAR(spawnBox), ["GOL_TeamResupplybox_", player]] call CBA_fnc_serverEvent;}],
+			["Ammo Box - Heavy Team",{[QGVAR(spawnBox), ["GOL_SpecialistResupplybox_", player]] call CBA_fnc_serverEvent;}],
+			["Ammo Box - Squad",{[QGVAR(spawnBox), ["GOL_SquadResupplybox_", player]] call CBA_fnc_serverEvent;}],
+			["Medical Box",{[QGVAR(spawnBox), ["GOL_MedicalResupply_", player]] call CBA_fnc_serverEvent;}],
+			["Service Station",{[QGVAR(spawnBox), ["GOL_MobileServiceStation", player]] call CBA_fnc_serverEvent;}]
 		]
 	];
 };
 
 if (_menuName isEqualTo "loadouts") then {
-	if ((getNumber(missionConfigFile >> "GW_Modules" >> "Gear" >> "version")) >= 1.5) then {
 		_menus pushBack [
 			["loadouts","Loadouts", _menuRsc],
 			[
-				["Forward Air Controller",{ [player, "fac"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#2eff2e'>Squad Leader</t>",{ [player, "sl"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#2eff2e'>Squad Medic</t>",{ [player, "sm"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#2eff2e'>Fire Team Leader</t>",{ [player, "ftl"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ff3737'>Rifleman</t>",{ [player, "r"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ff3737'>Grenadier</t>",{ [player, "g"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#6a9fff'>Asst. Gunner</t>",{ [player, "ag"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#6a9fff'>Automatic Rifleman</t>",{ [player, "ar"] call GW_Gear_Fnc_Handler; }],
-
-				["<t color='#FDF916'>Asst. Medium AT</t>",{ [player, "amat"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Medium AT</t>",{ [player, "mat"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Asst. Medium Machine Gunner</t>",{ [player, "ammg"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Medium Machine Gunner</t>",{ [player, "mmg"] call GW_Gear_Fnc_Handler; }],
-//				["Diver",{ [player, "diver"] call GW_Gear_Fnc_Handler; }],
-
-				["<t color='#FDF916'>Vehicle Crew</t>",{ [player, "crew"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Light Rifleman</t>",{ [player, "lr"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Ammo Bearer</t>",{ [player, "ab"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Anti-Air</t>",{ [player, "aa"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Chopper Pilot</t>",{ [player, "p"] call GW_Gear_Fnc_Handler; }],
-//				["<t color='#22B9FF'>Para-Rescueman</t>",{ [player, "pj"] call GW_Gear_Fnc_Handler; }],
-//				["UAV Operator",{ [player, "uav"] call GW_Gear_Fnc_Handler; }],
-//				["Jet Pilot",{ [player, "jetp"] call GW_Gear_Fnc_Handler; }]
-//				["<t color='#22B9FF'>Dragon</t>",{ [player, "dragon"] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Marksman</t>",{ [player, "marksman"] call GW_Gear_Fnc_Handler; }]
+				[
+					"Infantry >",
+					"", "", "",
+					[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_infantry", 1]
+				],
+				[
+					"Support >",
+					"", "", "",
+					[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_support", 1]
+				]
 			]
 		];
-	} else {	// Old
+};
+
+if (_menuName isEqualTo "loadouts_infantry") then {
 		_menus pushBack [
-			["loadouts","Loadouts", _menuRsc],
+			["loadouts_infantry","Loadouts - Infantry", _menuRsc],
 			[
-				["Platoon Leader",{ [player, "pl"] call GW_Gear_Fnc_Handler; }],
-				["Forward Air Controller",{ [player, "fac"] call GW_Gear_Fnc_Handler; }],
-				["Squad Leader",{ [player, "sl"] call GW_Gear_Fnc_Handler; }],
-				["Squad Medic",{ [player, "sm"] call GW_Gear_Fnc_Handler; }],
-				["Fire Team Leader",{ [player, "ftl"] call GW_Gear_Fnc_Handler; }],
-				["Rifleman",{ [player, "r"] call GW_Gear_Fnc_Handler; }],
-				["Grenadier",{ [player, "g"] call GW_Gear_Fnc_Handler; }],
-				["Asst. Gunner",{ [player, "ag"] call GW_Gear_Fnc_Handler; }],
-				["Automatic Rifleman",{ [player, "ar"] call GW_Gear_Fnc_Handler; }],
-				["Crew Member",{ [player, "crew"] call GW_Gear_Fnc_Handler; }],
-				["Pilot",{ [player, "p"] call GW_Gear_Fnc_Handler; }],
-				["Asst. Medium AT",{ [player, "amat"] call GW_Gear_Fnc_Handler; }],
-				["Medium AT",{ [player, "mat"] call GW_Gear_Fnc_Handler; }],
-				["Asst. Medium Machine Gunner",{ [player, "ammg"] call GW_Gear_Fnc_Handler; }],
-				["Medium Machine Gunner",{ [player, "mmg"] call GW_Gear_Fnc_Handler; }]
+				["<t color='#ffb400'>Actual</t>",{[player,'pl'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#ffb400'>Platoon Medic</t>",{[player,'pm'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#ffb400'>Forward Air Controller</t>",{[player,'fac'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#2eff2e'>Squad Leader</t>",{[player,'sl'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#2eff2e'>Squad Medic</t>",{[player,'sm'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#2eff2e'>Fire Team Leader</t>",{[player,'ftl'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#ff3737'>Rifleman</t>",{[player,'r'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#ff3737'>Grenadier</t>",{[player,'g'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#6a9fff'>Asst. Gunner</t>",{[player,'ag'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#6a9fff'>Automatic Rifleman</t>",{[player,'ar'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#6a9fff'>AR Ammo Bearer</t>",{[player,'ab'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#6a9fff'>AT Ammo Bearer</t>",{[player,'atab'] call GW_Gear_Fnc_Handler; }]
 			]
 		];
-	};
+};
+
+if (_menuName isEqualTo "loadouts_support") then {
+		_menus pushBack [
+			["loadouts_support","Loadouts - Support", _menuRsc],
+			[
+				["<t color='#ffb400'>Drone Operator</t>",{[player,'drone'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#ffb400'>Mortar Operator</t>",{[player,'lightdragon'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Vehicle Crew</t>",{[player,'crew'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Asst. Medium Machine Gunner</t>",{[player,'ammg'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Medium Machine Gunner</t>",{[player,'mmg'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Dragon</t>",{[player,'dragon'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Engineer</t>",{[player,'engineer'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Light Rifleman</t>",{[player,'lr'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Anti-Air</t>",{[player,'aa'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Asst. Heavy AT</t>",{[player,'amat'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Heavy AT</t>",{[player,'mat'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#22B9FF'>Chopper Pilot</t>",{[player,'p'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#22B9FF'>Para-Rescueman</t>",{[player,'pj'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#22B9FF'>Jet Pilot</t>",{[player,'jetp'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#22B9FF'>Marksman</t>",{[player,'marksman'] call GW_Gear_Fnc_Handler; }]
+			]
+		];
 };
 
 {

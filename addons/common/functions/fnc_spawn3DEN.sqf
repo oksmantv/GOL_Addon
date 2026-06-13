@@ -32,22 +32,22 @@ collect3DENHistory {
 
 	if (_side isEqualType "") then {
 		switch (toLower _side) do {
-			case "west":          { _side = WEST; };
-			case "east":          { _side = EAST; };
-			case "independent":   { _side = INDEPENDENT; };
+			case "west":          { _side = west; };
+			case "east":          { _side = east; };
+			case "independent":   { _side = independent; };
 			case "civilian":      { _side = civilian; };
-			default               { _side = EAST; };
+			default               { _side = east; };
 		};
 	};
 
 	if (_side isEqualType sideUnknown) then {
 		// GVAR(Faction) is stored as a string from CBA settings, convert it
 		switch (toLower str _side) do {
-			case "west":          { _side = WEST; };
-			case "east":          { _side = EAST; };
-			case "independent":   { _side = INDEPENDENT; };
+			case "west":          { _side = west; };
+			case "east":          { _side = east; };
+			case "independent":   { _side = independent; };
 			case "civilian":      { _side = civilian; };
-			default               { _side = EAST; };
+			default               { _side = east; };
 		};
 	};
 	([_side] call FUNC(getGroupType)) params ["_side", "_leader","_unitList"];

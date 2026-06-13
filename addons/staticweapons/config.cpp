@@ -6,7 +6,7 @@ class CfgPatches {
 		name = "GW - StaticWeapons Component";
 		url = "https://github.com/GuzzenVonLidl/";
 		units[] = {"GW_Item_StaticDummy"};
-		weapons[] = {};
+		weapons[] = {"GW_Item_StaticDummy"};
 		requiredVersion = REQUIRED_VERSION;
 		requiredAddons[] = {
 			"GW_Common"
@@ -16,6 +16,5 @@ class CfgPatches {
 	};
 };
 
-#include "CfgEventHandlers.hpp"
-//#include "CfgVehicles.hpp"
+#include "CfgVehicles.hpp"
 #include "CfgWeapons.hpp"

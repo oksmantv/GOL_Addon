@@ -32,6 +32,14 @@ params ["_faction"];
 if(_faction isEqualType sideUnknown) then {
 	_faction = str _faction;
 };
+if (_faction isEqualType 0) then {
+	// Number passed (e.g. from EAST/WEST macro collision) — map to side string
+	_faction = (["East","West","Independent","Civilian"] param [_faction, "East"]);
+};
+if (isNil "_faction" || {!(_faction isEqualType "")}) exitWith {
+	WARNING_1("getGroupType: unexpected _faction type: %1", typeName _faction);
+	[east, [], []]
+};
 private _factionStr = toUpper _faction;
 private _side = ([east,west,independent,civilian] select (getNumber(configFile >> "GW_FRAMEWORK" >> "SpawnUnits" >> _factionStr >> "Side")));
 private _leader = getArray(configFile >> "GW_FRAMEWORK" >> "SpawnUnits" >> _factionStr >> "Leaders");

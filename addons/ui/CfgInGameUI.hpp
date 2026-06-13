@@ -26,7 +26,7 @@ class CfgInGameUI  {
 	};
 
 	class DefaultAction {
-		size = 0;		// Hide crosshair text
+		//size = 0;		// Hide crosshair text
 	};
 
 	class PeripheralVision {

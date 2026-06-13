@@ -1,3 +1,0 @@
-
-PREP(fired);
-PREP(handler);

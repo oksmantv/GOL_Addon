@@ -46,6 +46,7 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		[_mhq,(_mhq getVariable [QGVAR(Fuel), (fuel _mhq)])] remoteExecCall ["setFuel", _mhq];
 		[QGVAR(Assembled), [_mhq, false]] call CBA_fnc_LocalEvent;
 	};
+	[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
 	[QGVAR(Actions), [_mhq]] call CBA_fnc_globalEvent;
 }] call CBA_fnc_addEventHandler;
 
@@ -76,6 +77,7 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		GVAR(AssembledArray) deleteAt (GVAR(AssembledArray) find _mhq);
 		publicVariable QGVAR(AssembledArray);
 	};
+	[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
 	TRACE_3("QGVAR(Assembled)", _mhq, (_mhq getVariable [QGVAR(Assembled), false]), _toggle);
 }] call CBA_fnc_addEventHandler;
 

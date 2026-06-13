@@ -15,10 +15,6 @@ GVAR(Grass_allowDisable) = true;
 GVAR(UnitCaching_Enabled) = false;
 GVAR(UnitCaching_Objects) = [];
 
-GVAR(ParadropHalo) = true;
-GVAR(ParadropHaloHeight) = 150;
-GVAR(ParadropStaticHeight) = 125;
-
 GVAR(STHud_EnabledOld) = isClass(configFile >> "CfgPatches" >> "ST_STHud");
 GVAR(STHud_Enabled) = isClass(configFile >> "CfgPatches" >> "STUI_Core");
 

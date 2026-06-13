@@ -31,19 +31,19 @@ params [
 if(_side isEqualType "") then {
 	switch (toLower(_side)) do {
 		case "west": { 
-			_side = WEST;
+			_side = west;
 		};
 		case "east": { 
-			_side = EAST;
+			_side = east;
 		};
 		case "independent": { 
-			_side = INDEPENDENT;
+			_side = independent;
 		};
 		case "civilian": { 
 			_side = civilian;
 		};					
 		default { 
-			_side = EAST;
+			_side = east;
 		};
 	};
 };

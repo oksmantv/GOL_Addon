@@ -58,9 +58,8 @@ if ((leader _grp) isEqualTo (leader _unit)) then {
 	_this enableGunLights "forceOff";
 }, _unit, 5] call CBA_fnc_waitAndExecute;
 
-if (_unit getVariable QGVAR(Fortify)) then {
-	[_unit] execFSM "x\gw\addons\ai_enhancements\ai_bunker.fsm";
-} else {
+
+if !(_unit getVariable QGVAR(Fortify)) then {
 	if ((leader _grp) isEqualTo (leader _unit)) then {
 		[_grp] call CBA_fnc_clearWaypoints;
 		_wp = _grp addWaypoint [(getposATL _unit), 0];

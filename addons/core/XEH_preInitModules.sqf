@@ -112,20 +112,23 @@ if (is3DEN) then {
 		PREPMISSIONFOLDER(spawnList);
 	} else {
 		LOG("SpawnList FAILED");
-		["Framework is corupt                           Missing file spawnList.sqf","WARNING"] spawn BIS_fnc_3DENShowMessage;
+		["Framework is corrupt                          Missing file spawnList.sqf","WARNING"] spawn BIS_fnc_3DENShowMessage;
 	};
 
 	if (FILE_EXISTS("Custom_Init.sqf")) then {
 		LOG("Custom Init Started");
 		[] call (compile preprocessFileLineNumbers "Custom_Init.sqf");
 	} else {
-		LOG("Custom Init FAILED");
-		["Framework is corupt                           Missing file Custom_Init.sqf","WARNING"] spawn BIS_fnc_3DENShowMessage;
+		LOG("Custom Init optional file missing; skipping");
 	};
 } else {	// Assume problem is fixed when its play/testing time
 	PREPMISSIONFOLDER(spawnList);
 	LOG("SpawnList Loaded");
 
-	[] call (compile preprocessFileLineNumbers "Custom_Init.sqf");
-	LOG("Custom Init Started");
+	if (FILE_EXISTS("Custom_Init.sqf")) then {
+		[] call (compile preprocessFileLineNumbers "Custom_Init.sqf");
+		LOG("Custom Init Started");
+	} else {
+		LOG("Custom Init optional file missing; skipping");
+	};
 };

@@ -1,6 +1,6 @@
 #include "script_component.hpp"
 
-[QGVARMAIN(playerReady), {
+if (hasInterface) then {
 	if (((getArray(ConfigFile >> "CfgPatches" >> "CBA_Main" >> "versionAr")) select 1) > 9) then { //	Dirty fix for number counting 3.9 > 3.13 || 13 > 9
 		[[QUOTE(PREFIX), "Admin"], "flexi_InteractSelfAdmin", "Admin Menu", {
 			if (ISADMIN) then {
@@ -38,7 +38,7 @@
 			};
 		}, {}, [DIK_INSERT,[true,false,true]], false] call CBA_fnc_addKeybind;
 	};
-}] call CBA_fnc_addEventHandler;
+};
 
 [{
 	if (hasInterface) then {
@@ -246,17 +246,38 @@
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(spawnBox), {
-	params ["_type","_class","_unit"];
+	params ["_type","_unit"];
+	private ["_class"];
 
-	_box = createVehicle [_class, [0,0,0], [], 0, "NONE"];
-	_pos = (_unit getRelPos [3, 0]);
-	_pos set [2, (getPosASL _unit) select 2];
-	_box setPos _pos;
+	if(_type != "GOL_MobileServiceStation") then {
+		switch (side _unit) do {
+			case west: {_class = _type + "WEST";};
+			case east: {_class = _type + "EAST";};
+			case independent: {_class = _type + "GUER";};
+			default {_class = _type + "WEST";};
+		};
+	} else {
+		_class = _type;
+	};
+
+	private _box = createVehicle [_class, [0,0,0], [], 0, "NONE"];
 	_box allowDamage false;
-	[_box, [_type, toLower(str([_unit] call GW_Common_Fnc_getSide)), true]] call GW_Gear_Fnc_Handler;
-	[_box] spawn {
-		params ["_box"];
-		waitUntil {sleep 3; speed _X < 0.1};
+	_box hideObjectGlobal true;
+	_box disableCollisionWith _unit;
+	_box setDir (getDir _unit);
+
+	[_box, _unit] spawn {
+		params ["_box", "_unit"];
+		sleep 0.1;
+
+		private _spawnPos = _unit modelToWorldWorld [0, 1.5, 0];
+		_box setPosASL _spawnPos;
+
+		// ACE carry must execute where the player object is local.
+		[_unit, _box] remoteExecCall ["ace_dragging_fnc_startCarry", _unit];
+
+		_box hideObjectGlobal false;
+		sleep 3;
 		_box allowDamage true;
 	};
 }] call CBA_fnc_addEventHandler;

@@ -13,10 +13,6 @@ GVARMAIN(adminCurators) = [];
 
 GVARMAIN(canUseDevConsole) = false;
 
-if (isNil QEGVAR(Gear,GearboxActive)) then {
-	EGVAR(Gear,GearboxActive) = true;
-};
-
 // Add multiple curators at mission start to prevent lag if other people needs access
 if (isServer && isMultiplayer) then {
 	private _LogicCenter = createCenter sideLogic;

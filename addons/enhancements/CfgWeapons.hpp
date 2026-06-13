@@ -5,39 +5,6 @@ class CfgWeapons {
 		fireLightDuration = 1;
 		fireLightIntensity = 0.5;
 	};
-	class Rifle;
-	class Rifle_Base_F: Rifle {
-		fireLightDuration = 0.02;
-		fireLightIntensity = 0.3;
-		fireLightDiffuse[] = {2,1.5,0};
-	};
-
-	class Rifle_Long_Base_F;
-	class LMG_Zafir_F: Rifle_Long_Base_F {
-		magazines[] += {"150Rnd_762x54_Box_Tracer_Red","150Rnd_762x54_Box_Tracer_Yellow","150Rnd_762x51_Box","150Rnd_762x51_Box_Tracer","150Rnd_762x51_Box_Tracer_Red","150Rnd_762x51_Box_Tracer_Yellow"};
-	};
-
-	class arifle_AK12_base_F: Rifle_Base_F {
-		descriptionShort = "Assault Rifle<br />Caliber: 5.45x39 mm";
-		magazines[] += {"30Rnd_545x39_Mag_F","30Rnd_545x39_Mag_Green_F","30Rnd_545x39_Mag_Tracer_F","30Rnd_545x39_Mag_Tracer_Green_F"};
-	};
-	class arifle_AK12_F: arifle_AK12_base_F {
-		displayName = "AK-12 5.45 mm";
-	};
-	class arifle_AK12_GL_base_F: arifle_AK12_base_F {
-	};
-	class arifle_AK12_GL_F: arifle_AK12_GL_base_F {
-		displayName = "AK-12 GL 5.45 mm";
-	};
-
-	class arifle_AKM_base_F: Rifle_Base_F {
-		magazines[] += {"30Rnd_545x39_Mag_F","30Rnd_545x39_Mag_Green_F","30Rnd_545x39_Mag_Tracer_F","30Rnd_545x39_Mag_Tracer_Green_F"};
-	};
-	class arifle_AKM_F: arifle_AKM_base_F {
-		scope = 2;
-		displayName = "AK-74 5.45 mm";
-		descriptionShort = "Assault Rifle<br />Caliber: 5.45x39 mm";
-	};
 
 	class ItemCore;
 	class InventoryFlashLightItem_Base_F;
