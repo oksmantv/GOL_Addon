@@ -80,13 +80,14 @@ class CfgAmmo {
 	class FlareCore;
 	class FlareBase: FlareCore {
 //		brightness = 1; == intensity = 3000; ?
-		coefGravity = 0.25;
+		coefGravity = 0.15;
 		cost = 100;
 		flareSize = F_SIZE;
 		intensity = F_INTENSITY;		//	Vanila: 500000 ACE: 1250000
-		sideairFriction = 0.2;
+		sideairFriction = 0.1;
 		simulationStep = 0.1;
 		triggerTime = 1;
+		timeToLive = 120;
 	};
 	class F_20mm_White: FlareBase {		// Flare gun
 		aiAmmoUsageFlags = "1 + 2 + 64";
@@ -100,11 +101,11 @@ class CfgAmmo {
 	class Flare_82mm_AMOS_White: FlareCore {	// Mortar Flare
 		effectFlare = "FlareShell";		//	CounterMeasureFlare
 		fuseDistance = 0;
-		coefGravity = 0.6;
+		coefGravity = 0.3;
 		deflectionSlowDown = 0.95;
 		flareSize = 8;
 		intensity = 150000;
-		timeToLive = 93;
+		timeToLive = 100;
 	};
 	class SmokeShellArty: SmokeShell {
 		effectsSmoke="SmokeShellWhiteSmall";

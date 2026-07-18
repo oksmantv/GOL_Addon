@@ -19,7 +19,9 @@ class CfgPatches {
 			"A3_Weapons_F_Mark",
 			"A3_Weapons_F_Machineguns_Zafir",
 			"A3_Weapons_F_Mark_Machineguns_Zafir",
-			"A3_Weapons_F_Rifles_Khaybar"
+			"A3_Weapons_F_Rifles_Khaybar",
+			"rhs_c_weapons",
+			"rhs_main_loadorder"
 		};
 		version = VERSION;
 		authors[] = {"GuzzenVonlidl"};
