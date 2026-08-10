@@ -18,7 +18,7 @@ if (isServer) then {
 		{
 			diag_log format ["[GW][Core] disabling AI on switchable unit=%1", _x];
 			_x disableAI "All";
-		} forEach switchableUnits;
+		} forEach (switchableUnits - [player]);;
 	};
 
 	// Local/hosted runs can hit postInit before switchableUnits is fully ready.
@@ -34,7 +34,7 @@ if (isServer) then {
 			{
 				diag_log format ["[GW][Core] delayed disabling AI on switchable unit=%1", _x];
 				_x disableAI "All";
-			} forEach switchableUnits;
+			} forEach (switchableUnits - [player]);;
 		};
 	}, [], 2] call CBA_fnc_waitAndExecute;
 };
