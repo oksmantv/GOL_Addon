@@ -12,7 +12,6 @@
 
 	Public: No
 */
-#include "script_Component.hpp"
 #define	bullShit nil,1,false,false,"",""
 #define	ALL nil,1,false,false,"","!(((_this getVariable ['GOL_SelectedRole',['']]) select 0) in ['pl','sl','ftl','g','ar','mmg','fac']) && (missionNamespace getVariable ['ARSENAL_ALLOW',true])"
 #define	GL nil,1,false,false,"","(((_this getVariable ['GOL_SelectedRole',['']]) select 0) in ['pl','sl','ftl','g','fac']) && (missionNamespace getVariable ['ARSENAL_ALLOW',true])"

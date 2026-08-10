@@ -2,9 +2,10 @@
 
 diag_log "[GW_Gear] XEH_postInit started";
 
-// Legacy missions handle their own postInit — stand down.
-if !(isClass (missionConfigFile >> "gw_Modules" >> "Gear")) exitWith {
-	diag_log "[GW_Gear] Legacy mission detected: skipping Gear postInit";
+// FW4.0 missions always provide Gear\preInit.sqf. Stand down for everything else
+// (legacy no-GW missions, old FW3.0 missions that manage their own gear system).
+if !(fileExists "Gear\preInit.sqf") exitWith {
+	diag_log "[GW_Gear] No Gear\preInit.sqf found: addon standing down";
 };
 
 diag_log "[GW_Gear] New-style mission detected: registering vehicle/unit handlers";
@@ -62,8 +63,50 @@ diag_log "[GW_Gear] XEH_postInit finished";
 	}, true, [], true] call CBA_fnc_addClassEventHandler;
 }] call CBA_fnc_addEventHandler;
 
-// Config summary — fires after all CBA settings are finalised
+// Recompile local overrides and print config summary after CBA settings are finalised.
+// XEH_preInit reads flags before settings are applied, so compiled functions always
+// default to ADDON there. This handler recompiles with the correct values.
 ["CBA_settingsInitialized", {
+	// ── DefaultCode ──────────────────────────────────────────────────
+	if (GVAR(UseLocalDefault)) then {
+		if (fileExists "Gear\Functions\fnc_DefaultCode_Local.sqf") then {
+			diag_log "[GW_Gear] CBA_settingsInitialized: DefaultCode -> LOCAL (Gear\Functions\fnc_DefaultCode_Local.sqf)";
+			GW_Gear_fnc_DefaultCode = compile preProcessFileLineNumbers "Gear\Functions\fnc_DefaultCode_Local.sqf";
+		} else {
+			if (fileExists "Modules\Gear\Scripts\Default.sqf") then {
+				diag_log "[GW_Gear] CBA_settingsInitialized: DefaultCode -> OLD FW (Modules\Gear\Scripts\Default.sqf)";
+				GW_Gear_fnc_DefaultCode = compile preProcessFileLineNumbers "Modules\Gear\Scripts\Default.sqf";
+			} else {
+				diag_log "[GW_Gear] WARNING: UseLocalDefault=true but no local file found. Using ADDON.";
+			};
+		};
+	};
+
+	// ── DefaultAICode ─────────────────────────────────────────────────
+	if (GVAR(UseLocalDefaultAI)) then {
+		if (fileExists "Gear\Functions\fnc_DefaultAICode_Local.sqf") then {
+			diag_log "[GW_Gear] CBA_settingsInitialized: DefaultAICode -> LOCAL (Gear\Functions\fnc_DefaultAICode_Local.sqf)";
+			GW_Gear_fnc_DefaultAICode = compile preProcessFileLineNumbers "Gear\Functions\fnc_DefaultAICode_Local.sqf";
+		} else {
+			if (fileExists "Modules\Gear\Scripts\Default_AI.sqf") then {
+				diag_log "[GW_Gear] CBA_settingsInitialized: DefaultAICode -> OLD FW (Modules\Gear\Scripts\Default_AI.sqf)";
+				GW_Gear_fnc_DefaultAICode = compile preProcessFileLineNumbers "Modules\Gear\Scripts\Default_AI.sqf";
+			} else {
+				diag_log "[GW_Gear] WARNING: UseLocalDefaultAI=true but no local file found. Using ADDON.";
+			};
+		};
+	};
+
+	// ── Handler ───────────────────────────────────────────────────────
+	if (GVAR(UseLocalHandler)) then {
+		if (fileExists "Gear\Functions\fnc_Handler.sqf") then {
+			diag_log "[GW_Gear] CBA_settingsInitialized: Handler -> LOCAL (Gear\Functions\fnc_Handler.sqf)";
+			GW_Gear_fnc_Handler = compile preProcessFileLineNumbers "Gear\Functions\fnc_Handler.sqf";
+		} else {
+			diag_log "[GW_Gear] WARNING: UseLocalHandler=true but Gear\Functions\fnc_Handler.sqf not found. Using ADDON.";
+		};
+	};
+
 	diag_log "[GW_Gear] ── Configuration ───────────────────────────────────";
 	diag_log format ["[GW_Gear]  Handler  : %1", ["ADDON (standard)", "LOCAL (mission)"] select GVAR(UseLocalHandler)];
 	diag_log format ["[GW_Gear]  Default  : %1", ["ADDON",            "LOCAL (mission)"] select GVAR(UseLocalDefault)];

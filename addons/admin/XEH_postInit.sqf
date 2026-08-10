@@ -104,11 +104,34 @@ if (hasInterface) then {
 					_ZeuzModule addCuratorEditableObjects [[_x],true];
 				} forEach (allUnits + vehicles);
 
-				if !(toLower(_ZeuzModule getVariable ["Name", ""]) isEqualTo "AdminZeusLogged") then {
+				private _name = toLower(_ZeuzModule getVariable ["Name", ""]);
+				if !(_name isEqualTo "adminzeuslogged" || { _name isEqualTo "gw_admin_curator_sp" }) then {
 					[QGVAR(shameList), [1, (getAssignedCuratorUnit _ZeuzModule)], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 			},	_this, 5] call CBA_fnc_waitAndExecute;
 		}, true, [], true] call CBA_fnc_addClassEventHandler;
+
+		// SP: one curator for admin/Zeus access, created here in postInit (CBA/ACE already initialized)
+		if !isMultiplayer then {
+			private _LogicCenter = createCenter sideLogic;
+			private _moduleGroup = createGroup _LogicCenter;
+			private _curtor = _moduleGroup createUnit ["ModuleCurator_F",[0,0,1000],[],0,"CAN_COLLIDE"];
+			_curtor setVariable ["Owner", "", true];
+			_curtor setVariable ["Name", "GW_Admin_Curator_SP", true];
+			_curtor setVariable ["Addons", 3, true];
+			_curtor setVariable ["Forced", 0, true];
+			_curtor setVariable ["birdType", "", true];
+			_curtor setVariable ["showNotification", false, true];
+			_curtor setVariable ["adminvar", ""];
+			_curtor setVariable ["bis_fnc_moduleexecute_activate", true];
+			_curtor setVariable ["bis_fnc_moduleinit_status", true];
+			_curtor setVariable ["bis_fnc_initmodules_activate", true];
+			_curtor setCuratorWaypointCost 0;
+			{ _curtor setCuratorCoef [_x,0]; } forEach ["place","edit","delete","destroy","group","synchronize"];
+			GVARMAIN(adminCurators) pushBack _curtor;
+			player assignCurator _curtor;
+			player call bis_fnc_curatorRespawn;
+		};
 	};
 }, [], 1] call CBA_fnc_waitAndExecute;
 

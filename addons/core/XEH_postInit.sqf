@@ -110,8 +110,11 @@ if (isServer) then {
 };
 
 {
-	diag_log format ["[GW][Modules] PostInit executing: %1 -> %2%3", (_x select 0), (_x select 2), (_x select 1)];
-	[] call compile preprocessFileLineNumbers ((_x select 2) + (_x select 1));
+	// Support both legacy 2-element [name, file] and new 3-element [name, file, moduleRoot] entries.
+	private _moduleRoot = if ((count _x) >= 3) then { _x select 2 } else { format ["Modules\%1\", _x select 0] };
+	diag_log format ["[GW][Modules] PostInit executing: %1 -> %2%3", (_x select 0), _moduleRoot, (_x select 1)];
+	
+	[] call compile preprocessFileLineNumbers (_moduleRoot + (_x select 1));
 	diag_log format ["[GW][Modules] PostInit complete: %1", (_x select 0)];
 } forEach GVARMAIN(postLoad);
 diag_log format ["[GW][Modules] PostInit count: %1", (count GVARMAIN(postLoad))];
