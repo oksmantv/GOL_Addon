@@ -116,7 +116,7 @@ if (hasInterface) then {
 			private _LogicCenter = createCenter sideLogic;
 			private _moduleGroup = createGroup _LogicCenter;
 			private _curtor = _moduleGroup createUnit ["ModuleCurator_F",[0,0,1000],[],0,"CAN_COLLIDE"];
-			_curtor setVariable ["Owner", "", true];
+			_curtor setVariable ["Owner", getPlayerUID player, true];
 			_curtor setVariable ["Name", "GW_Admin_Curator_SP", true];
 			_curtor setVariable ["Addons", 3, true];
 			_curtor setVariable ["Forced", 0, true];
