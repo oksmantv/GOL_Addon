@@ -63,7 +63,7 @@ private [
 	"_HAT","_HAT_mag","_HAT_mag_HE",
 	"_AA","_AA_Mag",
 	"_pistol","_pistol_mag","_pistol_mag_tr",
-	"_useFactionRadio","_roleUseRadio","_useMineDetector","_mortarRangeCard","_ATrag",
+	"_useFactionRadio","_roleUseRadio","_useMineDetector","_mortarRangeCard","_ATrag","_m6RangeCard",
 	"_Kestrel","_wirecutter","_UAVTerminal","_UAVTerminalB","_UAVTerminalO","_UAVTerminalI","_entrenchingTool","_notepad","_minedetector","_FacPanels",
 	"_mineDetectorVMM3","_mineDetectorVMH3","_mineDetectorVMM3Weapon","_mineDetectorVMH3Weapon",
 	"_mineAperMineDispenserMag","_mineClaymoreMag","_mineSlamMag","_mineAperBoundingMag",
@@ -614,6 +614,7 @@ if (_isMan) then {
 				[_unit, _packedHEABround, 15] call _fnc_AddObjectsCargo;
 				[_unit, _packedSmokeRound, 15] call _fnc_AddObjectsCargo;
 				[_unit, _packedFlareRound, 15] call _fnc_AddObjectsCargo;
+				[_unit, _m6RangeCard, 10] call _fnc_AddObjectsCargo;
 				[_unit, _1rndMortarHE, 30] call _fnc_AddObjectsCargo;
 				[_unit, _1rndMortarAB, 30] call _fnc_AddObjectsCargo;
 				[_unit, _1rndMortarFlareW, 20] call _fnc_AddObjectsCargo;
@@ -739,8 +740,8 @@ if (_isMan) then {
 				[_unit, _HAT_mag, 3] call _fnc_AddObjectsCargo;
 				[_unit, _AA_mag, 4] call _fnc_AddObjectsCargo;
 				[_unit, _demoCharge, 4] call _fnc_AddObjectsCargo;
-				[_unit, _packedHEround, 5] call _fnc_AddObjectsCargo;
-				[_unit, _packedHEABround, 5] call _fnc_AddObjectsCargo;
+				[_unit, _packedHEround, 6] call _fnc_AddObjectsCargo;
+				[_unit, _packedHEABround, 3] call _fnc_AddObjectsCargo;
 				[_unit, _packedSmokeRound, 5] call _fnc_AddObjectsCargo;
 				
 				[_unit, _packedDroneAT, 4] call _fnc_AddObjectsCargo;
