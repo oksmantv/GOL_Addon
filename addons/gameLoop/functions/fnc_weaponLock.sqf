@@ -51,6 +51,23 @@ if (_toggle) then {
 			};
 		}];
 	};
+	// ACE Advanced Throwing launches its own throwable object rather than using
+	// the player's FiredMan event handler. Its event fires before ACE finishes
+	// cleanup, so defer deletion by one frame to preserve ACE's throw state.
+	if (GVARMAIN(mod_ACE3) && {isNil QGVAR(BlockAceThrowable)}) then {
+		GVAR(BlockAceThrowable) = ["ace_throwableThrown", {
+			params [["_unit", objNull, [objNull]], ["_throwable", objNull, [objNull]]];
+			if (_unit isEqualTo player && {!isNull _throwable}) then {
+				[{
+					params ["_throwable"];
+					if (!isNull _throwable) then {
+						deleteVehicle _throwable;
+					};
+				}, [_throwable]] call CBA_fnc_execNextFrame;
+				["You can't throw while SafeMode is active", 5] call GW_Common_Fnc_Hint;
+			};
+		}] call CBA_fnc_addEventHandler;
+	};
 	if (time > 2 && _displayText) then {
 		systemChat "[SafeMode]: Enabled";
 	};
@@ -81,6 +98,10 @@ if (_toggle) then {
 	if !(isNil QGVAR(BlockVehicle)) then {
 		player removeEventHandler ["GetInMan", GVAR(BlockVehicle)];
 		GVAR(BlockVehicle) = nil;
+	};
+	if !(isNil QGVAR(BlockAceThrowable)) then {
+		["ace_throwableThrown", GVAR(BlockAceThrowable)] call CBA_fnc_removeEventHandler;
+		GVAR(BlockAceThrowable) = nil;
 	};
 	if (time > 2 && _displayText) then {
 		systemChat "[SafeMode]: Disabled";

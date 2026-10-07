@@ -288,6 +288,8 @@ if (hasInterface) then {
 	_box hideObjectGlobal true;
 	_box disableCollisionWith _unit;
 	_box setDir (getDir _unit);
+	// Admin boxes are created on the server, so make their ACE carry offset available to the requesting client.
+	[_box, true, [0, 1, 1], 0, false, true] call ace_dragging_fnc_setCarryable;
 
 	[_box, _unit] spawn {
 		params ["_box", "_unit"];

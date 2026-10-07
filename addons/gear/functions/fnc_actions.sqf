@@ -26,22 +26,27 @@ _unit addAction ["<t color='#00EAFF'>Attachment Menu (GL)</t>", {_playerSide = s
 _unit addAction ["<t color='#00EAFF'>Attachment Menu (LMG)</t>", {_playerSide = switch (side group player) do { case west: {"west"}; case east: {"east"}; case independent: {"independent"}; default {"west"}; }; _ArsenalLMG = missionNamespace getVariable [format["GOL_ArsenalLMG_%1",_playerSide], objNull]; [_ArsenalLMG, player] call ace_arsenal_fnc_openBox},LMG,5];
 
 _unit addAction ["<t color='#ff962c'>Remove Night gear</t>", {
-	player unassignItem "ACE_NVG_Gen4_Black";
-	player removeItem "ACE_NVG_Gen4_Black";
+	params ["_box", "_player"];
+	{
+		_player unassignItem _x;
+		_player removeItem _x;
+	} forEach (assignedItems _player select {_x isKindOf ["NVGoggles", configFile >> "CfgWeapons"]});
 	if (true) then {
-		player removeItem "ACE_IR_Strobe_Item";
-		player removeItem "ACE_Flashlight_XL50";
-		player removeMagazines  "ACE_40mm_Flare_green";
-		player removeMagazines  "ACE_40mm_Flare_red";
-		player removeMagazines  "ACE_40mm_Flare_white";
-		player removeMagazines  "ACE_HandFlare_Green";
-		player removeMagazines  "ACE_HandFlare_Red";
-		player removeMagazines  "ACE_HandFlare_White";
-		player removeMagazines  "ACE_HandFlare_Yellow";
-		player removeMagazines  "rhs_VG40OP_green";
-		player removeMagazines  "rhs_VG40OP_red";
+		_player removeItem "ACE_IR_Strobe_Item";
+		_player removeItem "ACE_Flashlight_XL50";
+		_player removeMagazines  "ACE_40mm_Flare_green";
+		_player removeMagazines  "ACE_40mm_Flare_red";
+		_player removeMagazines  "ACE_40mm_Flare_white";
+		_player removeMagazines  "ACE_HandFlare_Green";
+		_player removeMagazines  "ACE_HandFlare_Red";
+		_player removeMagazines  "ACE_HandFlare_White";
+		_player removeMagazines  "ACE_HandFlare_Yellow";
+		_player removeMagazines  "ACE_Chemlight_HiBlue";
+		_player removeMagazines  "ACE_Chemlight_HiGreen";
+		_player removeMagazines  "rhs_VG40OP_green";
+		_player removeMagazines  "rhs_VG40OP_red";
 	};
-},nil,1,false,false,"","!((((getUnitLoadout player) select 9) select 5) isEqualTo '')",5];
+},nil,1,false,false,"","((assignedItems _this) findIf {_x isKindOf [""NVGoggles"", configFile >> ""CfgWeapons""]}) >= 0",5];
 
 /* Default Ground Roles */
 _unit addAction ["<t color='#ffb400'>Platoon > Actual</t>","[player,'pl'] call GW_Gear_Fnc_Handler;",bullShit,4];
