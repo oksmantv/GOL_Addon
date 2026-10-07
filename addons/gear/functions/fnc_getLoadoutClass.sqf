@@ -44,19 +44,20 @@ private _rolePatterns = [
     [["Officer","Commander"], "officer"],
 	[["Platoon Leader"], "pl"],
     [["Squad Leader"], "sl"],
+	[["Medic","Combat Life Saver","Corpsman"], "sm"],
     [["JTAC"], "fac"],
     [["Team Leader"], "ftl"],
     [["Engineer","Ammo Bearer"], "ab"],
     [["Rifleman (AT)","Rifleman (Heavy AT)","Missile Specialist (AT)"], "mat"],
     [["Grenadier"], "g"],
-    [["Asst. Autorifleman","Combat Life Saver","Medic","Corpsman"], "ag"],
+	[["Asst. Autorifleman"], "ag"],
     [["Autorifleman","Automatic Rifleman","Auto Rifleman"], "ar"],
     [["Machinegunner","Machine Gunner","Machine Gunner Assistant","Heavy Gunner","Gunner (HMG)"], "mmg"],
     [["Crewman","Crew"], "crew"],
     [["Helicopter Pilot","Pilot"], "p"],
     [["Spotter","Marksman"], "lr"],
     [["Sniper"], "marksman"],
-    [["Missile Specialist (AA)","AA Specialist","Anti-Air Specialist","Anti Aircraft"], "aa"]
+	[["Missile Specialist (AA)","AA Specialist","Anti-Air Specialist","Anti-Air","Anti Aircraft","Igla","Stinger"], "aa"]
 ];
 
 // Try to resolve role by display name using the patterns
