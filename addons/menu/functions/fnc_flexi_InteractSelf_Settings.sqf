@@ -112,6 +112,18 @@ if (_menuName isEqualTo "settings_viewDistance") then {
 				"setViewDistance 10000; setObjectViewDistance 9000;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 10000)
+			],
+			[
+				"20000",
+				"setViewDistance 20000; setObjectViewDistance 18000;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 20000)
+			],
+			[
+				"25000",
+				"setViewDistance 25000; setObjectViewDistance 22500;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 25000)
 			]
 		]
 	];
