@@ -11,6 +11,18 @@ if (isServer) then {
 		[QGVAR(setSafetyMode), GVAR(SafeMode_Enabled)] call CBA_fnc_globalEvent;
 		diag_log format ["[GW][SafeMode] missionStarted -> enabled=%1 useType=%2", GVAR(SafeMode_Enabled), GVAR(SafeMode_useType)];
 	}] call CBA_fnc_addEventHandler;
+
+	// Restore legacy Safe Start coverage for AI and vehicle weapons. Player weapons
+	// are handled locally by WeaponLock; this server-side class handler suppresses
+	// projectiles fired by server-owned AI, including Zeus-spawned artillery.
+	["AllVehicles", "Fired", {
+		params ["_unit", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile"];
+		if !(GVAR(SafeMode_Enabled) && {!isNull _projectile}) exitWith {};
+		if (GVARMAIN(mod_ACE3)) then {
+			[_projectile] call ACE_FRAG_Fnc_addBlackList;
+		};
+		deleteVehicle _projectile;
+	}, true, [], true] call CBA_fnc_addClassEventHandler;
 };
 
 [QGVARMAIN(serverReady), {

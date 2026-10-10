@@ -65,6 +65,11 @@ if ((side _unit) isEqualTo "CIV") then {
 		_unit allowFleeing _value;
 	};
 
+	// Gear may apply after this function. Clear the marker so its final primary optic
+	// can apply the handling penalty once the loadout is complete.
+	_unit setVariable [QGVAR(hasLongRangeOpticPenalty), false, false];
+	[_unit] call FUNC(applyOpticSkillPenalty);
+
 	private _stealthEnabled = missionNamespace getVariable ["GOL_Stealth_Enabled", false];
 	private _group = group _unit;
 

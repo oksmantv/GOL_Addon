@@ -91,6 +91,14 @@ class Cfg3DEN {
 							text = "Platoon leader";
 							data = "pl";
 						};
+						class loadout_pm {
+							text = "Platoon Medic";
+							data = "pm";
+						};
+						class loadout_officer {
+							text = "Officer";
+							data = "officer";
+						};
 						class loadout_fac {
 							text = "Forward Air Controller";
 							data = "fac";
@@ -123,6 +131,58 @@ class Cfg3DEN {
 							text = "Automatic Rifleman";
 							data = "ar";
 						};
+						class loadout_ab {
+							text = "AR Ammo Bearer";
+							data = "ab";
+						};
+						class loadout_atab {
+							text = "AT Ammo Bearer";
+							data = "atab";
+						};
+						class loadout_lightdragon {
+							text = "Mortar Operator";
+							data = "lightdragon";
+						};
+						class loadout_ammg {
+							text = "Assistant Medium Machine Gunner";
+							data = "ammg";
+						};
+						class loadout_mmg {
+							text = "Medium Machine Gunner";
+							data = "mmg";
+						};
+						class loadout_dragon {
+							text = "Dragon";
+							data = "dragon";
+						};
+						class loadout_aa {
+							text = "Anti-Air";
+							data = "aa";
+						};
+						class loadout_amat {
+							text = "Assistant Heavy AT";
+							data = "amat";
+						};
+						class loadout_mat {
+							text = "Heavy AT";
+							data = "mat";
+						};
+						class loadout_drone {
+							text = "Drone Operator";
+							data = "drone";
+						};
+						class loadout_engineer {
+							text = "Engineer";
+							data = "engineer";
+						};
+						class loadout_lr {
+							text = "Light Rifleman";
+							data = "lr";
+						};
+						class loadout_marksman {
+							text = "Marksman";
+							data = "marksman";
+						};
 						class loadout_crew {
 							text = "Crew Member";
 							data = "crew";
@@ -130,6 +190,18 @@ class Cfg3DEN {
 						class loadout_p {
 							text = "Pilot";
 							data = "p";
+						};
+						class loadout_diver {
+							text = "Combat Diver";
+							data = "diver";
+						};
+						class loadout_pj {
+							text = "Para-Rescueman";
+							data = "pj";
+						};
+						class loadout_jetp {
+							text = "Jet Pilot";
+							data = "jetp";
 						};
 					};
 				};
@@ -558,6 +630,7 @@ class Cfg3DEN {
 			OnMessage = QUOTE(call FUNC(addEH_onMessage));
 			onMissionLoad = QUOTE(call FUNC(addEH_onMessage));
 			onMissionNew = QUOTE(call FUNC(addEH_onMessage));
+			onMissionSave = QUOTE([] call FUNC(refreshPlayerGearPreview));
 			onMissionPreviewEnd = QUOTE(call FUNC(addEH_onMessage));
 			onTerrainNew = QUOTE(call FUNC(addEH_onMessage));
 		};

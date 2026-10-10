@@ -4,6 +4,8 @@
 if !(hasInterface) exitWith {false};
 
 [QGVARMAIN(playerReady), {
+	[GVAR(showActionPrompts)] call FUNC(setActionMenuVisible);
+
 	if (GVARMAIN(mod_ACE3)) then {
 		if (GVAR(nameTags) > 0) then {
 			if (ace_nametags_showPlayerNames > 0) then {

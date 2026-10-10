@@ -20,9 +20,12 @@ GVAR(unitTrainingBackup) = GVAR(unitTraining);
 
 GVAR(index) = [];
 GVAR(names) = [];
+GVAR(classes) = [];
 for "_i" from 0 to ((count BEHAVIOURS) - 1) step 1 do {
+	private _behaviour = BEHAVIOURS select _i;
 	GVAR(index) pushBack _i;
-	GVAR(names) pushBack (configName (BEHAVIOURS select _i));
+	GVAR(names) pushBack (getText (_behaviour >> "displayName"));
+	GVAR(classes) pushBack (configName _behaviour);
 };
 
 // Global difficulty (backwards compatibility)

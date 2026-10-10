@@ -16,6 +16,8 @@ PREP(createComposition);
 PREP(createWaypoints);
 PREP(doAction);
 PREP(doActionMisc);
+
+PREP(refreshPlayerGearPreview);
 PREP(getAttributes);
 PREP(getAttributesLegacy);
 PREP(getLoadoutClass);

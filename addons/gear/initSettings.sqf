@@ -23,6 +23,22 @@
 	CBA_SERVEROVERWRITE
 ] call CBA_settings_fnc_init;
 
+[
+	QGVAR(DlcValidation), "CHECKBOX",
+	["Validate unsupported DLC gear", "Warn when a gear choice has only unsupported DLC or CDLC options. Base-game, supported DLC, and mod equipment remain valid fallbacks."],
+	[QUOTE(ADDON), "#0 General"],
+	true,
+	CBA_SERVEROVERWRITE
+] call CBA_settings_fnc_init;
+
+[
+	QGVAR(DlcValidationBlocked), "EDITBOX",
+	["Unsupported DLC labels", "Comma-separated config dlc labels that require a non-DLC or supported-DLC fallback. Add labels for unsupported CDLCs here."],
+	[QUOTE(ADDON), "#0 General"],
+	"Contact,Enoch,GM,SOGPF,CSLA,WS,Spearhead1944,ExpeditionaryForces",
+	CBA_SERVEROVERWRITE
+] call CBA_settings_fnc_init;
+
 // ── Faction selections ────────────────────────────────────────────────────────
 
 private _factionValues = [

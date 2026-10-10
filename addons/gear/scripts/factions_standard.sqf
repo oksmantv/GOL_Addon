@@ -202,7 +202,9 @@ switch (_side) do {
 			call compile preProcessFileLineNumbers "CustomGear\CUSTOM-W.sqf";
 		} else {
 			_errorCode = true;
-			ERROR("CUSTOM-W selected but CustomGear\CUSTOM-W.sqf not found");
+			if !(missionNamespace getVariable ["GW_Gear_DlcValidationInProgress", false]) then {
+				ERROR("CUSTOM-W selected but CustomGear\CUSTOM-W.sqf not found");
+			};
 		};
 	};
 	case "CUSTOM-E": {
@@ -210,7 +212,9 @@ switch (_side) do {
 			call compile preProcessFileLineNumbers "CustomGear\CUSTOM-E.sqf";
 		} else {
 			_errorCode = true;
-			ERROR("CUSTOM-E selected but CustomGear\CUSTOM-E.sqf not found");
+			if !(missionNamespace getVariable ["GW_Gear_DlcValidationInProgress", false]) then {
+				ERROR("CUSTOM-E selected but CustomGear\CUSTOM-E.sqf not found");
+			};
 		};
 	};
 	case "CUSTOM-I": {
@@ -218,12 +222,16 @@ switch (_side) do {
 			call compile preProcessFileLineNumbers "CustomGear\CUSTOM-I.sqf";
 		} else {
 			_errorCode = true;
-			ERROR("CUSTOM-I selected but CustomGear\CUSTOM-I.sqf not found");
+			if !(missionNamespace getVariable ["GW_Gear_DlcValidationInProgress", false]) then {
+				ERROR("CUSTOM-I selected but CustomGear\CUSTOM-I.sqf not found");
+			};
 		};
 	};
 	default {
 		_errorCode = true;
-		ERROR(FORMAT_1("Faction does not exist: %1", _side));
+		if !(missionNamespace getVariable ["GW_Gear_DlcValidationInProgress", false]) then {
+			ERROR(FORMAT_1("Faction does not exist: %1", _side));
+		};
 	};
 };
 

@@ -115,6 +115,21 @@ switch (toLower _role) do {
 		// Anti-Air Specialist
 		_classname = _sidePrefix + "soldier_AA_F";
 	};
+	case "drone": {
+		_classname = _sidePrefix + "soldier_UAV_F";
+	};
+	case "engineer": {
+		_classname = _sidePrefix + "soldier_exp_F";
+	};
+	case "diver": {
+		_classname = _sidePrefix + "diver_F";
+	};
+	case "pj": {
+		_classname = _sidePrefix + "medic_F";
+	};
+	case "jetp": {
+		_classname = _sidePrefix + "Fighter_Pilot_F";
+	};
 	case "r";
 	default {
 		// Rifleman (default)

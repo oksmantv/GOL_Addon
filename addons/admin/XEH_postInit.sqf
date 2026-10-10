@@ -289,7 +289,7 @@ if (hasInterface) then {
 	_box disableCollisionWith _unit;
 	_box setDir (getDir _unit);
 	// Admin boxes are created on the server, so make their ACE carry offset available to the requesting client.
-	[_box, true, [0, 1, 1], 0, false, true] call ace_dragging_fnc_setCarryable;
+	[_box, true, [0, 1.25, 0.5], 0, false, true] call ace_dragging_fnc_setCarryable;
 
 	[_box, _unit] spawn {
 		params ["_box", "_unit"];
@@ -371,6 +371,31 @@ if (hasInterface) then {
 		[_unit] call ace_medical_treatment_fnc_fullHealLocal
 	} else {
 		[_unit, _unit] call ACE_medical_fnc_treatmentAdvanced_fullHealLocal;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(healObject), {
+	params ["_object"];
+	if (_object isKindOf "CAManBase") then {
+		[QGVAR(fullHeal), _object] call CBA_fnc_localEvent;
+	} else {
+		_object setDamage 0;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(giveLoadout), {
+	params ["_unit", "_role"];
+	if (alive _unit && {_unit isKindOf "CAManBase"} && {!(_unit isKindOf "HeadlessClient_F")}) then {
+		[_unit, _role] call GW_Gear_fnc_Handler;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(enablePlayerProtection), {
+	params ["_unit"];
+	_unit setCaptive true;
+	_unit allowDamage false;
+	if (GVARMAIN(mod_ACE3)) then {
+		_unit setVariable ["ACE_Medical_AllowDamage", false];
 	};
 }] call CBA_fnc_addEventHandler;
 

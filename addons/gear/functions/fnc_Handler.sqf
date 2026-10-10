@@ -34,6 +34,22 @@
 #include "..\script_component.hpp"
 #include "\x\gw\addons\gear\scripts\functions.sqf"
 
+// The handler accepts one argument array only. Some editor callbacks supply a
+// Boolean result value as their implicit _this; reject it before params can
+// produce a hard script error and expose the bad caller in the RPT.
+if !(_this isEqualType []) exitWith {
+	diag_log format ["[GW_Gear][Handler] ignored invalid arguments (%1): %2", typeName _this, _this];
+	false
+};
+
+// Some asynchronous/editor callers provide a Boolean third argument. It is not
+// a valid faction identifier; preserve the unit and role, fall back to the
+// configured side faction, and leave an RPT trace for the caller audit.
+if ((_this param [2, ""]) isEqualType true) then {
+	diag_log format ["[GW_Gear][Handler] normalized Boolean forceFaction argument: %1", _this];
+	_this set [2, ""];
+};
+
 private [
 	"_compatibleItems","_opticValues",
 	"_isMan","_isCar","_isTank","_type","_allowedNightStuff","_isCivilian","_isPlayer","_side","_errorCode","_loadout","_loadoutFile","_insignia",
@@ -83,6 +99,16 @@ params [
 	["_forceFaction", "", ["",[]]]
 ];
 
+private _dlcValidationWarnings = [];
+private _validateDlcCandidateGroup = {
+	// Default and custom kit files can be compiled independently from this
+	// handler. Initialise locals explicitly so the callback stays valid when
+	// legacy loadout helpers invoke it through that separate scope.
+	private _candidates = _this param [0, "", ["", []]];
+	private _slot = _this param [1, "", [""]];
+	_dlcValidationWarnings append ([_candidates, _slot] call FUNC(validateDlcCandidates));
+};
+
 if (_forceFaction isEqualType []) then {
 	_forceFaction = if ((count _forceFaction) > 0) then {_forceFaction select 0} else {""};
 };
@@ -131,6 +157,7 @@ if (_isMan) then {
 		case "r": { _DisplayName = "Rifleman"; _roleArray pushBack _DisplayName};
 		case "g": { _DisplayName = "Grenadier"; _roleArray pushBack _DisplayName};
 		case "engineer": { _DisplayName = "Engineer"; _roleArray pushBack _DisplayName};
+		case "diver": { _DisplayName = "Combat Diver"; _roleArray pushBack _DisplayName};
 		case "ag": { _DisplayName = "Asst. Gunner"; _roleArray pushBack _DisplayName};
 		case "ar": { _DisplayName = "Automatic Rifleman"; _roleArray pushBack _DisplayName};
 		case "ammg": { _DisplayName = "Asst. Medium Machine Gunner"; _roleArray pushBack _DisplayName};
@@ -153,7 +180,7 @@ if (_isMan) then {
 	};
 	_unit setVariable ["GOL_SelectedRole",_roleArray,true];
 
-	if(time > 10 && isPlayer _unit) then {
+	if (time > 10 && {isPlayer _unit} && {!(missionNamespace getVariable [QGVAR(DlcValidationInProgress), false])}) then {
 		format["%1 has selected the %2 kit.",name _unit,_roleArray select 1] remoteExec ["systemChat",0];
 	};
 
@@ -216,7 +243,7 @@ if (_isMan) then {
 			if(!isNil "_nvg") then {_nvg = "ACE_NVG_Wide_Black_WP"};
 		};
 
-		if !(_isPlayer || (_unit in switchableUnits)) then {
+		if !(_isPlayer || (_unit in switchableUnits) || (missionNamespace getVariable [QGVAR(PreviewInProgress), false])) then {
 			_loadoutFile = "Default_AI";
 			_unit enableGunLights "forceOn";
 		};
@@ -253,6 +280,19 @@ if (_isMan) then {
 	};
 
 	if !(_errorCode) then {
+		{
+			_x params ["_slot", "_items"];
+			private _itemText = _items apply {format ["%1 (%2)", _x select 0, _x select 1]};
+			private _message = format ["[GW_Gear] DLC validation: faction %1, role %2, %3 has no approved fallback: %4", _side, _role, _slot, _itemText joinString ", "];
+			diag_log _message;
+			if (_isPlayer && {hasInterface} && {!(missionNamespace getVariable [QGVAR(DlcValidationInProgress), false])}) then {
+				systemChat _message;
+			};
+		} forEach (_dlcValidationWarnings arrayIntersect _dlcValidationWarnings);
+		if !(isNil {missionNamespace getVariable QGVAR(DlcValidationCapture)}) then {
+			missionNamespace setVariable [QGVAR(DlcValidationCapture), _dlcValidationWarnings arrayIntersect _dlcValidationWarnings];
+		};
+
 		_unit setUnitLoadout _loadout;
 		_unit setVariable ["GW_Gear_appliedGear", true, true];
 

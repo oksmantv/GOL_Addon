@@ -5,3 +5,5 @@ PREP(getLoadoutClass);
 PREP(getClassnameByRole);
 PREP(Handler);
 PREP(Init);
+PREP(validateDlcCandidates);
+PREP(validateFactionDlc);

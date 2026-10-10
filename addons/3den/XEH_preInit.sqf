@@ -6,6 +6,29 @@
 if !(is3DEN) exitWith {false};
 clearRadio;
 
+private _queueGearPreviewRefresh = {
+	if !(uiNamespace getVariable ["GW_3DEN_GearPreviewRefreshQueued", false]) then {
+		uiNamespace setVariable ["GW_3DEN_GearPreviewRefreshQueued", true];
+		[] spawn {
+			uiSleep 0.1;
+			uiNamespace setVariable ["GW_3DEN_GearPreviewRefreshQueued", false];
+			[] call GW_3den_fnc_refreshPlayerGearPreview;
+		};
+	};
+};
+
+private _addSettingChangedName = "CBA" + "_fnc_addSettingChanged";
+private _addSettingChanged = missionNamespace getVariable [_addSettingChangedName, objNull];
+if (_addSettingChanged isEqualType {}) then {
+	{
+		[_x, {
+			[] call (uiNamespace getVariable "GW_3DEN_QueueGearPreviewRefresh");
+		}] call _addSettingChanged;
+	} forEach ["GW_Gear_Blufor", "GW_Gear_Opfor", "GW_Gear_Independent", "GW_Gear_Civilian"];
+};
+
+uiNamespace setVariable ["GW_3DEN_QueueGearPreviewRefresh", _queueGearPreviewRefresh];
+
 // Default per-session marker options.
 if (isNil { uiNamespace getVariable "GW_FRAMEWORK_MARKER_ADD_FLAG" }) then {
 	uiNamespace setVariable ["GW_FRAMEWORK_MARKER_ADD_FLAG", false];
@@ -69,6 +92,7 @@ add3DENEventHandler ["OnPaste", {
 	} else {
 		if (_dbg) then { diag_log "[GW][3DEN][FrontlineNodes][OnPaste] OKS_fnc_EdenFrontlineNodeOnPasteRenumber is NIL"; };
 	};
+	[] call (uiNamespace getVariable "GW_3DEN_QueueGearPreviewRefresh");
 }];
 
 GVAR(AutoTestEvents) = [];
@@ -143,7 +167,20 @@ addMissionEventHandler ["Draw3D", {
 } forEach ((all3DENEntities select 2) select {(((_x get3DENAttribute "text") select 0) isEqualTo "HideTrigger")});
 
 [] spawn {
+	private _knownGearPreviewUnits = [];
 	while {is3DEN} do {
+		// `add3DENEventHandler` has no documented entity-created enum. Detect
+		// actual editor state instead, which also captures vehicle-generated crew.
+		private _gearPreviewUnits = (all3DENEntities select 0) select {
+			_x isKindOf "CAManBase"
+		};
+		if !(_gearPreviewUnits isEqualTo _knownGearPreviewUnits) then {
+			_knownGearPreviewUnits = +_gearPreviewUnits;
+			if !(_gearPreviewUnits isEqualTo []) then {
+				[] call (uiNamespace getVariable "GW_3DEN_QueueGearPreviewRefresh");
+			};
+		};
+
 		for "_i" from 0 to 9 step 1 do {
 			[] call FUNC(showStats);
 			uiSleep 0.1;

@@ -8,7 +8,7 @@ GVAR(MissionMenu) = false;
 GVAR(viewDistance_Enabled) = true;
 GVAR(viewDistance_Default) = 0;
 GVAR(viewObjectDistance_Default) = 0;
-GVAR(viewDistance_Max) = 10000;
+GVAR(viewDistance_Max) = 20000;
 GVAR(Grass_Enabled) = true;
 GVAR(Grass_allowDisable) = true;
 

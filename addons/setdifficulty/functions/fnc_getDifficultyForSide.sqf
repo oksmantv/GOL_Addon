@@ -28,6 +28,10 @@ if (_unitOrSide isEqualType objNull) then {
 
 private _difficulty = GVAR(unitTraining); // Default to global setting
 
+// A mission lobby selection overrides all CBA global and side-specific settings.
+private _missionOverride = missionNamespace getVariable [QGVAR(missionSkillOverride), -1];
+if (_missionOverride != -1) exitWith {_missionOverride};
+
 // Get side-specific setting
 private _sideDifficulty = switch (_side) do {
 	case west: { GVAR(unitTraining_WEST) };

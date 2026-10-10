@@ -23,7 +23,7 @@ if(!isNil "GOL_OKS_Stealth_Mission") then {
 		];
 
 		private _difficulty = [_unit] call FUNC(getDifficultyForSide);
-		_skill = (configFile >> "GW_FRAMEWORK" >> "Behaviour" >> (GVAR(names) select _difficulty) >> "playerCamoCoef");
+		_skill = (configFile >> "GW_FRAMEWORK" >> "Behaviour" >> (GVAR(classes) select _difficulty) >> "playerCamoCoef");
 
 		(getArray(_skill)) params ["_min","_mid","_max"];
 		private _value = _mid;

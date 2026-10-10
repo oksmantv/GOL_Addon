@@ -19,6 +19,38 @@ if (typeName _params isEqualTo typeName []) then {
 };
 
 private _menuDef = [];
+private _protectedPlayers = allPlayers select {!(_x isKindOf "HeadlessClient_F")};
+private _playerProtectionEnabled = (count _protectedPlayers > 0) && {
+	(_protectedPlayers findIf {!(captive _x) || {isDamageAllowed _x}}) isEqualTo -1
+};
+private _cursorObject = cursorObject;
+private _canHealCursorObject = !isNull _cursorObject && {
+	alive _cursorObject && {
+		!(_cursorObject isKindOf "HeadlessClient_F") && {
+			_cursorObject isKindOf "CAManBase" || {_cursorObject isKindOf "AllVehicles"}
+		}
+	}
+};
+private _canGiveLoadout = _canHealCursorObject && {_cursorObject isKindOf "CAManBase"};
+private _mobileHQ = missionNamespace getVariable ["Mobile_HQ", objNull];
+private _canMoveMobileHQ = !isNull _mobileHQ && {
+	alive _mobileHQ
+};
+private _healCaption = "Heal";
+if (_canHealCursorObject) then {
+	private _targetName = if (_cursorObject isKindOf "CAManBase") then {
+		name _cursorObject
+	} else {
+		getText (configFile >> "CfgVehicles" >> typeOf _cursorObject >> "displayName")
+	};
+	if !(_targetName isEqualTo "") then {
+		_healCaption = format ["Heal %1", _targetName];
+	};
+};
+private _giveLoadoutCaption = "Give Loadout >";
+if (_canGiveLoadout && {isPlayer _cursorObject}) then {
+	_giveLoadoutCaption = format ["Give %1 Loadout >", name _cursorObject];
+};
 private _menus = [
 	[
 		["main", "Admin Menu", _menuRsc],
@@ -52,41 +84,6 @@ if (_menuName isEqualTo "actions") then {
 		["actions","Actions Menu", _menuRsc],
 		[
 			[
-				"Modules >",
-				"","","",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"modules", 1],
-				-1, true,true
-			],
-			[
-				"MHQ >",
-				"","","",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"mhqlist", 1],
-				-1, true,
-				isClass(missionConfigFile >> "GW_Modules" >> "MHQ")
-			]
-		]
-	];
-};
-
-if (_menuName isEqualTo "mhqlist") then {
-	private _mhqMenu = [];
-	{
-		if (!isNil{(_x getVariable QEGVAR(MHQ,Info))}) then {
-			if (_x getVariable QEGVAR(MHQ,Active)) then {
-				_mhqMenu pushBack [(format ["Deactivate %1", _x]), (compile format ["['GW_MHQ_Enabled', [%1, false, str([player] call GW_Common_fnc_getSide)]] call CBA_fnc_serverEvent", _x])];
-			} else {
-				_mhqMenu pushBack [(format ["Move %1", _x]), (compile format ["[%1, player, 5] call GW_Menu_fnc_MoveVehicle;", _x])];
-				_mhqMenu pushBack [(format ["Activate %1", _x]), (compile format ["['GW_MHQ_Enabled', [%1, true, str([player] call GW_Common_fnc_getSide)]] call CBA_fnc_serverEvent", _x])];
-			};
-		};
-	} forEach (vehicles select {alive _x});
-	_menus pushBack [["mhqlist", "MHQ List", _menuRsc],_mhqMenu];
-};
-if (_menuName isEqualTo "modules") then {
-	_menus pushBack [
-		["modules","Modules Menu", _menuRsc],
-		[
-			[
 				"Toggle Weapon Lock", {
 					if (EGVAR(GameLoop,SafeMode_Enabled)) then {
 						[QEGVAR(GameLoop,setSafetyMode), false] call CBA_fnc_globalEvent;
@@ -97,12 +94,66 @@ if (_menuName isEqualTo "modules") then {
 				"", "", -1, true, true
 			],
 			[
+				"Enable Player Protection", {
+					{
+						if !(_x isKindOf "HeadlessClient_F") then {
+							[QGVAR(enablePlayerProtection), _x, _x] call CBA_fnc_targetEvent;
+						};
+					} forEach allPlayers;
+				},
+				[_playerProtectionEnabled] call FUNC(getCheckBoxIcon),
+				"", "", -1, true,true
+			],
+			[
+				_healCaption, {
+					private _object = cursorObject;
+					if (!isNull _object && {
+						alive _object && {
+							!(_object isKindOf "HeadlessClient_F") && {
+								_object isKindOf "CAManBase" || {_object isKindOf "AllVehicles"}
+							}
+						}
+					}) then {
+						[QGVAR(healObject), _object, _object] call CBA_fnc_targetEvent;
+					};
+				},
+				"\A3\ui_f\data\igui\cfg\actions\heal_ca.paa", "", "", -1, _canHealCursorObject, true
+			],
+			[
 				"Heal All Players", {
 					{
 						[QGVAR(fullHeal), _x, _x] call CBA_fnc_targetEvent;
 					} forEach allPlayers;
 				},
-				"","", "", -1, true,true
+				"\A3\ui_f\data\igui\cfg\actions\heal_ca.paa", "", "", -1, true,true
+			],
+			[
+				"MHQ >",
+				"","","",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"mhqlist", 1],
+				-1, true,
+				isClass(missionConfigFile >> "GW_Modules" >> "MHQ")
+			],
+			[
+				"Move Mobile HQ", {
+					private _mobileHQ = missionNamespace getVariable ["Mobile_HQ", objNull];
+					if (!isNull _mobileHQ && {alive _mobileHQ}) then {
+						[_mobileHQ, player, 5] call GW_Menu_fnc_MoveVehicle;
+					};
+				},
+				"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa", "", "", -1, _canMoveMobileHQ, true
+			],
+			[
+				"Select Loadouts >",
+				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1],
+				-1, true, true
+			],
+			[
+				_giveLoadoutCaption,
+				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts", 1],
+				-1, _canGiveLoadout, true
 			]
 		]
 	];
@@ -195,18 +246,13 @@ if (_menuName isEqualTo "spawn") then {
 	_menus pushBack [
 		["spawn","Spawn Menu", _menuRsc],
 		[
-			[
-				"Loadouts - Squad >",
-				"", "", "",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1]
-			],
-			["Gear Box",{[QGVAR(spawnBox), ["GOL_GearBox_", player]] call CBA_fnc_serverEvent;}],
-			["Support Box",{[QGVAR(spawnBox), ["GOL_SupportBox_", player]] call CBA_fnc_serverEvent;}],	
-			["Ammo Box - Team",{[QGVAR(spawnBox), ["GOL_TeamResupplybox_", player]] call CBA_fnc_serverEvent;}],
-			["Ammo Box - Heavy Team",{[QGVAR(spawnBox), ["GOL_SpecialistResupplybox_", player]] call CBA_fnc_serverEvent;}],
-			["Ammo Box - Squad",{[QGVAR(spawnBox), ["GOL_SquadResupplybox_", player]] call CBA_fnc_serverEvent;}],
-			["Medical Box",{[QGVAR(spawnBox), ["GOL_MedicalResupply_", player]] call CBA_fnc_serverEvent;}],
-			["Service Station",{[QGVAR(spawnBox), ["GOL_MobileServiceStation", player]] call CBA_fnc_serverEvent;}]
+			["Gear Box",{[QGVAR(spawnBox), ["GOL_GearBox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa"],
+			["Support Box",{[QGVAR(spawnBox), ["GOL_SupportBox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\Map\VehicleIcons\iconCrateAmmo_ca.paa"],
+			["Team Resupply Box",{[QGVAR(spawnBox), ["GOL_TeamResupplybox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\reload_ca.paa"],
+			["Specialist Resupply Box",{[QGVAR(spawnBox), ["GOL_SpecialistResupplybox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\reload_ca.paa"],
+			["Squad Resupply Box",{[QGVAR(spawnBox), ["GOL_SquadResupplybox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\reload_ca.paa"],
+			["Medical Box",{[QGVAR(spawnBox), ["GOL_MedicalResupply_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\heal_ca.paa"],
+			["Service Station",{[QGVAR(spawnBox), ["GOL_MobileServiceStation", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\repair_ca.paa"]
 		]
 	];
 };
@@ -215,27 +261,31 @@ if (_menuName isEqualTo "loadouts") then {
 		_menus pushBack [
 			["loadouts","Loadouts", _menuRsc],
 			[
-				[
-					"Infantry >",
-					"", "", "",
-					[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_infantry", 1]
-				],
-				[
-					"Support >",
-					"", "", "",
-					[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_support", 1]
-				]
+				["Command &amp; Coordination >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_command", 1], -1, true, true],
+				["Squad Roles >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_squad", 1], -1, true, true],
+				["Heavy Weapons >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_heavy", 1], -1, true, true],
+				["Specialists >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_specialists", 1], -1, true, true],
+				["Aviation >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_aviation", 1], -1, true, true]
 			]
 		];
 };
 
-if (_menuName isEqualTo "loadouts_infantry") then {
+if (_menuName isEqualTo "loadouts_command") then {
 		_menus pushBack [
-			["loadouts_infantry","Loadouts - Infantry", _menuRsc],
+			["loadouts_command","Loadouts - Command & Coordination", _menuRsc],
 			[
+				["<t color='#ffb400'>Officer</t>",{[player,'officer'] call GW_Gear_Fnc_Handler;}],
 				["<t color='#ffb400'>Actual</t>",{[player,'pl'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#ffb400'>Platoon Medic</t>",{[player,'pm'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ffb400'>Forward Air Controller</t>",{[player,'fac'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#ffb400'>Forward Air Controller</t>",{[player,'fac'] call GW_Gear_Fnc_Handler; }]
+			]
+		];
+};
+
+if (_menuName isEqualTo "loadouts_squad") then {
+		_menus pushBack [
+			["loadouts_squad","Loadouts - Squad Roles", _menuRsc],
+			[
 				["<t color='#2eff2e'>Squad Leader</t>",{[player,'sl'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#2eff2e'>Squad Medic</t>",{[player,'sm'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#2eff2e'>Fire Team Leader</t>",{[player,'ftl'] call GW_Gear_Fnc_Handler; }],
@@ -249,27 +299,71 @@ if (_menuName isEqualTo "loadouts_infantry") then {
 		];
 };
 
-if (_menuName isEqualTo "loadouts_support") then {
+if (_menuName isEqualTo "loadouts_heavy") then {
 		_menus pushBack [
-			["loadouts_support","Loadouts - Support", _menuRsc],
+			["loadouts_heavy","Loadouts - Heavy Weapons", _menuRsc],
 			[
-				["<t color='#ffb400'>Drone Operator</t>",{[player,'drone'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ffb400'>Mortar Operator</t>",{[player,'lightdragon'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Vehicle Crew</t>",{[player,'crew'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#FDF916'>Mortar Operator</t>",{[player,'lightdragon'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#FDF916'>Asst. Medium Machine Gunner</t>",{[player,'ammg'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#FDF916'>Medium Machine Gunner</t>",{[player,'mmg'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#FDF916'>Dragon</t>",{[player,'dragon'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Engineer</t>",{[player,'engineer'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Light Rifleman</t>",{[player,'lr'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#FDF916'>Anti-Air</t>",{[player,'aa'] call GW_Gear_Fnc_Handler; }],
 				["<t color='#FDF916'>Asst. Heavy AT</t>",{[player,'amat'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Heavy AT</t>",{[player,'mat'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Chopper Pilot</t>",{[player,'p'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Para-Rescueman</t>",{[player,'pj'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Jet Pilot</t>",{[player,'jetp'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Marksman</t>",{[player,'marksman'] call GW_Gear_Fnc_Handler; }]
+				["<t color='#FDF916'>Heavy AT</t>",{[player,'mat'] call GW_Gear_Fnc_Handler; }]
 			]
 		];
+};
+
+if (_menuName isEqualTo "loadouts_specialists") then {
+		_menus pushBack [
+			["loadouts_specialists","Loadouts - Specialists", _menuRsc],
+			[
+				["<t color='#c77dff'>Drone Operator</t>",{[player,'drone'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#c77dff'>Engineer</t>",{[player,'engineer'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#c77dff'>Light Rifleman</t>",{[player,'lr'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#c77dff'>Marksman</t>",{[player,'marksman'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#c77dff'>Vehicle Crew</t>",{[player,'crew'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#c77dff'>Combat Diver</t>",{[player,'diver'] call GW_Gear_Fnc_Handler; }]
+			]
+		];
+};
+
+if (_menuName isEqualTo "loadouts_aviation") then {
+		_menus pushBack [
+			["loadouts_aviation","Loadouts - Aviation", _menuRsc],
+			[
+				["<t color='#22B9FF'>Chopper Pilot</t>",{[player,'p'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#22B9FF'>Para-Rescueman</t>",{[player,'pj'] call GW_Gear_Fnc_Handler; }],
+				["<t color='#22B9FF'>Jet Pilot</t>",{[player,'jetp'] call GW_Gear_Fnc_Handler; }]
+			]
+		];
+};
+
+if (_menuName isEqualTo "target_loadouts") then {
+	_menus pushBack [["target_loadouts","Give Loadout", _menuRsc], [
+		["Command &amp; Coordination >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_command", 1], -1, true, true],
+		["Squad Roles >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_squad", 1], -1, true, true],
+		["Heavy Weapons >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_heavy", 1], -1, true, true],
+		["Specialists >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_specialists", 1], -1, true, true],
+		["Aviation >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_aviation", 1], -1, true, true]
+	]];
+};
+
+if ((_menuName find "target_loadouts_") isEqualTo 0) then {
+	private _targetLoadoutRoles = switch (_menuName) do {
+		case "target_loadouts_command": {[["<t color='#ffb400'>Officer</t>", "officer"], ["<t color='#ffb400'>Actual</t>", "pl"], ["<t color='#ffb400'>Platoon Medic</t>", "pm"], ["<t color='#ffb400'>Forward Air Controller</t>", "fac"]]};
+		case "target_loadouts_squad": {[["<t color='#2eff2e'>Squad Leader</t>", "sl"], ["<t color='#2eff2e'>Squad Medic</t>", "sm"], ["<t color='#2eff2e'>Fire Team Leader</t>", "ftl"], ["<t color='#ff3737'>Rifleman</t>", "r"], ["<t color='#ff3737'>Grenadier</t>", "g"], ["<t color='#6a9fff'>Asst. Gunner</t>", "ag"], ["<t color='#6a9fff'>Automatic Rifleman</t>", "ar"], ["<t color='#6a9fff'>AR Ammo Bearer</t>", "ab"], ["<t color='#6a9fff'>AT Ammo Bearer</t>", "atab"]]};
+		case "target_loadouts_heavy": {[["<t color='#FDF916'>Mortar Operator</t>", "lightdragon"], ["<t color='#FDF916'>Asst. Medium Machine Gunner</t>", "ammg"], ["<t color='#FDF916'>Medium Machine Gunner</t>", "mmg"], ["<t color='#FDF916'>Dragon</t>", "dragon"], ["<t color='#FDF916'>Anti-Air</t>", "aa"], ["<t color='#FDF916'>Asst. Heavy AT</t>", "amat"], ["<t color='#FDF916'>Heavy AT</t>", "mat"]]};
+		case "target_loadouts_specialists": {[["<t color='#c77dff'>Drone Operator</t>", "drone"], ["<t color='#c77dff'>Engineer</t>", "engineer"], ["<t color='#c77dff'>Light Rifleman</t>", "lr"], ["<t color='#c77dff'>Marksman</t>", "marksman"], ["<t color='#c77dff'>Vehicle Crew</t>", "crew"], ["<t color='#c77dff'>Combat Diver</t>", "diver"]]};
+		case "target_loadouts_aviation": {[["<t color='#22B9FF'>Chopper Pilot</t>", "p"], ["<t color='#22B9FF'>Para-Rescueman</t>", "pj"], ["<t color='#22B9FF'>Jet Pilot</t>", "jetp"]]};
+		default {[]};
+	};
+	private _targetLoadoutMenu = [];
+	{
+		_x params ["_name", "_role"];
+		_targetLoadoutMenu pushBack [_name, compile format ["private _unit = cursorObject; if (!isNull _unit && {alive _unit} && {_unit isKindOf 'CAManBase'} && {!(_unit isKindOf 'HeadlessClient_F')}) then {['%2', [_unit, '%1'], _unit] call CBA_fnc_targetEvent;};", _role, QGVAR(giveLoadout)]];
+	} forEach _targetLoadoutRoles;
+	_menus pushBack [[_menuName, "Give Loadout", _menuRsc], _targetLoadoutMenu];
 };
 
 {

@@ -2,6 +2,14 @@
 
 diag_log "[GW][SetDifficulty] XEH_postInit started";
 
+// Cache the optional lobby parameter. -1 preserves the configured CBA settings.
+GVAR(missionSkillOverride) = -1;
+{
+	if (configName _x isEqualTo "GOL_AISkillOverride") exitWith {
+		GVAR(missionSkillOverride) = paramsArray select _forEachIndex;
+	};
+} forEach (configProperties [missionConfigFile >> "Params", "isClass _x", true]);
+
 [QGVARMAIN(serverReady), {
 	["CAManBase", "init", {
 		_this call FUNC(init);

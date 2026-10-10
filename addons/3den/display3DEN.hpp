@@ -1430,6 +1430,7 @@ class Display3DEN {
 						MENU(doActions),
 						MENU(set3DENAttributes),
 						MENU(Misc),
+						MENU(RefreshPlayerGearPreview),
 						"Separator",
 						MENU(OpenSettingsMenu),
 						MENU(getVersionMenu),

@@ -6,7 +6,7 @@ if (isClass(configFile >> "CfgPatches" >> "GW_menu")) then {
 	EGVAR(menu,viewDistance_Enabled) = true;	// Toggle Change ViewDistance with GOL Menu
 	EGVAR(menu,viewDistance_Default) = 1000;	// Anything above 0 overwrites the personal default ViewDistance that is on mission start
 	EGVAR(menu,viewObjectDistance_Default) = 0;	// Anything above 0 overwrites the personal default objectViewDistance that is on mission start
-	EGVAR(menu,viewDistance_Max) = 10000;		// Set Max ViewDistance Allowed
+	EGVAR(menu,viewDistance_Max) = 20000;		// Set Max ViewDistance Allowed
 	EGVAR(menu,Grass_Enabled) = true;			// Enable Change Grass
 	EGVAR(menu,Grass_allowDisable) = true;		// Enable Ability to disable grass fully
 };

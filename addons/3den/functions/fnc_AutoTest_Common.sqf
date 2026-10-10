@@ -30,6 +30,7 @@ _allPlayable = ((all3DENEntities select 0) select {((_x get3DENAttribute "Contro
 _west = (_allPlayable select {(side _x) isEqualTo blufor});
 _east = (_allPlayable select {(side _x) isEqualTo opfor});
 _indep = (_allPlayable select {(side _x) isEqualTo independent});
+_civilian = (_allPlayable select {(side _x) isEqualTo civilian});
 _respawneast = [];
 _respawnwest = [];
 _respawnindep = [];
@@ -100,6 +101,95 @@ if ((count _indep) > 0) then {
 	};
 };
 
+// Validate only factions that supply playable units. The gear handler evaluates
+// every selectable player role and reports candidate groups that would force an
+// unsupported DLC watermark without an approved fallback.
+private _getFactionSetting = {
+	params ["_setting"];
+	private _value = "";
+	if !(isNil "CBA_settings_fnc_get") then {
+		_value = [_setting] call CBA_settings_fnc_get;
+	};
+	if !(_value isEqualType "") then {
+		_value = missionNamespace getVariable [_setting, ""];
+	};
+	_value
+};
+private _playerFactionSides = [
+	["BLUFOR", _west, "GW_Gear_Blufor", west],
+	["OPFOR", _east, "GW_Gear_Opfor", east],
+	["INDEPENDENT", _indep, "GW_Gear_Independent", independent],
+	["CIVILIAN", _civilian, "GW_Gear_Civilian", civilian]
+];
+private _getRoleDisplayName = {
+	params ["_role"];
+	switch (_role) do {
+		case "officer": {"Officer"};
+		case "pl": {"Platoon Leader"};
+		case "pm": {"Platoon Medic"};
+		case "fac": {"Forward Air Controller"};
+		case "sl": {"Squad Leader"};
+		case "sm": {"Squad Medic"};
+		case "ftl": {"Fireteam Leader"};
+		case "r": {"Rifleman"};
+		case "g": {"Grenadier"};
+		case "ag": {"Assistant Gunner"};
+		case "ar": {"Automatic Rifleman"};
+		case "ab": {"AR Ammo Bearer"};
+		case "atab": {"AT Ammo Bearer"};
+		case "lightdragon": {"Mortar Operator"};
+		case "ammg": {"Assistant Medium Machine Gunner"};
+		case "mmg": {"Medium Machine Gunner"};
+		case "dragon": {"Dragon"};
+		case "aa": {"Anti-Air"};
+		case "amat": {"Assistant Heavy AT"};
+		case "mat": {"Heavy AT"};
+		case "drone": {"Drone Operator"};
+		case "engineer": {"Engineer"};
+		case "lr": {"Light Rifleman"};
+		case "marksman": {"Marksman"};
+		case "crew": {"Vehicle Crew"};
+		case "diver": {"Combat Diver"};
+		case "p": {"Chopper Pilot"};
+		case "pj": {"Para-Rescueman"};
+		case "jetp": {"Jet Pilot"};
+		default {_role};
+	};
+};
+{
+	_x params ["_sideName", "_units", "_setting", "_side"];
+	if ((count _units) > 0) then {
+		private _faction = [_setting] call _getFactionSetting;
+		if (_faction isEqualTo "") then {
+			_output pushBack [_error, format ["%1 player faction is not configured", _sideName], format ["Set %1 in Addon Options before export.", _setting], [-1]];
+		} else {
+			private _watermarkRisks = [_faction, _side] call EFUNC(Gear,validateFactionDlc);
+			if (_watermarkRisks isEqualTo []) then {
+				_output pushBack [_approved, format ["%1 player faction %2 has no DLC watermark risks", _sideName, _faction], "All selectable player roles were checked.", [-1]];
+			} else {
+				private _groupedRisks = [];
+				{
+					_x params ["_role", "_slot", "_items"];
+					private _groupIndex = _groupedRisks findIf {(_x select 0) isEqualTo _slot && {(_x select 1) isEqualTo _items}};
+					if (_groupIndex isEqualTo -1) then {
+						_groupedRisks pushBack [_slot, _items, [_role]];
+					} else {
+						(_groupedRisks select _groupIndex select 2) pushBackUnique _role;
+					};
+				} forEach _watermarkRisks;
+				{
+					_x params ["_slot", "_items", "_roles"];
+					private _roleNames = (_roles apply {[_x] call _getRoleDisplayName}) joinString ", ";
+					private _candidateClasses = _items apply {_x select 0};
+					private _dlcLabels = (_items apply {_x select 1}) arrayIntersect (_items apply {_x select 1});
+					private _tooltip = format ["Side / selected gear: %1 / %2\n\nAffected roles:\n%3\n\nDefined candidates: %4\nBlocked DLC: %5", _sideName, _faction, _roleNames, str _candidateClasses, _dlcLabels joinString ", "];
+					_output pushBack [_error, format ["No non-DLC %1 support - Number of Roles: %2", _slot, count _roles], _tooltip, [-1]];
+				} forEach _groupedRisks;
+			};
+		};
+	};
+} forEach _playerFactionSides;
+
 
 
 if (isClass(missionConfigFile >> "GW_Modules" >> "MHQ")) then {
@@ -138,6 +228,24 @@ if (_aiCount > 100) then {
 
 // Check for critical framework objects
 _allObjects = all3DENEntities select 0;
+
+// Named player assets are part of the intended mission experience. Check only
+// these explicitly named vehicles, avoiding unrelated editor props and AI assets.
+private _namedPlayerAssets = _allObjects select {
+	private _name = toLower ((_x get3DENAttribute "name") select 0);
+	(["vehicle_", "helicopter_", "jet_", "mhq_"] findIf {(_name find _x) isEqualTo 0}) isNotEqualTo -1 && {_x isKindOf "AllVehicles"}
+};
+{
+	private _assetName = (_x get3DENAttribute "name") select 0;
+	private _assetClass = typeOf _x;
+	private _assetRisks = [_assetClass, "Vehicle"] call EFUNC(Gear,validateDlcCandidates);
+	if !(_assetRisks isEqualTo []) then {
+		_assetRisks select 0 params ["", "_items"];
+		private _itemText = _items apply {format ["%1 (%2)", _x select 0, _x select 1]};
+		private _displayName = getText (configFile >> "CfgVehicles" >> _assetClass >> "displayName");
+		_output pushBack [_error, format ["%1 (%2) uses unsupported DLC", _assetName, _displayName], _itemText joinString ", ", [4, _x], "Move To .."];
+	};
+} forEach _namedPlayerAssets;
 
 _HasGearBox = ({(typeOf _x) find "GOL_GearBox" > -1} count _allObjects > 0);
 if !(_HasGearBox) then {
