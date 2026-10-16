@@ -22,7 +22,7 @@ if (true) then {
 		["TFAR_objectInterceptionEnabled", _objectInterceptionEnabled, true, "server"] call CBA_settings_fnc_set;
 		["TFAR_spectatorCanHearEnemyUnits", _spectatorCanHearEnemyUnits, true, "server"] call CBA_settings_fnc_set;
 		["TFAR_spectatorCanHearFriendlies", _spectatorCanHearFriendlies, true, "server"] call CBA_settings_fnc_set;
-		["TFAR_defaultIntercomSlot", -1, true, "server"] call CBA_settings_fnc_set;
+		["TFAR_defaultIntercomSlot", 0, true, "server"] call CBA_settings_fnc_set;
 	}] call CBA_fnc_addEventHandler;
 } else {
 	["CBA_settingsInitializedDelayed", {

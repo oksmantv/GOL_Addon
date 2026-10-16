@@ -19,6 +19,27 @@ if (typeName _params isEqualTo typeName []) then {
 };
 
 private _menuDef = [];
+private _protectedPlayers = allPlayers select {!(_x isKindOf "HeadlessClient_F")};
+private _playerProtectionEnabled = (count _protectedPlayers > 0) && {
+	(_protectedPlayers findIf {!(captive _x) || {isDamageAllowed _x}}) isEqualTo -1
+};
+private _togglePlayerProtection = if (_playerProtectionEnabled) then {
+	{
+		{
+			if !(_x isKindOf "HeadlessClient_F") then {
+				[QGVAR(disablePlayerProtection), [_x, true], _x] call CBA_fnc_targetEvent;
+			};
+		} forEach allPlayers;
+	}
+} else {
+	{
+		{
+			if !(_x isKindOf "HeadlessClient_F") then {
+				[QGVAR(enablePlayerProtection), _x, _x] call CBA_fnc_targetEvent;
+			};
+		} forEach allPlayers;
+	}
+};
 private _cursorObject = cursorObject;
 private _canHealCursorObject = !isNull _cursorObject && {
 	alive _cursorObject && {
@@ -47,7 +68,7 @@ private _giveLoadoutCaption = "Give Loadout >";
 if (_canGiveLoadout && {isPlayer _cursorObject}) then {
 	_giveLoadoutCaption = format ["Give %1 Loadout >", name _cursorObject];
 };
-private _loadoutRoles = [
+private _standardLoadoutRoles = [
 	["<t color='#ffb400'>Officer</t>", "officer"],
 	["<t color='#ffb400'>Actual</t>", "pl"],
 	["<t color='#ffb400'>Platoon Medic</t>", "pm"],
@@ -60,7 +81,9 @@ private _loadoutRoles = [
 	["<t color='#6a9fff'>Asst. Gunner</t>", "ag"],
 	["<t color='#6a9fff'>Automatic Rifleman</t>", "ar"],
 	["<t color='#6a9fff'>AR Ammo Bearer</t>", "ab"],
-	["<t color='#6a9fff'>AT Ammo Bearer</t>", "atab"],
+	["<t color='#6a9fff'>AT Ammo Bearer</t>", "atab"]
+];
+private _specialistLoadoutRoles = [
 	["<t color='#FDF916'>Mortar Operator</t>", "lightdragon"],
 	["<t color='#FDF916'>Asst. Medium Machine Gunner</t>", "ammg"],
 	["<t color='#FDF916'>Medium Machine Gunner</t>", "mmg"],
@@ -121,24 +144,10 @@ if (_menuName isEqualTo "actions") then {
 				"", "", -1, true, true
 			],
 			[
-				"Enable Player Protection", {
-					{
-						if !(_x isKindOf "HeadlessClient_F") then {
-							[QGVAR(enablePlayerProtection), _x, _x] call CBA_fnc_targetEvent;
-						};
-					} forEach allPlayers;
-				},
-					"", "", "", -1, true, true
-			],
-			[
-				"Disable Player Protection", {
-					{
-						if !(_x isKindOf "HeadlessClient_F") then {
-							[QGVAR(disablePlayerProtection), [_x, true], _x] call CBA_fnc_targetEvent;
-						};
-					} forEach allPlayers;
-				},
-					"", "", "", -1, true, true
+				"Player Protection",
+				_togglePlayerProtection,
+				[_playerProtectionEnabled] call FUNC(getCheckBoxIcon),
+				"", "", -1, true, true
 			],
 			[
 				_healCaption, {
@@ -294,21 +303,53 @@ if (_menuName isEqualTo "spawn") then {
 };
 
 if (_menuName isEqualTo "loadouts") then {
-	private _selfLoadoutMenu = [];
+	private _selfLoadoutMenu = [
+		[
+			"Specialist Roles >",
+			"", "", "",
+			[QUOTE(call FUNC(flexi_InteractSelf)), "loadouts_specialists", 1],
+			-1, true, true
+		]
+	];
 	{
 		_x params ["_name", "_role"];
 		_selfLoadoutMenu pushBack [_name, compile format ["[player, '%1'] call GW_Gear_Fnc_Handler;", _role]];
-	} forEach _loadoutRoles;
+	} forEach _standardLoadoutRoles;
 	_menus pushBack [["loadouts", "Loadouts", _menuRsc], _selfLoadoutMenu];
 };
 
+if (_menuName isEqualTo "loadouts_specialists") then {
+	private _selfSpecialistLoadoutMenu = [];
+	{
+		_x params ["_name", "_role"];
+		_selfSpecialistLoadoutMenu pushBack [_name, compile format ["[player, '%1'] call GW_Gear_Fnc_Handler;", _role]];
+	} forEach _specialistLoadoutRoles;
+	_menus pushBack [["loadouts_specialists", "Specialist Loadouts", _menuRsc], _selfSpecialistLoadoutMenu];
+};
+
 if (_menuName isEqualTo "target_loadouts") then {
-	private _targetLoadoutMenu = [];
+	private _targetLoadoutMenu = [
+		[
+			"Specialist Roles >",
+			"", "", "",
+			[QUOTE(call FUNC(flexi_InteractSelf)), "target_loadouts_specialists", 1],
+			-1, true, true
+		]
+	];
 	{
 		_x params ["_name", "_role"];
 		_targetLoadoutMenu pushBack [_name, compile format ["private _unit = cursorObject; if (!isNull _unit && {alive _unit} && {_unit isKindOf 'CAManBase'} && {!(_unit isKindOf 'HeadlessClient_F')}) then {['%2', [_unit, '%1'], _unit] call CBA_fnc_targetEvent;};", _role, QGVAR(giveLoadout)]];
-	} forEach _loadoutRoles;
+	} forEach _standardLoadoutRoles;
 	_menus pushBack [["target_loadouts", "Give Loadout", _menuRsc], _targetLoadoutMenu];
+};
+
+if (_menuName isEqualTo "target_loadouts_specialists") then {
+	private _targetSpecialistLoadoutMenu = [];
+	{
+		_x params ["_name", "_role"];
+		_targetSpecialistLoadoutMenu pushBack [_name, compile format ["private _unit = cursorObject; if (!isNull _unit && {alive _unit} && {_unit isKindOf 'CAManBase'} && {!(_unit isKindOf 'HeadlessClient_F')}) then {['%2', [_unit, '%1'], _unit] call CBA_fnc_targetEvent;};", _role, QGVAR(giveLoadout)]];
+	} forEach _specialistLoadoutRoles;
+	_menus pushBack [["target_loadouts_specialists", "Give Specialist Loadout", _menuRsc], _targetSpecialistLoadoutMenu];
 };
 
 {
