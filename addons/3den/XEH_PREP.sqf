@@ -4,6 +4,7 @@ PREP(AutoTest);
 PREP(AutoTest_Common);
 PREP(AutoTest_Events);
 PREP(AutoTest_Mission);
+PREP(validateSpawnListPrefixes);
 PREP(configViewerExport);
 PREP(copyGroup);
 PREP(copyLoadout);

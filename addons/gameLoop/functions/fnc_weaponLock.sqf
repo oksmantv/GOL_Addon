@@ -72,24 +72,30 @@ if (_toggle) then {
 		systemChat "[SafeMode]: Enabled";
 	};
 } else {
-	player setCaptive false;
-	player allowDamage true;
+	private _adminProtectionActive = !((player getVariable [QEGVAR(admin,playerProtectionState), []]) isEqualTo []);
+	if !_adminProtectionActive then {
+		player setCaptive false;
+		player allowDamage true;
+	};
 	player setVariable [QGVAR(weaponLock), false];
 
-	if (GVARMAIN(mod_ACE3)) then {
+	if (GVARMAIN(mod_ACE3) && !_adminProtectionActive) then {
 		player setVariable ["ACE_Medical_AllowDamage", true];
 	};
 
-	if (isNull (objectParent player)) then {
-		player playActionNow (getText (configfile >> "CfgWeapons" >> (currentWeapon player) >> "reloadAction"));
-	};
-	[{
-		if (GVARMAIN(mod_ACE3)) then {
-			if ((currentWeapon player) in (player getVariable ["ACE_SafeMode_safedWeapons", []])) then {
-				[CURRENT_WEAPONS] call ACE_SafeMode_fnc_unlockSafety;
-			};
+	if (isNull (objectParent player) && {currentWeapon player isNotEqualTo ""}) then {
+		private _reloadAction = getText (configfile >> "CfgWeapons" >> (currentWeapon player) >> "reloadAction");
+		if (_reloadAction isNotEqualTo "") then {
+			player playActionNow _reloadAction;
 		};
-	}, [], (random 5)] call CBA_fnc_waitAndExecute;
+	};
+	// Unlock before removing FiredMan. The previous delayed unlock could leave
+	// ACE safety active for up to five seconds after the local lock was removed.
+	if (GVARMAIN(mod_ACE3)) then {
+		if ((currentWeapon player) in (player getVariable ["ACE_SafeMode_safedWeapons", []])) then {
+			[CURRENT_WEAPONS] call ACE_SafeMode_fnc_unlockSafety;
+		};
+	};
 
 	if !(isNil QGVAR(BlockFire)) then {
 		player removeEventHandler ["FiredMan", GVAR(BlockFire)];

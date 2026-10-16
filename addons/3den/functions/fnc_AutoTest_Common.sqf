@@ -229,6 +229,19 @@ if (_aiCount > 100) then {
 // Check for critical framework objects
 _allObjects = all3DENEntities select 0;
 
+// spawnList.sqf supplies scripted spawn assets that are not represented by
+// placed 3DEN entities. Audit its source with the same blocked-prefix setting
+// used by Gear validation so removed addon content cannot bypass export checks.
+{
+	_x params ["_prefix", "_lines"];
+	_output pushBack [
+		_error,
+		format ["spawnList.sqf uses unsupported addon prefix %1", toUpper _prefix],
+		format ["Blocked prefix found on source line(s): %1. Replace these classnames with supported assets before export.", _lines joinString ", "],
+		[-1]
+	];
+} forEach (call FUNC(validateSpawnListPrefixes));
+
 // Named player assets are part of the intended mission experience. Check only
 // these explicitly named vehicles, avoiding unrelated editor props and AI assets.
 private _namedPlayerAssets = _allObjects select {

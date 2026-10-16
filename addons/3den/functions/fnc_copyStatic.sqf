@@ -25,6 +25,17 @@ private _units = [];
 private _vehicles = [];
 private _objects = [];
 private _return = 0;
+private _groups = [];
+
+{
+	private _group = group _x;
+	if !(isNull _group) then {
+		_groups pushBackUnique _group;
+	};
+} forEach (get3DENSelected "object");
+
+private _groupCallsigns = (_groups apply { groupId _x }) select { !(_x isEqualTo "") };
+private _groupText = if (_groupCallsigns isEqualTo []) then { "No group" } else { _groupCallsigns joinString ", " };
 
 {
 	private _special = [];
@@ -97,7 +108,7 @@ switch (_type) do {
 			default {"civilian"};
 		};
 
-		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), _sideStr];
+		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup; // 3DEN | %4 | Groups: %5 | U:%6 V:%7", str(_units), str(_vehicles), _sideStr, toUpper _sideStr, _groupText, count _units, count _vehicles];
 		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
 		if !(_cache isEqualType []) then { _cache = [] };
 		_cache pushBack _return;
@@ -105,19 +116,21 @@ switch (_type) do {
 		private _cacheCount = count _cache;
 		TRACE_1("Units", _units);
 		TRACE_1("Vehicles", _vehicles);
-		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied (Cache=%4)", (count _units), (count _vehicles), _sideStr, _cacheCount];
-		[format["Copy Static: %3: %1 units, %2 vehicles copied (Cache=%4)", (count _units), (count _vehicles), _sideStr, _cacheCount], 0, 5, true] call BIS_fnc_3DENNotification;
+		private _copyText = format ["Copy Static | %1 | %2 | U:%3 V:%4 | Cache:%5", toUpper _sideStr, _groupText, count _units, count _vehicles, _cacheCount];
+		systemChat _copyText;
+		[_copyText, 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	case 2: {
-		_return = (str(_objects) + (" call GW_Common_fnc_spawnObjects;"));
+		_return = format ["%1 call GW_Common_fnc_spawnObjects; // 3DEN | Groups: %2 | O:%3", str _objects, _groupText, count _objects];
 		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
 		if !(_cache isEqualType []) then { _cache = [] };
 		_cache pushBack _return;
 		uiNamespace setVariable ["OKS_3DEN_CLIPBOARD_CACHE", _cache];
 		private _cacheCount = count _cache;
 		TRACE_1("Objects", _objects);
-		systemChat format ["Copy Objects: %1 objects copied (Cache=%2)", (count _objects), _cacheCount];
-		[format["Copy Objects: %1 objects copied (Cache=%2)", (count _objects), _cacheCount], 0, 5, true] call BIS_fnc_3DENNotification;
+		private _copyText = format ["Copy Objects | %1 | O:%2 | Cache:%3", _groupText, count _objects, _cacheCount];
+		systemChat _copyText;
+		[_copyText, 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	default {
 		systemChat "Copy Static: No valid copy mode selected!";

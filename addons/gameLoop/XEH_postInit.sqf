@@ -18,6 +18,10 @@ if (isServer) then {
 	["AllVehicles", "Fired", {
 		params ["_unit", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile"];
 		if !(GVAR(SafeMode_Enabled) && {!isNull _projectile}) exitWith {};
+		// A player released after the local 50-metre check must be able to fire
+		// while the global timer still protects players who remain at spawn.
+		// WeaponLock handles still-locked players on their owning client.
+		if (isPlayer _unit || {isPlayer (effectiveCommander _unit)}) exitWith {};
 		if (GVARMAIN(mod_ACE3)) then {
 			[_projectile] call ACE_FRAG_Fnc_addBlackList;
 		};
@@ -73,42 +77,6 @@ if (isServer) then {
 	[QGVAR(requestSafetyMode), player] call CBA_fnc_serverEvent;
 
 	#include "XEH_postInitPlayer.sqf"
-
-	[] spawn {
-		if !((markerType "protection_west") isEqualTo "") then {
-			GVAR(SafeZoneMarkers) pushBackUnique [west, "protection_west"];
-		};
-		if !((markerType "protection_east") isEqualTo "") then {
-			GVAR(SafeZoneMarkers) pushBackUnique [east, "protection_east"];
-		};
-		if !((markerType "protection_resistance") isEqualTo "") then {
-			GVAR(SafeZoneMarkers) pushBackUnique [independent, "protection_resistance"];
-		};
-		private _marker = "";
-		{
-			if ((([player] call EFUNC(Common,getSide)) isEqualTo (_x select 0)) && ((getPosATL player) inArea (_x select 1))) then {
-				_marker = (_x select 1);
-			};
-		} forEach GVAR(SafeZoneMarkers);
-
-		waitUntil {
-			_pos = (getPosATL (vehicle player));
-
-			if (_pos inArea _marker) then {
-				GVAR(SafeZonePos) = _pos;
-			} else {
-				if !(isNIl QGVAR(SafeZonePos)) then {
-					player setPosATL GVAR(SafeZonePos);
-					["You can leave the zone during warmup", 5] call GW_Common_Fnc_Hint;
-				};
-			};
-			sleep 0.1;
-			!(GVAR(SafeMode_Enabled) && !(_marker isEqualTo ""))
-		};
-		_marker setMarkerAlphaLocal 0;
-		GVAR(SafeZoneMarkers) = nil;
-		GVAR(SafeZonePos) = nil;
-	};
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(SafeMode_CountDown), {
@@ -143,7 +111,48 @@ if (isServer) then {
 	};
 	if (hasInterface) then {
 		TRACE_1("QGVAR(setSafetyMode)", _enabled);
-		[_enabled, false] call FUNC(WeaponLock);
+		if (_enabled) then {
+			if !(GVAR(SafeMode_LocalReleased)) then {
+				[true, false] call FUNC(WeaponLock);
+
+				if !(GVAR(SafeMode_ReleaseMonitorActive)) then {
+					private _spawnPosition = getPosATL (vehicle player);
+					private _releaseGeneration = GVAR(SafeMode_ReleaseGeneration);
+					GVAR(SafeMode_ReleaseMonitorActive) = true;
+
+					[_spawnPosition, _releaseGeneration] spawn {
+						params ["_spawnPosition", "_releaseGeneration"];
+						private _releaseDistance = 50;
+
+						waitUntil {
+							sleep 0.25;
+							!(GVAR(SafeMode_Enabled))
+							|| {GVAR(SafeMode_ReleaseGeneration) isNotEqualTo _releaseGeneration}
+							|| {(vehicle player) distance2D _spawnPosition >= _releaseDistance}
+						};
+
+						if (
+							GVAR(SafeMode_Enabled)
+							&& {GVAR(SafeMode_ReleaseGeneration) isEqualTo _releaseGeneration}
+							&& {(vehicle player) distance2D _spawnPosition >= _releaseDistance}
+						) then {
+							GVAR(SafeMode_LocalReleased) = true;
+							[false] call FUNC(WeaponLock);
+							systemChat "[SafeMode]: Local spawn protection disabled";
+						};
+
+						if (GVAR(SafeMode_ReleaseGeneration) isEqualTo _releaseGeneration) then {
+							GVAR(SafeMode_ReleaseMonitorActive) = false;
+						};
+					};
+				};
+			};
+		} else {
+			GVAR(SafeMode_ReleaseGeneration) = GVAR(SafeMode_ReleaseGeneration) + 1;
+			GVAR(SafeMode_LocalReleased) = false;
+			GVAR(SafeMode_ReleaseMonitorActive) = false;
+			[false, false] call FUNC(WeaponLock);
+		};
 
 		if (!_enabled && (GVAR(SafeMode_useType) isEqualTo 2)) then {
 			systemChat "[SafeMode]: Weapons & Vehicles are now active";

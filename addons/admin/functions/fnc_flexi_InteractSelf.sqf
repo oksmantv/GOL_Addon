@@ -19,10 +19,6 @@ if (typeName _params isEqualTo typeName []) then {
 };
 
 private _menuDef = [];
-private _protectedPlayers = allPlayers select {!(_x isKindOf "HeadlessClient_F")};
-private _playerProtectionEnabled = (count _protectedPlayers > 0) && {
-	(_protectedPlayers findIf {!(captive _x) || {isDamageAllowed _x}}) isEqualTo -1
-};
 private _cursorObject = cursorObject;
 private _canHealCursorObject = !isNull _cursorObject && {
 	alive _cursorObject && {
@@ -51,6 +47,37 @@ private _giveLoadoutCaption = "Give Loadout >";
 if (_canGiveLoadout && {isPlayer _cursorObject}) then {
 	_giveLoadoutCaption = format ["Give %1 Loadout >", name _cursorObject];
 };
+private _loadoutRoles = [
+	["<t color='#ffb400'>Officer</t>", "officer"],
+	["<t color='#ffb400'>Actual</t>", "pl"],
+	["<t color='#ffb400'>Platoon Medic</t>", "pm"],
+	["<t color='#ffb400'>Forward Air Controller</t>", "fac"],
+	["<t color='#2eff2e'>Squad Leader</t>", "sl"],
+	["<t color='#2eff2e'>Squad Medic</t>", "sm"],
+	["<t color='#2eff2e'>Fire Team Leader</t>", "ftl"],
+	["<t color='#ff3737'>Rifleman</t>", "r"],
+	["<t color='#ff3737'>Grenadier</t>", "g"],
+	["<t color='#6a9fff'>Asst. Gunner</t>", "ag"],
+	["<t color='#6a9fff'>Automatic Rifleman</t>", "ar"],
+	["<t color='#6a9fff'>AR Ammo Bearer</t>", "ab"],
+	["<t color='#6a9fff'>AT Ammo Bearer</t>", "atab"],
+	["<t color='#FDF916'>Mortar Operator</t>", "lightdragon"],
+	["<t color='#FDF916'>Asst. Medium Machine Gunner</t>", "ammg"],
+	["<t color='#FDF916'>Medium Machine Gunner</t>", "mmg"],
+	["<t color='#FDF916'>Dragon</t>", "dragon"],
+	["<t color='#FDF916'>Anti-Air</t>", "aa"],
+	["<t color='#FDF916'>Asst. Heavy AT</t>", "amat"],
+	["<t color='#FDF916'>Heavy AT</t>", "mat"],
+	["<t color='#c77dff'>Drone Operator</t>", "drone"],
+	["<t color='#c77dff'>Engineer</t>", "engineer"],
+	["<t color='#c77dff'>Light Rifleman</t>", "lr"],
+	["<t color='#c77dff'>Marksman</t>", "marksman"],
+	["<t color='#c77dff'>Vehicle Crew</t>", "crew"],
+	["<t color='#c77dff'>Combat Diver</t>", "diver"],
+	["<t color='#22B9FF'>Chopper Pilot</t>", "p"],
+	["<t color='#22B9FF'>Para-Rescueman</t>", "pj"],
+	["<t color='#22B9FF'>Jet Pilot</t>", "jetp"]
+];
 private _menus = [
 	[
 		["main", "Admin Menu", _menuRsc],
@@ -101,8 +128,17 @@ if (_menuName isEqualTo "actions") then {
 						};
 					} forEach allPlayers;
 				},
-				[_playerProtectionEnabled] call FUNC(getCheckBoxIcon),
-				"", "", -1, true,true
+					"", "", "", -1, true, true
+			],
+			[
+				"Disable Player Protection", {
+					{
+						if !(_x isKindOf "HeadlessClient_F") then {
+							[QGVAR(disablePlayerProtection), [_x, true], _x] call CBA_fnc_targetEvent;
+						};
+					} forEach allPlayers;
+				},
+					"", "", "", -1, true, true
 			],
 			[
 				_healCaption, {
@@ -258,112 +294,21 @@ if (_menuName isEqualTo "spawn") then {
 };
 
 if (_menuName isEqualTo "loadouts") then {
-		_menus pushBack [
-			["loadouts","Loadouts", _menuRsc],
-			[
-				["Command &amp; Coordination >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_command", 1], -1, true, true],
-				["Squad Roles >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_squad", 1], -1, true, true],
-				["Heavy Weapons >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_heavy", 1], -1, true, true],
-				["Specialists >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_specialists", 1], -1, true, true],
-				["Aviation >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"loadouts_aviation", 1], -1, true, true]
-			]
-		];
-};
-
-if (_menuName isEqualTo "loadouts_command") then {
-		_menus pushBack [
-			["loadouts_command","Loadouts - Command & Coordination", _menuRsc],
-			[
-				["<t color='#ffb400'>Officer</t>",{[player,'officer'] call GW_Gear_Fnc_Handler;}],
-				["<t color='#ffb400'>Actual</t>",{[player,'pl'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ffb400'>Platoon Medic</t>",{[player,'pm'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ffb400'>Forward Air Controller</t>",{[player,'fac'] call GW_Gear_Fnc_Handler; }]
-			]
-		];
-};
-
-if (_menuName isEqualTo "loadouts_squad") then {
-		_menus pushBack [
-			["loadouts_squad","Loadouts - Squad Roles", _menuRsc],
-			[
-				["<t color='#2eff2e'>Squad Leader</t>",{[player,'sl'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#2eff2e'>Squad Medic</t>",{[player,'sm'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#2eff2e'>Fire Team Leader</t>",{[player,'ftl'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ff3737'>Rifleman</t>",{[player,'r'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#ff3737'>Grenadier</t>",{[player,'g'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#6a9fff'>Asst. Gunner</t>",{[player,'ag'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#6a9fff'>Automatic Rifleman</t>",{[player,'ar'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#6a9fff'>AR Ammo Bearer</t>",{[player,'ab'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#6a9fff'>AT Ammo Bearer</t>",{[player,'atab'] call GW_Gear_Fnc_Handler; }]
-			]
-		];
-};
-
-if (_menuName isEqualTo "loadouts_heavy") then {
-		_menus pushBack [
-			["loadouts_heavy","Loadouts - Heavy Weapons", _menuRsc],
-			[
-				["<t color='#FDF916'>Mortar Operator</t>",{[player,'lightdragon'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Asst. Medium Machine Gunner</t>",{[player,'ammg'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Medium Machine Gunner</t>",{[player,'mmg'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Dragon</t>",{[player,'dragon'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Anti-Air</t>",{[player,'aa'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Asst. Heavy AT</t>",{[player,'amat'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#FDF916'>Heavy AT</t>",{[player,'mat'] call GW_Gear_Fnc_Handler; }]
-			]
-		];
-};
-
-if (_menuName isEqualTo "loadouts_specialists") then {
-		_menus pushBack [
-			["loadouts_specialists","Loadouts - Specialists", _menuRsc],
-			[
-				["<t color='#c77dff'>Drone Operator</t>",{[player,'drone'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#c77dff'>Engineer</t>",{[player,'engineer'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#c77dff'>Light Rifleman</t>",{[player,'lr'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#c77dff'>Marksman</t>",{[player,'marksman'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#c77dff'>Vehicle Crew</t>",{[player,'crew'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#c77dff'>Combat Diver</t>",{[player,'diver'] call GW_Gear_Fnc_Handler; }]
-			]
-		];
-};
-
-if (_menuName isEqualTo "loadouts_aviation") then {
-		_menus pushBack [
-			["loadouts_aviation","Loadouts - Aviation", _menuRsc],
-			[
-				["<t color='#22B9FF'>Chopper Pilot</t>",{[player,'p'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Para-Rescueman</t>",{[player,'pj'] call GW_Gear_Fnc_Handler; }],
-				["<t color='#22B9FF'>Jet Pilot</t>",{[player,'jetp'] call GW_Gear_Fnc_Handler; }]
-			]
-		];
+	private _selfLoadoutMenu = [];
+	{
+		_x params ["_name", "_role"];
+		_selfLoadoutMenu pushBack [_name, compile format ["[player, '%1'] call GW_Gear_Fnc_Handler;", _role]];
+	} forEach _loadoutRoles;
+	_menus pushBack [["loadouts", "Loadouts", _menuRsc], _selfLoadoutMenu];
 };
 
 if (_menuName isEqualTo "target_loadouts") then {
-	_menus pushBack [["target_loadouts","Give Loadout", _menuRsc], [
-		["Command &amp; Coordination >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_command", 1], -1, true, true],
-		["Squad Roles >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_squad", 1], -1, true, true],
-		["Heavy Weapons >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_heavy", 1], -1, true, true],
-		["Specialists >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_specialists", 1], -1, true, true],
-		["Aviation >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts_aviation", 1], -1, true, true]
-	]];
-};
-
-if ((_menuName find "target_loadouts_") isEqualTo 0) then {
-	private _targetLoadoutRoles = switch (_menuName) do {
-		case "target_loadouts_command": {[["<t color='#ffb400'>Officer</t>", "officer"], ["<t color='#ffb400'>Actual</t>", "pl"], ["<t color='#ffb400'>Platoon Medic</t>", "pm"], ["<t color='#ffb400'>Forward Air Controller</t>", "fac"]]};
-		case "target_loadouts_squad": {[["<t color='#2eff2e'>Squad Leader</t>", "sl"], ["<t color='#2eff2e'>Squad Medic</t>", "sm"], ["<t color='#2eff2e'>Fire Team Leader</t>", "ftl"], ["<t color='#ff3737'>Rifleman</t>", "r"], ["<t color='#ff3737'>Grenadier</t>", "g"], ["<t color='#6a9fff'>Asst. Gunner</t>", "ag"], ["<t color='#6a9fff'>Automatic Rifleman</t>", "ar"], ["<t color='#6a9fff'>AR Ammo Bearer</t>", "ab"], ["<t color='#6a9fff'>AT Ammo Bearer</t>", "atab"]]};
-		case "target_loadouts_heavy": {[["<t color='#FDF916'>Mortar Operator</t>", "lightdragon"], ["<t color='#FDF916'>Asst. Medium Machine Gunner</t>", "ammg"], ["<t color='#FDF916'>Medium Machine Gunner</t>", "mmg"], ["<t color='#FDF916'>Dragon</t>", "dragon"], ["<t color='#FDF916'>Anti-Air</t>", "aa"], ["<t color='#FDF916'>Asst. Heavy AT</t>", "amat"], ["<t color='#FDF916'>Heavy AT</t>", "mat"]]};
-		case "target_loadouts_specialists": {[["<t color='#c77dff'>Drone Operator</t>", "drone"], ["<t color='#c77dff'>Engineer</t>", "engineer"], ["<t color='#c77dff'>Light Rifleman</t>", "lr"], ["<t color='#c77dff'>Marksman</t>", "marksman"], ["<t color='#c77dff'>Vehicle Crew</t>", "crew"], ["<t color='#c77dff'>Combat Diver</t>", "diver"]]};
-		case "target_loadouts_aviation": {[["<t color='#22B9FF'>Chopper Pilot</t>", "p"], ["<t color='#22B9FF'>Para-Rescueman</t>", "pj"], ["<t color='#22B9FF'>Jet Pilot</t>", "jetp"]]};
-		default {[]};
-	};
 	private _targetLoadoutMenu = [];
 	{
 		_x params ["_name", "_role"];
 		_targetLoadoutMenu pushBack [_name, compile format ["private _unit = cursorObject; if (!isNull _unit && {alive _unit} && {_unit isKindOf 'CAManBase'} && {!(_unit isKindOf 'HeadlessClient_F')}) then {['%2', [_unit, '%1'], _unit] call CBA_fnc_targetEvent;};", _role, QGVAR(giveLoadout)]];
-	} forEach _targetLoadoutRoles;
-	_menus pushBack [[_menuName, "Give Loadout", _menuRsc], _targetLoadoutMenu];
+	} forEach _loadoutRoles;
+	_menus pushBack [["target_loadouts", "Give Loadout", _menuRsc], _targetLoadoutMenu];
 };
 
 {

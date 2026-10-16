@@ -47,9 +47,10 @@ Scope: Runtime wiring and parity fixes during FW4 migration debugging.
 - File reverted to baseline+diagnostics shape: addons/gameLoop/XEH_postInit.sqf
 
 ### GameLoop experimental distance-limit setting
-- Removed SafeMode_distanceLimit setting and related waitUntil release logic.
-- Why: reintroduced old semantics during unstable runtime phase; reverted for controlled parity pass.
-- File: addons/gameLoop/initSettings.sqf
+- The configurable distance-limit setting remains removed.
+- A fixed 50-metre local SafeMode release is implemented: each player unlocks after moving 50 metres from the position where their SafeMode lock was applied, while the server's global timer continues for players who remain at spawn.
+- The former warmup safe-zone teleport is removed so players can reach the local-release distance.
+- Files: addons/gameLoop/XEH_preInit.sqf; addons/gameLoop/XEH_postInit.sqf
 
 ### GameLoop experimental legacy class Fired hook
 - Removed temporary legacy-style class Fired registration from playerReady path.

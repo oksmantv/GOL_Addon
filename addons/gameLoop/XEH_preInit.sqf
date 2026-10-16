@@ -11,4 +11,6 @@ GVAR(Timer) = -1;	// useType == false
 GVAR(CiviKillCount) = 0;
 
 GVAR(SafeMode_Enabled) = false;
-GVAR(SafeZoneMarkers) = [];
+GVAR(SafeMode_LocalReleased) = false;
+GVAR(SafeMode_ReleaseMonitorActive) = false;
+GVAR(SafeMode_ReleaseGeneration) = 0;

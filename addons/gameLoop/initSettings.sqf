@@ -17,7 +17,7 @@
 
 [
 	QGVAR(SafeMode_Timer), "LIST",
-	["Starting Protection", "Disables all weapons during the first minutes of the mission"],
+	["Starting Protection", "Globally unlocks players who remain at spawn after this time. Players who move 50 metres from their spawn point unlock locally."],
 	[QUOTE(ADDON), "SafeMode"], [[-1,1,3,5,10,15,20], ["Disabled","1 Min","3 Min","5 Min","10 Min","15 Min","20 Min"], 3],
 	CBA_SERVEROVERWRITE, {}, CBA_NEEDRESTART
 ] call CBA_settings_fnc_init;

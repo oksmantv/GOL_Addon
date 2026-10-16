@@ -2,8 +2,6 @@
 
 #include "XEH_PREP.sqf"
 
-GVAR(showActionPrompts) = false;
-
 #include "initSettings.sqf"
 
 GVAR(onScreenUnits) = [];
