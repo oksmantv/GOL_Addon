@@ -50,6 +50,8 @@ private _vehicles = [];
 
 private _waypoints = [];
 private _grps = [];
+private _includeExportComments = missionNamespace getVariable ["OKS_3DEN_COPY_EXPORT_COMMENTS", false];
+if !(_includeExportComments isEqualType true) then { _includeExportComments = false };
 
 {
 	if !(isNull(group _x)) then {
@@ -184,7 +186,10 @@ if ((count _grps) > 1) then {
 		default {"civilian"};
 	};
 
-	_return = format ["[%1,%2,%3,%4] call GW_Common_fnc_spawnGroup; // 3DEN | %5 | Groups: %6 | U:%7 V:%8 WP:%9", str(_units), str(_vehicles), str(_groupWaypoint), _sideStr, toUpper _sideStr, _groupText, count _units, count _vehicles, count _groupWaypoint];
+	_return = format ["[%1,%2,%3,%4] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), str(_groupWaypoint), _sideStr];
+	if (_includeExportComments) then {
+		_return = _return + format [" // 3DEN | %1 | Groups: %2 | U:%3 V:%4 WP:%5", toUpper _sideStr, _groupText, count _units, count _vehicles, count _groupWaypoint];
+	};
 
 	private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
 	if !(_cache isEqualType []) then { _cache = [] };

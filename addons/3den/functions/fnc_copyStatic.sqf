@@ -26,6 +26,8 @@ private _vehicles = [];
 private _objects = [];
 private _return = 0;
 private _groups = [];
+private _includeExportComments = missionNamespace getVariable ["OKS_3DEN_COPY_EXPORT_COMMENTS", false];
+if !(_includeExportComments isEqualType true) then { _includeExportComments = false };
 
 {
 	private _group = group _x;
@@ -108,7 +110,10 @@ switch (_type) do {
 			default {"civilian"};
 		};
 
-		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup; // 3DEN | %4 | Groups: %5 | U:%6 V:%7", str(_units), str(_vehicles), _sideStr, toUpper _sideStr, _groupText, count _units, count _vehicles];
+		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), _sideStr];
+		if (_includeExportComments) then {
+			_return = _return + format [" // 3DEN | %1 | Groups: %2 | U:%3 V:%4", toUpper _sideStr, _groupText, count _units, count _vehicles];
+		};
 		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
 		if !(_cache isEqualType []) then { _cache = [] };
 		_cache pushBack _return;
@@ -121,7 +126,10 @@ switch (_type) do {
 		[_copyText, 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	case 2: {
-		_return = format ["%1 call GW_Common_fnc_spawnObjects; // 3DEN | Groups: %2 | O:%3", str _objects, _groupText, count _objects];
+		_return = format ["%1 call GW_Common_fnc_spawnObjects;", str _objects];
+		if (_includeExportComments) then {
+			_return = _return + format [" // 3DEN | Groups: %1 | O:%2", _groupText, count _objects];
+		};
 		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
 		if !(_cache isEqualType []) then { _cache = [] };
 		_cache pushBack _return;
