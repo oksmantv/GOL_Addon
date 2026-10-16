@@ -33,11 +33,11 @@ if(_role isEqualTo "officer") then {
 	_backpackRadio = "rhs_r148";
 };
 if(_role isEqualTo "crew") then {
-	_helmet = selectRandom ["UK3CB_ARD_B_H_Crew_Cap_Ess","UK3CB_H_Crew_Cap"];
+	_helmet = ["UK3CB_ARD_B_H_Crew_Cap_Ess","UK3CB_H_Crew_Cap"];
 	_vest = "rhs_6b2_holster";
 };
 if (_role in ["ag","ammg","lr","ab"]) then {
-	_backpack = selectRandom ["rhs_sidor","UK3CB_CHC_C_B_HIKER","UK3CB_B_Largepack","UK3CB_B_Largepack_Med"];
+	_backpack = ["rhs_sidor","UK3CB_CHC_C_B_HIKER","UK3CB_B_Largepack","UK3CB_B_Largepack_Med"];
 };
 if (_role isEqualTo "p") then {
 	_helmet = "H_Booniehat_khk_hs";

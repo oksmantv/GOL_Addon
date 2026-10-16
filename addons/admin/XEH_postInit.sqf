@@ -390,13 +390,88 @@ if (hasInterface) then {
 	};
 }] call CBA_fnc_addEventHandler;
 
+[QGVAR(disablePlayerProtection), {
+	params ["_unit", ["_notify", false]];
+	private _state = _unit getVariable [QGVAR(playerProtectionState), []];
+	if (_state isEqualTo []) exitWith {};
+	private _pfh = _unit getVariable [QGVAR(playerProtectionPFH), -1];
+	if (_pfh >= 0) then {
+		[_pfh] call CBA_fnc_removePerFrameHandler;
+	};
+
+	_state params ["_wasCaptive", "_damageAllowed", "_hadAceDamageState", "_aceDamageAllowed"];
+	_unit setCaptive _wasCaptive;
+	_unit allowDamage _damageAllowed;
+	if (GVARMAIN(mod_ACE3)) then {
+		if (_hadAceDamageState) then {
+			_unit setVariable ["ACE_Medical_AllowDamage", _aceDamageAllowed];
+		} else {
+			_unit setVariable ["ACE_Medical_AllowDamage", nil];
+		};
+	};
+	_unit setVariable [QGVAR(playerProtectionState), nil];
+	_unit setVariable [QGVAR(playerProtectionPFH), nil];
+
+	if (_notify && {_unit isEqualTo player}) then {
+		["Player protection ended after leaving the starting area", 5] call GW_Common_Fnc_Hint;
+	};
+}] call CBA_fnc_addEventHandler;
+
 [QGVAR(enablePlayerProtection), {
 	params ["_unit"];
+	if !(_unit getVariable [QGVAR(playerProtectionState), []] isEqualTo []) then {
+		[QGVAR(disablePlayerProtection), [_unit]] call CBA_fnc_localEvent;
+	};
+
+	private _sideSuffix = switch (side _unit) do {
+		case west: { "west" };
+		case east: { "east" };
+		case independent: { "resistance" };
+		default { "" };
+	};
+	private _marker = format ["protection_%1", _sideSuffix];
+	private _flag = missionNamespace getVariable [format ["flag_%1_1", _sideSuffix], objNull];
+	private _startArea = if !((markerType _marker) isEqualTo "") then {
+		["marker", _marker]
+	} else {
+		if (!isNull _flag) then {
+			["flag", _flag]
+		} else {
+			["position", getPosATL _unit]
+		};
+	};
+	private _hadAceDamageState = !isNil {_unit getVariable "ACE_Medical_AllowDamage"};
+	private _aceDamageState = _unit getVariable ["ACE_Medical_AllowDamage", true];
+	_unit setVariable [QGVAR(playerProtectionState), [captive _unit, isDamageAllowed _unit, _hadAceDamageState, _aceDamageState]];
 	_unit setCaptive true;
 	_unit allowDamage false;
 	if (GVARMAIN(mod_ACE3)) then {
 		_unit setVariable ["ACE_Medical_AllowDamage", false];
 	};
+
+	private _pfh = [{
+		params ["_args", "_pfh"];
+		_args params ["_unit", "_startArea"];
+		if (isNull _unit || {!alive _unit} || {!local _unit}) exitWith {
+			[_pfh] call CBA_fnc_removePerFrameHandler;
+			if (!isNull _unit) then {
+				_unit setVariable [QGVAR(playerProtectionState), nil];
+				_unit setVariable [QGVAR(playerProtectionPFH), nil];
+			};
+		};
+
+		_startArea params ["_type", "_area"];
+		private _position = getPosATL (vehicle _unit);
+		private _insideStartArea = switch (_type) do {
+			case "marker": { _position inArea _area };
+			case "flag": { _position distance2D _area <= 100 };
+			default { _position distance2D _area <= 100 };
+		};
+		if !_insideStartArea then {
+			[QGVAR(disablePlayerProtection), [_unit, true]] call CBA_fnc_localEvent;
+		};
+	}, 1, [_unit, _startArea]] call CBA_fnc_addPerFrameHandler;
+	_unit setVariable [QGVAR(playerProtectionPFH), _pfh];
 }] call CBA_fnc_addEventHandler;
 
 #include "ChatCommands.sqf"

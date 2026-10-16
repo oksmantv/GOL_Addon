@@ -33,7 +33,7 @@ private _menus = [
 				GVAR(viewDistance_Enabled)
 			],
 			[
-				"Grass Settings >",
+				"Terrain Detail >",
 				"","","",
 				[QUOTE(call FUNC(flexi_InteractSelf_Settings)),"settings_grass", 1],
 				-1,true,
@@ -162,27 +162,32 @@ if (_menuName isEqualTo "settings_objectViewDistance") then {
 
 if (_menuName isEqualTo "settings_grass") then {
 	_menus pushBack [
-		["settings_grass","Grass Settings", _menuRsc],
+		["settings_grass","Terrain Detail",_menuRsc],
 		[
 			[
-				"None",
+				"Low",
 				"setTerrainGrid 50;",
 				"","","",-1,true,
 				GVAR(Grass_allowDisable)
 			],
 			[
-				"Low",
+				"Medium",
 				"setTerrainGrid 25;",
 				"","","",-1,true,true
 			],
 			[
-				"Medium",
+				"High",
 				"setTerrainGrid 12.5;",
 				"","","",-1,true,true
 			],
 			[
-				"High",
+				"Very High",
 				"setTerrainGrid 6.25;",
+				"","","",-1,true,true
+			],
+			[
+				"Ultra",
+				"setTerrainGrid 3.125;",
 				"","","",-1,true,true
 			]
 		]

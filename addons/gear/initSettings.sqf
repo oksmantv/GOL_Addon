@@ -39,6 +39,14 @@
 	CBA_SERVEROVERWRITE
 ] call CBA_settings_fnc_init;
 
+[
+	QGVAR(DlcValidationBlockedPrefixes), "EDITBOX",
+	["Unsupported gear classname prefixes", "Comma-separated classname prefixes that require a supported fallback. Prefix matching is case-insensitive."],
+	[QUOTE(ADDON), "#0 General"],
+	"HLC_,LOP_",
+	CBA_SERVEROVERWRITE
+] call CBA_settings_fnc_init;
+
 // ── Faction selections ────────────────────────────────────────────────────────
 
 private _factionValues = [

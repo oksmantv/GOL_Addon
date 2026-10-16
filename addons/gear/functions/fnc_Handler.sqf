@@ -108,6 +108,9 @@ private _validateDlcCandidateGroup = {
 	private _slot = _this param [1, "", [""]];
 	_dlcValidationWarnings append ([_candidates, _slot] call FUNC(validateDlcCandidates));
 };
+private _removeUnsupportedGearCandidates = {
+	_this call FUNC(removeUnsupportedGearCandidates)
+};
 
 if (_forceFaction isEqualType []) then {
 	_forceFaction = if ((count _forceFaction) > 0) then {_forceFaction select 0} else {""};

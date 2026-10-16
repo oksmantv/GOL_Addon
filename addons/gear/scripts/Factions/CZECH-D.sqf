@@ -5,12 +5,12 @@ _insignia = "";
 _goggles = [""];
 _helmet = ["acp_gol_CZ_VZ95_Desert_H_HelmetB_light_CZ_VZ95_Desert_insignia"];
 _OfficerHelmet = "rhsgref_fieldcap_ttsko_digi";
-_uniform = ["acp_gol_CZ_VZ95_Desert_U_I_E_Uniform_shortsleeve_CZ_VZ95_Desert_01_F_flag","acp_gol_CZ_VZ95_Desert_U_I_E_Uniform_CZ_VZ95_Desert_01_F_insignia"];
+_uniform = ["acp_gol_CZ_VZ95_Desert_U_I_E_Uniform_shortsleeve_CZ_VZ95_Desert_01_F_flag","acp_gol_CZ_VZ95_Desert_U_I_E_Uniform_CZ_VZ95_Desert_01_F_insignia","acp_gol_CZ_VZ95_Desert_U_I_CombatUniform_shortsleeve_CZ_VZ95_Desert_insignia","acp_gol_CZ_VZ95_Desert_U_I_CombatUniform_CZ_VZ95_Desert_insignia"];
 _vest = ["acp_gol_CZ_VZ95_Desert_V_PlateCarrierIA2_CZ_VZ95_Desert"];
 _backpack = "acp_gol_CZ_VZ95_Desert_B_AssaultPackEnhanced_CZ_VZ95_Desert_insignia";
 _backpackRadio = _backpack;
 if (true) then {
-	_backpackRadio = "acp_gol_CZ_VZ95_Desert_B_RadioBag_01_CZ_VZ95_Desert_F";
+	_backpackRadio = ["acp_gol_CZ_VZ95_Desert_B_RadioBag_01_CZ_VZ95_Desert_F", "UK3CB_B_B_Backpack_Radio_Chem"];
 };
 
 if (_role in ["ag","ammg","sm","lr","ab"]) then {

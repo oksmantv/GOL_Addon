@@ -23,14 +23,14 @@
 				<br/>
 				<br/>	==============================================
 				<br/>
-				<br/>	Framework by: GuzzenVonLidl
+				<br/>	Framework by: GuzzenVonLidl - Modified by Oksman for example
 				<br/>	Version: "+(getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version"))+"
 				<br/>
 				<br/>	==============================================
 				<br/>
 				<br/>	Guerrillas of Liberation
-				<br/>	Teamspeak: teamspeak.gol-clan.co.uk
-				<br/>	Website: http://www.gol-clan.co.uk/
+				<br/>	Teamspeak: ts.gol-clan.com
+				<br/>	Website: https://gol-clan.com/
 				<br/>	=============================================="
 			]];
 		}, []] call CBA_Fnc_execNextFrame;

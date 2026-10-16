@@ -2,98 +2,111 @@
 _addEquipment = {
 
 	private ["_equipment"];
+	private _equipmentChoices = _this apply {[_x] call _removeUnsupportedGearCandidates};
 	private _slotNames = ["Goggles", "Helmet", "Uniform", "Vest", "Backpack"];
 	{
 		if !(_x isEqualTo "") then {
 			[_x, _slotNames select _forEachIndex] call _validateDlcCandidateGroup;
 		};
-	} forEach _this;
-	if !((_this select 0) isEqualTo "") then {
-		if((typeName (_this select 0)) isEqualTo "ARRAY") then {
-			_equipment = selectRandom (_this select 0);
+	} forEach _equipmentChoices;
+	if !((_equipmentChoices select 0) isEqualTo "") then {
+		if((typeName (_equipmentChoices select 0)) isEqualTo "ARRAY") then {
+			_equipment = selectRandom (_equipmentChoices select 0);
 		} else {
-			_equipment = (_this select 0);
+			_equipment = (_equipmentChoices select 0);
 		};
 		_loadout set [7, _equipment];		// Goggles
 	};
-	if !((_this select 1) isEqualTo "") then {
-		if((typeName (_this select 1)) isEqualTo "ARRAY") then {
-			_equipment = selectRandom (_this select 1);
+	if !((_equipmentChoices select 1) isEqualTo "") then {
+		if((typeName (_equipmentChoices select 1)) isEqualTo "ARRAY") then {
+			_equipment = selectRandom (_equipmentChoices select 1);
 		} else {
-			_equipment = (_this select 1);
+			_equipment = (_equipmentChoices select 1);
 		};		
 		_loadout set [6, _equipment];		// Helmet
 	};
-	if !((_this select 2) isEqualTo "") then {
-		if((typeName (_this select 2)) isEqualTo "ARRAY") then {
-			_equipment = selectRandom (_this select 2);
+	if !((_equipmentChoices select 2) isEqualTo "") then {
+		if((typeName (_equipmentChoices select 2)) isEqualTo "ARRAY") then {
+			_equipment = selectRandom (_equipmentChoices select 2);
 		} else {
-			_equipment = (_this select 2);
+			_equipment = (_equipmentChoices select 2);
 		};
 		_loadout set [3, [_equipment,[]]];	// Uniform
 	};
-	if !((_this select 3) isEqualTo "") then {
-		if((typeName (_this select 3)) isEqualTo "ARRAY") then {
-			_equipment = selectRandom (_this select 3);
+	if !((_equipmentChoices select 3) isEqualTo "") then {
+		if((typeName (_equipmentChoices select 3)) isEqualTo "ARRAY") then {
+			_equipment = selectRandom (_equipmentChoices select 3);
 		} else {
-			_equipment = (_this select 3);
+			_equipment = (_equipmentChoices select 3);
 		};
 		_loadout set [4, [_equipment,[]]];	// Vest
 	};
-	if !((_this select 4) isEqualTo "") then {
-		if((typeName (_this select 4)) isEqualTo "ARRAY") then {
-			_equipment = selectRandom (_this select 4);
+	if !((_equipmentChoices select 4) isEqualTo "") then {
+		if((typeName (_equipmentChoices select 4)) isEqualTo "ARRAY") then {
+			_equipment = selectRandom (_equipmentChoices select 4);
 		} else {
-			_equipment = (_this select 4);
+			_equipment = (_equipmentChoices select 4);
 		};
 		_loadout set [5, [_equipment,[]]];	// Backpack
 	};
 };
 
 _addPrimary = {
-	private _weapon = _this select 0;
+	private _weapon = (_this select 0) apply {[_x] call _removeUnsupportedGearCandidates};
+	private _magazine = [_this select 1] call _removeUnsupportedGearCandidates;
+	private _tracerMagazine = [_this select 2] call _removeUnsupportedGearCandidates;
 	[_weapon select 0, "Primary weapon"] call _validateDlcCandidateGroup;
 	{
 		[_weapon select _x, "Primary weapon attachment"] call _validateDlcCandidateGroup;
 	} forEach [1, 2, 3, 4];
-	[_this select 1, "Primary weapon magazine"] call _validateDlcCandidateGroup;
-	[_this select 2, "Primary weapon magazine"] call _validateDlcCandidateGroup;
-	if(typeName ((_this select 0) select 0) == "ARRAY") then {
-		_loadout set [0, [selectRandom((_this select 0) select 0),(_this select 0 select 1),(_this select 0 select 2),(_this select 0 select 3),ADD_MAG(_this select 1),ADD_MAG(_this select 2),(_this select 0 select 4)]]
-	}
-	else
-	{
-		_loadout set [0, [(_this select 0 select 0),(_this select 0 select 1),(_this select 0 select 2),(_this select 0 select 3),ADD_MAG(_this select 1),ADD_MAG(_this select 2),(_this select 0 select 4)]]
+	[_magazine, "Primary weapon magazine"] call _validateDlcCandidateGroup;
+	[_tracerMagazine, "Primary weapon magazine"] call _validateDlcCandidateGroup;
+	if !(_weapon select 0 isEqualTo "" || {_weapon select 0 isEqualTo []}) then {
+		private _primaryClass = if (_weapon select 0 isEqualType []) then {selectRandom (_weapon select 0)} else {_weapon select 0};
+		_loadout set [0, [_primaryClass, _weapon select 1, _weapon select 2, _weapon select 3, ADD_MAG(_magazine), ADD_MAG(_tracerMagazine), _weapon select 4]];
 	};
 };
 _addLaunchers = {
-	private _weapon = _this select 0;
+	private _weapon = (_this select 0) apply {[_x] call _removeUnsupportedGearCandidates};
+	private _magazine = [_this select 1] call _removeUnsupportedGearCandidates;
+	private _tracerMagazine = [_this select 2] call _removeUnsupportedGearCandidates;
 	[_weapon select 0, "Launcher"] call _validateDlcCandidateGroup;
 	{
 		[_weapon select _x, "Launcher attachment"] call _validateDlcCandidateGroup;
 	} forEach [1, 2, 3, 4];
-	[_this select 1, "Launcher magazine"] call _validateDlcCandidateGroup;
-	[_this select 2, "Launcher magazine"] call _validateDlcCandidateGroup;
-	_loadout set [1, [_weapon select 0, _weapon select 1, _weapon select 2, _weapon select 3, ADD_MAG(_this select 1), ADD_MAG(_this select 2), _weapon select 4]]
+	[_magazine, "Launcher magazine"] call _validateDlcCandidateGroup;
+	[_tracerMagazine, "Launcher magazine"] call _validateDlcCandidateGroup;
+	if !(_weapon select 0 isEqualTo "" || {_weapon select 0 isEqualTo []}) then {
+		private _launcherClass = if (_weapon select 0 isEqualType []) then {selectRandom (_weapon select 0)} else {_weapon select 0};
+		_loadout set [1, [_launcherClass, _weapon select 1, _weapon select 2, _weapon select 3, ADD_MAG(_magazine), ADD_MAG(_tracerMagazine), _weapon select 4]];
+	};
 };
 _addHandGun = {
-	private _weapon = _this select 0;
+	private _weapon = (_this select 0) apply {[_x] call _removeUnsupportedGearCandidates};
+	private _magazine = [_this select 1] call _removeUnsupportedGearCandidates;
+	private _tracerMagazine = [_this select 2] call _removeUnsupportedGearCandidates;
 	[_weapon select 0, "Handgun"] call _validateDlcCandidateGroup;
 	{
 		[_weapon select _x, "Handgun attachment"] call _validateDlcCandidateGroup;
 	} forEach [1, 2, 3, 4];
-	[_this select 1, "Handgun magazine"] call _validateDlcCandidateGroup;
-	[_this select 2, "Handgun magazine"] call _validateDlcCandidateGroup;
-	_loadout set [2, [_weapon select 0, _weapon select 1, _weapon select 2, _weapon select 3, ADD_MAG(_this select 1), ADD_MAG(_this select 2), _weapon select 4]]
+	[_magazine, "Handgun magazine"] call _validateDlcCandidateGroup;
+	[_tracerMagazine, "Handgun magazine"] call _validateDlcCandidateGroup;
+	if !(_weapon select 0 isEqualTo "" || {_weapon select 0 isEqualTo []}) then {
+		private _handgunClass = if (_weapon select 0 isEqualType []) then {selectRandom (_weapon select 0)} else {_weapon select 0};
+		_loadout set [2, [_handgunClass, _weapon select 1, _weapon select 2, _weapon select 3, ADD_MAG(_magazine), ADD_MAG(_tracerMagazine), _weapon select 4]];
+	};
 };
 _addToUniform = {
 	if !(count (_loadout select 3) isEqualTo 0) then {
 		{
-			[_x select 0, "Uniform cargo"] call _validateDlcCandidateGroup;
-			if (ISMAG(_x select 0)) then {
-				((_loadout select 3) select 1) append [COUNT_MAGS((_x select 0),(_x select 1))];
-			} else {
-				((_loadout select 3) select 1) append [_x];
+			private _item = [_x select 0] call _removeUnsupportedGearCandidates;
+			[_item, "Uniform cargo"] call _validateDlcCandidateGroup;
+			if !(_item isEqualTo "") then {
+				if (ISMAG(_item)) then {
+					((_loadout select 3) select 1) append [COUNT_MAGS(_item,(_x select 1))];
+				} else {
+					((_loadout select 3) select 1) append [[_item, _x select 1]];
+				};
 			};
 		} forEach _this;
 	};
@@ -101,11 +114,14 @@ _addToUniform = {
 _addToVest = {
 	if !(count (_loadout select 4) isEqualTo 0) then {
 		{
-			[_x select 0, "Vest cargo"] call _validateDlcCandidateGroup;
-			if (ISMAG(_x select 0)) then {
-				((_loadout select 4) select 1) append [COUNT_MAGS((_x select 0),(_x select 1))];
-			} else {
-				((_loadout select 4) select 1) append [_x];
+			private _item = [_x select 0] call _removeUnsupportedGearCandidates;
+			[_item, "Vest cargo"] call _validateDlcCandidateGroup;
+			if !(_item isEqualTo "") then {
+				if (ISMAG(_item)) then {
+					((_loadout select 4) select 1) append [COUNT_MAGS(_item,(_x select 1))];
+				} else {
+					((_loadout select 4) select 1) append [[_item, _x select 1]];
+				};
 			};
 		} forEach _this;
 	};
@@ -113,33 +129,44 @@ _addToVest = {
 _addToBackPack = {
 	if !(count (_loadout select 5) isEqualTo 0) then {
 		{
-			[_x select 0, "Backpack cargo"] call _validateDlcCandidateGroup;
-			if (ISMAG(_x select 0)) then {
-				((_loadout select 5) select 1) append [COUNT_MAGS((_x select 0),(_x select 1))];
-			} else {
-				((_loadout select 5) select 1) append [_x];
+			private _item = [_x select 0] call _removeUnsupportedGearCandidates;
+			[_item, "Backpack cargo"] call _validateDlcCandidateGroup;
+			if !(_item isEqualTo "") then {
+				if (ISMAG(_item)) then {
+					((_loadout select 5) select 1) append [COUNT_MAGS(_item,(_x select 1))];
+				} else {
+					((_loadout select 5) select 1) append [[_item, _x select 1]];
+				};
 			};
 		} forEach _this;
 	};
 };
 _addBino = {
-	[_this, "Binocular"] call _validateDlcCandidateGroup;
-	_loadout set [8, [_this,"","","",[],[],""]]
+	private _bino = [_this] call _removeUnsupportedGearCandidates;
+	[_bino, "Binocular"] call _validateDlcCandidateGroup;
+	if !(_bino isEqualTo "") then {
+		_loadout set [8, [_bino,"","","",[],[],""]];
+	};
 };
 _addNVG = {
-	[_this, "Night-vision device"] call _validateDlcCandidateGroup;
-	(_loadout select 9) set [5, _this]
+	private _nvg = [_this] call _removeUnsupportedGearCandidates;
+	[_nvg, "Night-vision device"] call _validateDlcCandidateGroup;
+	if !(_nvg isEqualTo "") then {
+		(_loadout select 9) set [5, _nvg];
+	};
 };
 _addLinkedItems = {
 	private _slotNames = ["Map", "GPS", "Radio", "Compass", "Watch", "Night-vision device"];
+	private _linkedItems = _this apply {[_x] call _removeUnsupportedGearCandidates};
 	{
 		[_x, _slotNames select _forEachIndex] call _validateDlcCandidateGroup;
-	} forEach _this;
-	_loadout set [9, _this]
+	} forEach _linkedItems;
+	_loadout set [9, _linkedItems]
 };
 
 _fnc_AddObjectsCargo = {
 	params [["_unit", objNull, [objNull]],["_item", "", [""]],["_number", 1, [0]]];
+	_item = [_item] call _removeUnsupportedGearCandidates;
 
 	if !(_item isEqualTo "") then {
 		if (([_item] call BIS_fnc_itemType select 0) isEqualTo "Item") then {

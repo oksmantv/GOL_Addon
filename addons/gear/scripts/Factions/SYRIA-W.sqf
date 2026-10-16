@@ -24,7 +24,7 @@ _vest = ["acp_gol_SY_WDL_V_PlateCarrierIA1_SY_WDL","acp_gol_SY_WDL_V_CarrierRigK
 _backpack = "acp_gol_SY_WDL_B_FieldPack_SY_WDL";
 _backpackRadio = _backpack;
 if (true) then {
-	_backpackRadio = "acp_gol_SY_WDL_B_RadioBag_01_SY_WDL_F";
+	_backpackRadio = ["acp_gol_SY_WDL_B_RadioBag_01_SY_WDL_F", "UK3CB_B_B_Backpack_Radio_Chem_OLI"];
 };
 
 if (_role in ["ag","ammg","lr","ab"]) then {
