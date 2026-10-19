@@ -85,7 +85,9 @@ if (hasInterface) then {
 
 	["CBA_loadingScreenDone", {
 		[] spawn {
-			if (isMultiplayer && !(call EFUNC(Common,isDevBuild))) then {
+			private _showLocalIntro = getMissionConfigValue ["GW_ShowIntroInSingleplayer", false];
+			if ((isMultiplayer || _showLocalIntro) && !(call EFUNC(Common,isDevBuild))) then {
+				diag_log "[GW][Core] displaying GOL loading logo";
 				startLoadingScreen ["", "GW_loadingScreen"];
 
 				_progress = 0;

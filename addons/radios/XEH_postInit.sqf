@@ -7,6 +7,8 @@ if (false) then {
 
 if (true) then {
 	[QGVARMAIN(missionLoaded), {
+		if (!hasInterface) exitWith {};
+
 		private _group = (group player);
 		_group setVariable ["TF_sw_frequency", TF_freq_west];
 		_group setVariable ["TF_dd_frequency", TF_freq_west];

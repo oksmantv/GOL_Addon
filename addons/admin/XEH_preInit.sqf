@@ -12,6 +12,8 @@ GVARMAIN(superAdminList) = ["_SP_PLAYER_", GUZZENVONLIDL, OKSMAN, BLU];
 GVARMAIN(adminCurators) = [];
 
 GVARMAIN(canUseDevConsole) = false;
+GVAR(playerProtectionEnabled) = true;
+GVAR(playerProtectionStartAreaExpiry) = true;
 
 // Add multiple curators at mission start to prevent lag if other people needs access
 if (isServer && isMultiplayer) then {

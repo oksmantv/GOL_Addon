@@ -325,6 +325,15 @@ class Cfg3DEN {
 							defaultValue = "false";
 							expression = "true";
 						};
+						class GW_ShowIntroInSingleplayer {
+							displayName = "Show Intro in Local Preview";
+							tooltip = "Displays the GOL logo splash and mission intro text in editor and singleplayer preview. Multiplayer always displays the intro.";
+							property = "GW_ShowIntroInSingleplayer";
+							value = 1;
+							control = "Checkbox";
+							defaultValue = "false";
+							expression = "true";
+						};
 					};
 				};
 

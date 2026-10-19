@@ -19,26 +19,9 @@ if (typeName _params isEqualTo typeName []) then {
 };
 
 private _menuDef = [];
-private _protectedPlayers = allPlayers select {!(_x isKindOf "HeadlessClient_F")};
-private _playerProtectionEnabled = (count _protectedPlayers > 0) && {
-	(_protectedPlayers findIf {!(captive _x) || {isDamageAllowed _x}}) isEqualTo -1
-};
-private _togglePlayerProtection = if (_playerProtectionEnabled) then {
-	{
-		{
-			if !(_x isKindOf "HeadlessClient_F") then {
-				[QGVAR(disablePlayerProtection), [_x, true], _x] call CBA_fnc_targetEvent;
-			};
-		} forEach allPlayers;
-	}
-} else {
-	{
-		{
-			if !(_x isKindOf "HeadlessClient_F") then {
-				[QGVAR(enablePlayerProtection), _x, _x] call CBA_fnc_targetEvent;
-			};
-		} forEach allPlayers;
-	}
+private _playerProtectionEnabled = GVAR(playerProtectionEnabled);
+private _togglePlayerProtection = {
+	[QGVAR(setPlayerProtection), [!GVAR(playerProtectionEnabled), false]] call CBA_fnc_serverEvent;
 };
 private _cursorObject = cursorObject;
 private _canHealCursorObject = !isNull _cursorObject && {
@@ -136,9 +119,9 @@ if (_menuName isEqualTo "actions") then {
 			[
 				"Toggle Weapon Lock", {
 					if (EGVAR(GameLoop,SafeMode_Enabled)) then {
-						[QEGVAR(GameLoop,setSafetyMode), false] call CBA_fnc_globalEvent;
+						[QEGVAR(GameLoop,setSafetyMode), [false, false]] call CBA_fnc_globalEvent;
 					} else {
-						[QEGVAR(GameLoop,setSafetyMode), true] call CBA_fnc_globalEvent;
+						[QEGVAR(GameLoop,setSafetyMode), [true, false]] call CBA_fnc_globalEvent;
 					};
 				}, [EGVAR(GameLoop,SafeMode_Enabled)] call FUNC(getCheckBoxIcon),
 				"", "", -1, true, true
@@ -148,6 +131,12 @@ if (_menuName isEqualTo "actions") then {
 				_togglePlayerProtection,
 				[_playerProtectionEnabled] call FUNC(getCheckBoxIcon),
 				"", "", -1, true, true
+			],
+			[
+				"End Mission >",
+				"", "", "",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"endMissionCommand", 1],
+				-1, true, true
 			],
 			[
 				_healCaption, {
@@ -199,6 +188,26 @@ if (_menuName isEqualTo "actions") then {
 				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts", 1],
 				-1, _canGiveLoadout, true
+			]
+		]
+	];
+};
+
+if (_menuName isEqualTo "endMissionCommand") then {
+	_menus pushBack [
+		["endMissionCommand", "End Mission", _menuRsc],
+		[
+			[
+				"End Mission: Successful", {
+					[QGVAR(endMissionCommand), [true]] call CBA_fnc_serverEvent;
+				},
+				"\A3\ui_f\data\igui\cfg\actions\ico_on_ca.paa", "", "", -1, true, true
+			],
+			[
+				"End Mission: Failed", {
+					[QGVAR(endMissionCommand), [false]] call CBA_fnc_serverEvent;
+				},
+				"\A3\ui_f\data\igui\cfg\actions\ico_off_ca.paa", "", "", -1, true, true
 			]
 		]
 	];

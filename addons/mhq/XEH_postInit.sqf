@@ -88,14 +88,18 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 	#define	CONDITION_3 "(alive _target) && (speed _target) < 0.1"
 	#define CONDITION_4 "(gunner _target) == player || (driver _target) == player || (commander _target) == player || vehicle player isNotEqualTo _target"
 	params ["_mhq"];
+	diag_log format["[MHQ DEBUG] _MHQ Variable: %1",_mhq];
+
 	private	_add = [];
 	private _mhqActiveActions = (_mhq getVariable [QGVAR(ActiveActions), []]);
 	{
+		[(_x select 0), (_x select 1)] call BIS_fnc_holdActionRemove;
 		(_x select 0) removeAction (_x select 1);
 	} forEach _mhqActiveActions;
 	_mhq setVariable [QGVAR(ActiveActions), []];
 
 	if (_mhq getVariable QGVAR(Active)) then {
+		diag_log format["[MHQ DEBUG DEACTIVATE] _MHQ Variable: %1",_mhq];
 		_id = _mhq addAction ["<t color='#ec2b14'>Deactivate MHQ</t>",{ player PlayMove "Acts_carFixingWheel";
 			["Deactivating MHQ", 5, {(((_this select 0) select 0) getVariable "GW_MHQ_Active")}, {
 				([QGVAR(Enabled), [((_this select 0) select 0), false, str([player] call EFUNC(Common,getSide))]] call CBA_fnc_serverEvent);
@@ -130,88 +134,128 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		},ARGUMENT(_mhq),(CONDITION_1 + "&& " + CONDITION_2),7];
 		_add pushback [_mhq, _id];
 
-		_id = _mhq addAction ["<t color='#eeb20e'>Teleport to Base</t>",{[player, ([(_this select 0)] call FUNC(getFlag))] call bis_fnc_moveToRespawnPosition},ARGUMENT(_mhq),(CONDITION_1),7];
-		_add pushback [_mhq, _id];
+		_id = [
+			_mhq,
+			"<t color='#eeb20e'>Teleport to Staging Area</t>",
+			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
+			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
+			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
+			{},
+			{},
+			{
+				params ["_target", "_caller"];
+				[_caller, ([_target] call FUNC(getFlag))] call BIS_fnc_moveToRespawnPosition;
+			},
+			{},
+			[],
+			3,
+			7,
+			false,
+			false
+		] call BIS_fnc_holdActionAdd;
+		_add pushback [_mhq, _id, true];
 		private _mhqName = _mhq;
 		if(["p3d", str _mhq] call BIS_fnc_inString) then {
 			_mhqName = format["%1 MHQ",[configFile >> "CfgVehicles" >> typeOf _mhq] call BIS_fnc_displayName];
 		};
-		_id = (([_mhq] call FUNC(getFlag))) addAction[format ["<t color='#eeb20e'>Teleport to %1</t>", _mhqName],{
-			_MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
-			_EnemyNearUnits = ((_this select 3) nearEntities ["Man", _MhqSafeZone]) select {(side _X) getFriend (side player) < 0.6 && side _X != civilian};
-			if(count _EnemyNearUnits == 0) then {	
-				private _height = 5;
-				private _sleep = 3.5;	
-				private _camera = "camera" camCreate [getPosATL (_this select 3) select 0,getPosATL (_this select 3) select 1,100];		
-				cutText ["", "BLACK OUT",1]; sleep 1;
-				1 fadeSound 0;
-				cutText ["", "BLACK IN",1];
-				if(vehicleVarName (_this select 3) == "Mobile_HQ") then {
-					[player, (_this select 3)] call bis_fnc_moveToRespawnPosition;
-					_camera camSetTarget player;
-					_height = 2;
-					_sleep = 5;
+		_id = [
+			([_mhq] call FUNC(getFlag)),
+			format ["<t color='#eeb20e'>Teleport to %1</t>", _mhqName],
+			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
+			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
+			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
+			{},
+			{},
+			{
+				params ["_target", "_caller", "_actionId", "_args"];
+				_args params ["_mhq"];
+				diag_log format["[MHQ DEBUG TELEPORT TO] _MHQ Variable: %1",_mhq];
+				private _MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
+				private _EnemyNearUnits = (_mhq nearEntities ["Man", _MhqSafeZone]) select {(side _X) getFriend (side _caller) < 0.6 && side _X != civilian};
+				if(count _EnemyNearUnits == 0) then {	
+					private _height = 5;
+					private _sleep = 3.5;	
+					private _camera = "camera" camCreate [getPosATL _mhq select 0,getPosATL _mhq select 1,100];
+					cutText ["", "BLACK OUT",1]; sleep 1;
+					1 fadeSound 0;
+					cutText ["", "BLACK IN",1];
+					if(vehicleVarName _mhq == "Mobile_HQ") then {
+						[_caller, _mhq] call BIS_fnc_moveToRespawnPosition;
+						_camera camSetTarget _caller;
+						_height = 2;
+						_sleep = 5;
+					} else {
+						_camera camSetTarget _mhq;
+					};	
+					showCinemaBorder true;
+					_camera cameraEffect ["internal", "back"];
+					
+					waitUntil { camCommitted _camera; };
+					1 fadeSound 1;
+					
+					_camera camSetPos [getPosATL _mhq select 0,getPosATL _mhq select 1,_height];
+					_camera camCommit 4.5;
+					sleep _sleep;
+					cutText ["", "BLACK OUT",1];
+					waitUntil { sleep 1; camCommitted _camera; };				
+					_camera cameraEffect ["terminate", "back"];			
+					camDestroy _camera;
+					if(vehicleVarName _mhq != "Mobile_HQ") then {
+						[_caller, _mhq] call BIS_fnc_moveToRespawnPosition;
+					};	
+					sleep 1.1;	
+					cutText ["", "BLACK IN",1];		
 				} else {
-					_camera camSetTarget (_this select 3);
-				};	
-				showCinemaBorder true;
-				_camera cameraEffect ["internal", "back"];
-				
-				waitUntil { camCommitted _camera; };
-				1 fadeSound 1;
-				_camera camSetPos [getPosATL (_this select 3) select 0,getPosATL (_this select 3) select 1,_height];
-				_camera camCommit 4.5;
-				sleep _sleep;
-				cutText ["", "BLACK OUT",1];
-				waitUntil { sleep 1; camCommitted _camera; };				
-				_camera cameraEffect ["terminate", "back"];			
-				camDestroy _camera;
-				if(vehicleVarName (_this select 3) != "Mobile_HQ") then {
-					[player, (_this select 3)] call bis_fnc_moveToRespawnPosition;
-				};	
-				sleep 1.1;	
-				cutText ["", "BLACK IN",1];
-				
-			} else {
-				_MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
-				if(count crew (_this select 3) > 0) then {			
-					systemChat format["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). The crew has been notified.",_MhqSafeZone];
-					(format["Reinsert: %1 attempted to move to the MHQ.",name player]) remoteExec ["SystemChat",crew (_this select 3)];
-				} else {
-					private ["_GroupLeaders"];
-					systemChat format["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). Group leaders have been notified",_MhqSafeZone];
-					if(!isNil "flag_west_1") then {
-						_GroupLeaders = allPlayers select {leader (group _X) == _X && (_X distance flag_west_1 > 100)};
-					};
-					if(!isNil "flag_east_1") then {
-						_GroupLeaders = allPlayers select {leader (group _X) == _X && (_X distance flag_east_1 > 100)};
-					};				
-					(format["Reinsert: %1 attempted to move to the MHQ.",name player]) remoteExec ["SystemChat",_GroupLeaders];
-				};	
-				(player) spawn {
-						_this setVariable ["GOL_TeleportDelay",true,true];
-						_Delay = 10;
-						for [{ private _i = _Delay }, { _i > 0 }, { _i = _i - 1}] do {
-							[parseText format[
-								("<t color='#f5791b'>"+
-								"<t size='1.3'>RESPAWN DELAY</t>"+
-								"<br/><t size='1.1'>YOU MAY USE SCRIPTED REINSERT IN:<br/><br/>"+
-								"<t size='2'>%1</t></t></t>")
-							,_i]] remoteExec ["hintSilent",_this];
-							sleep 1;
+					_MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
+					if(count crew _mhq > 0) then {
+						systemChat format["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). The crew has been notified.",_MhqSafeZone];
+						(format["Reinsert: %1 attempted to move to the MHQ.",name _caller]) remoteExec ["SystemChat",crew _mhq];
+					} else {
+						private ["_GroupLeaders"];
+						systemChat format["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). Group leaders have been notified",_MhqSafeZone];
+						if(!isNil "flag_west_1") then {
+							_GroupLeaders = allPlayers select {leader (group _X) == _X && (_X distance flag_west_1 > 100)};
 						};
-						[parseText
-								("<t color='#f5791b'>"+
-								"<t size='1.3'>RESPAWN DELAY</t>"+
-								"<br/><br/><t size='1.1'>YOU MAY NOW USED SCRIPTED REINSERT.</t></t>")
-						] remoteExec ["hintSilent",_this];
-						sleep 2;
-						_this setVariable ["GOL_TeleportDelay",false,true];
-				};						
-			}
-		},ARGUMENT(_mhq),(CONDITION_1),7];
-		_add pushback [([_mhq] call FUNC(getFlag)), _id];
+						if(!isNil "flag_east_1") then {
+							_GroupLeaders = allPlayers select {leader (group _X) == _X && (_X distance flag_east_1 > 100)};
+						};				
+						(format["Reinsert: %1 attempted to move to the MHQ.",name _caller]) remoteExec ["SystemChat",_GroupLeaders];
+					};	
+					_caller spawn {
+							_this setVariable ["GOL_TeleportDelay",true,true];
+							_Delay = 10;
+							for [{ private _i = _Delay }, { _i > 0 }, { _i = _i - 1}] do {
+								[parseText format[
+									("<t color='#f5791b'>"+
+									"<t size='1.3'>RESPAWN DELAY</t>"+
+									"<br/><t size='1.1'>YOU MAY USE SCRIPTED REINSERT IN:<br/><br/>"+
+									"<t size='2'>%1</t></t></t>")
+								,_i]] remoteExec ["hintSilent",_this];
+								sleep 1;
+							};
+							[parseText
+									("<t color='#f5791b'>"+
+									"<t size='1.3'>RESPAWN DELAY</t>"+
+									"<br/><br/><t size='1.1'>YOU MAY NOW USED SCRIPTED REINSERT.</t></t>")
+							] remoteExec ["hintSilent",_this];
+							sleep 2;
+							_this setVariable ["GOL_TeleportDelay",false,true];
+					};						
+				}
+			},
+			{},
+			[_mhq],
+			1,
+			7,
+			false,
+			false
+		] call BIS_fnc_holdActionAdd;
+		_add pushback [([_mhq] call FUNC(getFlag)), _id, true];
 	} else {
+		diag_log format["[MHQ DEBUG ELSE] _MHQ Variable: %1",_mhq];
+
 		_id = _mhq addAction ["<t color='#0fdf29'>Activate MHQ</t>",{
 			_MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
 			_EnemyNearUnits = ((_this select 3) nearEntities ["Man", _MhqSafeZone]) select {(side _X) getFriend (side player) < 0.6 && side _X != civilian};

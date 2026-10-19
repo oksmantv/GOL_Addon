@@ -17,6 +17,7 @@ PREP(getGroupType);
 PREP(getVersionAddon);
 PREP(getVersionFramework);
 PREP(hint);
+PREP(protectionStatusHint);
 //PREP(isDebugConsoleAllowed); // CfgFunction
 PREP(isDevBuild);
 PREP(isNight);

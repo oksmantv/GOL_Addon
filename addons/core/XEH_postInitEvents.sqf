@@ -43,43 +43,59 @@
 	};
 }, []] call CBA_Fnc_execNextFrame;
 
-[{(getClientStateNumber >= 10) || !isMultiplayer}, {
+// A dedicated server has no player-facing client state. Do not make the
+// server lifecycle depend on getClientStateNumber, or serverReady can remain
+// blocked forever while remote clients wait for their intro sequence.
+if (isServer) then {
 	[{
-		LOG("Event missionLoaded");
+		LOG("Event missionLoaded (server)");
 		[QGVARMAIN(missionLoaded), []] call CBA_fnc_localEvent;
 
-		LOG("Event missionStarted");
+		LOG("Event missionStarted (server)");
 		[QGVARMAIN(missionStarted), []] call CBA_fnc_localEvent;
 
-		if (isServer) then {
-			LOG("Event serverReady");
-			[QGVARMAIN(serverReady), []] call CBA_fnc_localEvent;
+		LOG("Event serverReady");
+		[QGVARMAIN(serverReady), []] call CBA_fnc_localEvent;
+	}, [], 0.5] call CBA_fnc_waitAndExecute;
+};
 
-/*
-			if !(dynamicSimulationSystemEnabled) then {
-				enableDynamicSimulationSystem true;
+// Player clients need both a fully loaded mission and a real player object.
+// Editor/singleplayer previews do not use the multiplayer client-state flow,
+// so they retain the original !isMultiplayer readiness bypass.
+// A hosted server already emitted missionLoaded/missionStarted above, so only
+// remote clients emit those local lifecycle events here.
+if (hasInterface) then {
+	[{!isNull player && {!isMultiplayer || {getClientStateNumber >= 10}}}, {
+		[{
+			if (!isServer) then {
+				LOG("Event missionLoaded (client)");
+				[QGVARMAIN(missionLoaded), []] call CBA_fnc_localEvent;
 
-				"Group" setDynamicSimulationDistance 350;
-				"Vehicle" setDynamicSimulationDistance 500;
-				"Prop" setDynamicSimulationDistance 50;
-				"EmptyVehicle" setDynamicSimulationDistance 100;
-				"IsMoving" setDynamicSimulationDistanceCoef 3;
+				LOG("Event missionStarted (client)");
+				[QGVARMAIN(missionStarted), []] call CBA_fnc_localEvent;
 			};
-*/
-		};
 
-		if (hasInterface) then {
 			if ((getPlayerUID player) in getArray(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "AuthorUID")) then {
 				[QGVARMAIN(AddAdmin), player] call CBA_fnc_localEvent;
 			};
 			player setVariable [QGVARMAIN(startLocation), (getPosASL player)];
 			LOG("Event playerReady");
 			[QGVARMAIN(playerReady), []] call CBA_fnc_localEvent;
-		};
+		}, [], 0.5] call CBA_fnc_waitAndExecute;
+	}, []] call CBA_fnc_waitUntilAndExecute;
+};
 
-		if (CBA_isHeadlessClient) then {
-			LOG("Event headlessReady");
-			[QGVARMAIN(headlessReady), []] call CBA_fnc_localEvent;
-		};
+// Headless clients do not have an interface or a player object. Their
+// lifecycle is independent from both the dedicated server and player clients.
+if (CBA_isHeadlessClient) then {
+	[{
+		LOG("Event missionLoaded (headless)");
+		[QGVARMAIN(missionLoaded), []] call CBA_fnc_localEvent;
+
+		LOG("Event missionStarted (headless)");
+		[QGVARMAIN(missionStarted), []] call CBA_fnc_localEvent;
+
+		LOG("Event headlessReady");
+		[QGVARMAIN(headlessReady), []] call CBA_fnc_localEvent;
 	}, [], 0.5] call CBA_fnc_waitAndExecute;
-}, []] call CBA_fnc_waitUntilAndExecute;
+};

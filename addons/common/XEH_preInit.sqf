@@ -6,6 +6,8 @@
 diag_log "[GW][Common] XEH_preInit started";
 
 GVAR(HintInt) = 0;
+GVAR(protectionStatusExpiresAt) = -1;
+GVAR(protectionStatusClosing) = false;
 GVAR(tempCurator) = [];
 GVAR(spawnActive) = false;
 GVAR(spawnQueue) = [];
