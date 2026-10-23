@@ -369,8 +369,12 @@ if (hasInterface) then {
 		["GW_DEBRIEF_SUCCESS_1", "GW_DEBRIEF_SUCCESS_2", "GW_DEBRIEF_SUCCESS_3", "GW_DEBRIEF_SUCCESS_4", "GW_DEBRIEF_SUCCESS_5", "GW_DEBRIEF_SUCCESS_6", "GW_DEBRIEF_SUCCESS_7", "GW_DEBRIEF_SUCCESS_8", "GW_DEBRIEF_SUCCESS_9", "GW_DEBRIEF_SUCCESS_10", "GW_DEBRIEF_SUCCESS_11", "GW_DEBRIEF_SUCCESS_12", "GW_DEBRIEF_SUCCESS_13", "GW_DEBRIEF_SUCCESS_14", "GW_DEBRIEF_SUCCESS_15", "GW_DEBRIEF_SUCCESS_16"]
 	] select _successful;
 	private _end = selectRandom _endings;
+	private _debriefingTitle = getText (missionConfigFile >> "CfgDebriefing" >> _end >> "title");
 
-	diag_log format ["[GW][Admin] Ending mission as %1 with debriefing %2", _result, _end];
+	diag_log format ["[GW][Admin] Ending mission as %1 with debriefing %2 (%3)", _result, _end, _debriefingTitle];
+	if (_debriefingTitle isEqualTo "") then {
+		diag_log format ["[GW][Admin] ERROR: %1 is not defined in missionConfigFile >> CfgDebriefing", _end];
+	};
 	[_end, _successful, true, true] remoteExec ["BIS_fnc_endMission",0];
 }] call CBA_fnc_addEventHandler;
 
