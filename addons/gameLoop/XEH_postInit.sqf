@@ -119,6 +119,11 @@ if (isServer) then {
 	if (isServer) then {
 		publicVariable QGVAR(SafeMode_Enabled);
 		publicVariable QGVAR(SafeMode_StartAreaExpiry);
+		// Framework 3+ Safe Start still owns its own projectile-deletion handler.
+		// Release it when GW SafeMode releases so old mission templates unlock too.
+		if (!_enabled) then {
+			["StartUp_setSafetyMode", false] call CBA_fnc_globalEvent;
+		};
 	};
 	if (hasInterface) then {
 		TRACE_1("QGVAR(setSafetyMode)", _enabled);

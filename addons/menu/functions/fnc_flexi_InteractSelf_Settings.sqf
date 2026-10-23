@@ -91,10 +91,22 @@ if (_menuName isEqualTo "settings_viewDistance") then {
 				(GVAR(viewDistance_Max) >= 2000)
 			],
 			[
+				"2500",
+				"setViewDistance 2500;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 2500)
+			],
+			[
 				"3000",
 				"setViewDistance 3000;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 3000)
+			],
+			[
+				"3500",
+				"setViewDistance 3500;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 3500)
 			],
 			[
 				"4000",
@@ -137,6 +149,24 @@ if (_menuName isEqualTo "settings_viewDistance") then {
 				"setViewDistance 20000;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 20000)
+			],
+			[
+				"25000",
+				"setViewDistance 25000;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 25000)
+			],
+			[
+				"27500",
+				"setViewDistance 27500;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 27500)
+			],
+			[
+				"30000",
+				"setViewDistance 30000;",
+				"","","",-1,true,
+				(GVAR(viewDistance_Max) >= 30000)
 			]
 		]
 	];
@@ -149,14 +179,19 @@ if (_menuName isEqualTo "settings_objectViewDistance") then {
 		["1200", "setObjectViewDistance 1200;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 1200],
 		["1500", "setObjectViewDistance 1500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 1500],
 		["2000", "setObjectViewDistance 2000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 2000],
+		["2500", "setObjectViewDistance 2500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 2500],
 		["3000", "setObjectViewDistance 3000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 3000],
+		["3500", "setObjectViewDistance 3500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 3500],
 		["4000", "setObjectViewDistance 4000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 4000],
 		["6000", "setObjectViewDistance 6000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 6000],
 		["8000", "setObjectViewDistance 8000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 8000],
 		["10000", "setObjectViewDistance 10000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 10000],
 		["12000", "setObjectViewDistance 12000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 12000],
 		["15000", "setObjectViewDistance 15000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 15000],
-		["20000", "setObjectViewDistance 20000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 20000]
+		["20000", "setObjectViewDistance 20000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 20000],
+		["25000", "setObjectViewDistance 25000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 25000],
+		["27500", "setObjectViewDistance 27500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 27500],
+		["30000", "setObjectViewDistance 30000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 30000]
 	]];
 };
 
