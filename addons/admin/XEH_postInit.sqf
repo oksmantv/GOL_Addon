@@ -364,13 +364,14 @@ if (hasInterface) then {
 	if (!isServer) exitWith {};
 
 	private _result = ["failed", "successful"] select _successful;
-	private _end = "LOSER";
-	if(_successful) then {
-		_end = "END1";
-	};
+	private _endings = [
+		["GW_DEBRIEF_FAILURE_1", "GW_DEBRIEF_FAILURE_2", "GW_DEBRIEF_FAILURE_3", "GW_DEBRIEF_FAILURE_4", "GW_DEBRIEF_FAILURE_5", "GW_DEBRIEF_FAILURE_6", "GW_DEBRIEF_FAILURE_7", "GW_DEBRIEF_FAILURE_8", "GW_DEBRIEF_FAILURE_9", "GW_DEBRIEF_FAILURE_10", "GW_DEBRIEF_FAILURE_11", "GW_DEBRIEF_FAILURE_12", "GW_DEBRIEF_FAILURE_13", "GW_DEBRIEF_FAILURE_14", "GW_DEBRIEF_FAILURE_15", "GW_DEBRIEF_FAILURE_16"],
+		["GW_DEBRIEF_SUCCESS_1", "GW_DEBRIEF_SUCCESS_2", "GW_DEBRIEF_SUCCESS_3", "GW_DEBRIEF_SUCCESS_4", "GW_DEBRIEF_SUCCESS_5", "GW_DEBRIEF_SUCCESS_6", "GW_DEBRIEF_SUCCESS_7", "GW_DEBRIEF_SUCCESS_8", "GW_DEBRIEF_SUCCESS_9", "GW_DEBRIEF_SUCCESS_10", "GW_DEBRIEF_SUCCESS_11", "GW_DEBRIEF_SUCCESS_12", "GW_DEBRIEF_SUCCESS_13", "GW_DEBRIEF_SUCCESS_14", "GW_DEBRIEF_SUCCESS_15", "GW_DEBRIEF_SUCCESS_16"]
+	] select _successful;
+	private _end = selectRandom _endings;
 
-	diag_log format ["[GW][Admin] Ending mission as %1", _result];
-	[_end, _successful, 2] call BIS_fnc_endMissionServer;
+	diag_log format ["[GW][Admin] Ending mission as %1 with debriefing %2", _result, _end];
+	[_end, _successful, true, true] remoteExec ["BIS_fnc_endMission",0];
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(treatmentAdvanced_CPRLocal), {
@@ -402,6 +403,30 @@ if (hasInterface) then {
 	if (alive _unit && {_unit isKindOf "CAManBase"} && {!(_unit isKindOf "HeadlessClient_F")}) then {
 		[_unit, _role] call GW_Gear_fnc_Handler;
 	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(refreshNearbyLoadouts), {
+	params ["_admin"];
+	if (!isServer || {!isPlayer _admin} || {!(_admin in GVARMAIN(adminList))}) exitWith {};
+
+	private _refreshed = 0;
+	private _nearbyUnits = (allPlayers + playableUnits) arrayIntersect (allPlayers + playableUnits);
+	{
+		private _unit = _x;
+		if (alive _unit && {_unit distance _admin <= 200}) then {
+			private _role = _unit getVariable [QEGVAR(Gear,Loadout), ""];
+			if (_role isEqualTo "") then {
+				private _selectedRole = _unit getVariable ["GOL_SelectedRole", []];
+				_role = _selectedRole param [0, ""];
+			};
+			if !(_role isEqualTo "") then {
+				[QGVAR(giveLoadout), [_unit, _role], _unit] call CBA_fnc_targetEvent;
+				_refreshed = _refreshed + 1;
+			};
+		};
+	} forEach _nearbyUnits;
+
+	[QGVARMAIN(sendMessage), format ["Refreshed %1 nearby player/playable loadout(s).", _refreshed], _admin] call CBA_fnc_targetEvent;
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(playerProtectionStatus), {

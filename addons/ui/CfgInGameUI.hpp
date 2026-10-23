@@ -1,7 +1,7 @@
 
 class CfgInGameUI  {
 	class Actions {	// Keep the player-configured position, but clear the protection-status HUD.
-		y = "((profilenamespace getvariable [""IGUI_GRID_MENU_Y"", (0.5 * (((safezoneW / safezoneH) min 1.2) / 25) + safezoneY)]) + (3 * (((safezoneW / safezoneH) min 1.2) / 25)))";
+		y = "((profilenamespace getvariable [""IGUI_GRID_MENU_Y"", (0.5 * (((safezoneW / safezoneH) min 1.2) / 25) + safezoneY)]) + (6 * (((safezoneW / safezoneH) min 1.2) / 25)))";
 	};
 	class CommandBar  {
 		left = 0;

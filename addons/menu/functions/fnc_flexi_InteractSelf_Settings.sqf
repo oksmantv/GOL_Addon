@@ -168,18 +168,6 @@ if (_menuName isEqualTo "settings_viewDistance_high") then {
 				"setViewDistance 25000;",
 				"","","",-1,true,
 				(GVAR(viewDistance_Max) >= 25000)
-			],
-			[
-				"27500",
-				"setViewDistance 27500;",
-				"","","",-1,true,
-				(GVAR(viewDistance_Max) >= 27500)
-			],
-			[
-				"30000",
-				"setViewDistance 30000;",
-				"","","",-1,true,
-				(GVAR(viewDistance_Max) >= 30000)
 			]
 		]
 	];
@@ -196,7 +184,7 @@ if (_menuName isEqualTo "settings_objectViewDistance") then {
 		["3000", "setObjectViewDistance 3000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 3000],
 		["3500", "setObjectViewDistance 3500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 3500],
 		["4000", "setObjectViewDistance 4000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 4000],
-		["Higher Object View Distance >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf_Settings)), "settings_objectViewDistance_high", 1]
+		["Higher Object View Distance >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf_Settings)), "settings_objectViewDistance_high", 1]]
 	]];
 };
 
@@ -208,9 +196,7 @@ if (_menuName isEqualTo "settings_objectViewDistance_high") then {
 		["12000", "setObjectViewDistance 12000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 12000],
 		["15000", "setObjectViewDistance 15000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 15000],
 		["20000", "setObjectViewDistance 20000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 20000],
-		["25000", "setObjectViewDistance 25000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 25000],
-		["27500", "setObjectViewDistance 27500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 27500],
-		["30000", "setObjectViewDistance 30000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 30000]
+		["25000", "setObjectViewDistance 25000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 25000]
 	]];
 };
 

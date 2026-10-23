@@ -162,13 +162,6 @@ if (_menuName isEqualTo "actions") then {
 				"\A3\ui_f\data\igui\cfg\actions\heal_ca.paa", "", "", -1, true,true
 			],
 			[
-				"MHQ >",
-				"","","",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"mhqlist", 1],
-				-1, true,
-				isClass(missionConfigFile >> "GW_Modules" >> "MHQ")
-			],
-			[
 				"Move Mobile HQ", {
 					private _mobileHQ = missionNamespace getVariable ["Mobile_HQ", objNull];
 					if (!isNull _mobileHQ && {alive _mobileHQ}) then {
@@ -320,6 +313,11 @@ if (_menuName isEqualTo "spawn_loadout") then {
 				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts", 1],
 				-1, _canGiveLoadout, true
+			],
+			[
+				"Refresh Nearby Player Loadouts (200m)",
+				{[QGVAR(refreshNearbyLoadouts), player] call CBA_fnc_serverEvent;},
+				"\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "", "", -1, true, true
 			]
 		]
 	];
