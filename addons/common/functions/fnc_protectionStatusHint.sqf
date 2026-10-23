@@ -18,11 +18,27 @@ private _safeModeEnabled = missionNamespace getVariable ["GW_GameLoop_SafeMode_E
 private _playerProtectionEnabled = missionNamespace getVariable ["GW_admin_playerProtectionEnabled", false];
 private _layer = "GW_ProtectionStatus" call BIS_fnc_rscLayer;
 private _protectionActive = _safeModeEnabled || _playerProtectionEnabled;
+private _hudVisible = (shownHUD findIf {_x}) >= 0;
+private _cameraActive = !isNull findDisplay 314 || {!isNull findDisplay 312};
+private _statusVisible = _hudVisible && {!_cameraActive};
 
 if (isNil QGVAR(protectionStatusPFH)) then {
 	GVAR(protectionStatusPFH) = [{
 		[] call FUNC(protectionStatusHint);
 	}, 0.5] call CBA_fnc_addPerFrameHandler;
+};
+
+private _display = uiNamespace getVariable ["GW_ProtectionStatus", displayNull];
+if (!_statusVisible) exitWith {
+	if !(isNull _display) then {
+		_layer cutText ["", "PLAIN"];
+	};
+	if (!_protectionActive && {!isNil QGVAR(protectionStatusPFH)}) then {
+		[GVAR(protectionStatusPFH)] call CBA_fnc_removePerFrameHandler;
+		GVAR(protectionStatusPFH) = nil;
+		GVAR(protectionStatusExpiresAt) = -1;
+	};
+	true
 };
 
 private _fnc_stateInfo = {
@@ -48,8 +64,6 @@ private _text = parseText format [
 	_playerProtectionInfo select 0,
 	_playerProtectionInfo select 1
 ];
-
-private _display = uiNamespace getVariable ["GW_ProtectionStatus", displayNull];
 if (isNull _display) exitWith {
 	_layer cutRsc ["GW_ProtectionStatus", "PLAIN", 0, false];
 	[{ [] call FUNC(protectionStatusHint); }] call CBA_fnc_execNextFrame;

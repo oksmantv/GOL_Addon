@@ -134,7 +134,7 @@ if (_menuName isEqualTo "actions") then {
 			],
 			[
 				"End Mission >",
-				"", "", "",
+				"", "\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa", "",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"endMissionCommand", 1],
 				-1, true, true
 			],
@@ -176,18 +176,6 @@ if (_menuName isEqualTo "actions") then {
 					};
 				},
 				"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa", "", "", -1, _canMoveMobileHQ, true
-			],
-			[
-				"Select Loadouts >",
-				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1],
-				-1, true, true
-			],
-			[
-				_giveLoadoutCaption,
-				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
-				[QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts", 1],
-				-1, _canGiveLoadout, true
 			]
 		]
 	];
@@ -300,6 +288,12 @@ if (_menuName isEqualTo "spawn") then {
 	_menus pushBack [
 		["spawn","Spawn Menu", _menuRsc],
 		[
+			[
+				"Loadout >",
+				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"spawn_loadout", 1],
+				-1, true, true
+			],
 			["Gear Box",{[QGVAR(spawnBox), ["GOL_GearBox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa"],
 			["Support Box",{[QGVAR(spawnBox), ["GOL_SupportBox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\Map\VehicleIcons\iconCrateAmmo_ca.paa"],
 			["Team Resupply Box",{[QGVAR(spawnBox), ["GOL_TeamResupplybox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\reload_ca.paa"],
@@ -307,6 +301,26 @@ if (_menuName isEqualTo "spawn") then {
 			["Squad Resupply Box",{[QGVAR(spawnBox), ["GOL_SquadResupplybox_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\reload_ca.paa"],
 			["Medical Box",{[QGVAR(spawnBox), ["GOL_MedicalResupply_", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\heal_ca.paa"],
 			["Service Station",{[QGVAR(spawnBox), ["GOL_MobileServiceStation", player]] call CBA_fnc_serverEvent;}, "\A3\ui_f\data\igui\cfg\actions\repair_ca.paa"]
+		]
+	];
+};
+
+if (_menuName isEqualTo "spawn_loadout") then {
+	_menus pushBack [
+		["spawn_loadout", "Loadout", _menuRsc],
+		[
+			[
+				"Loadouts >",
+				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1],
+				-1, true, true
+			],
+			[
+				_giveLoadoutCaption,
+				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
+				[QUOTE(call FUNC(flexi_InteractSelf)),"target_loadouts", 1],
+				-1, _canGiveLoadout, true
+			]
 		]
 	];
 };

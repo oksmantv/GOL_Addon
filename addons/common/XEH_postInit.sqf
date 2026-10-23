@@ -12,17 +12,16 @@ GOL_SpawnMultiplier = 100;
 
 if (hasInterface) then {
 	[QGVAR(update), {
+		if (player getVariable [QGVAR(simpleRosterUpdatePending), false]) exitWith {};
+		player setVariable [QGVAR(simpleRosterUpdatePending), true];
 		[{
+			player setVariable [QGVAR(simpleRosterUpdatePending), false];
 			[] call FUNC(simpleRoster);
 		}, []] call CBA_fnc_execNextFrame;
 	}] call CBA_fnc_addEventHandler;
 
 	[QGVARMAIN(mapLoaded), {
-		if (didJip) then {
-			[QGVAR(update), []] call CBA_fnc_globalEvent;
-		} else {
-			[QGVAR(update), []] call CBA_fnc_localEvent;
-		};
+		[QGVAR(update), []] call CBA_fnc_localEvent;
 	}] call CBA_fnc_addEventHandler;
 };
 

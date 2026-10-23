@@ -115,6 +115,19 @@ if (_menuName isEqualTo "settings_viewDistance") then {
 				(GVAR(viewDistance_Max) >= 4000)
 			],
 			[
+				"Higher View Distance >",
+				"","","",
+				[QUOTE(call FUNC(flexi_InteractSelf_Settings)),"settings_viewDistance_high", 1]
+			]
+		]
+	];
+};
+
+if (_menuName isEqualTo "settings_viewDistance_high") then {
+	_menus pushBack [
+		["settings_viewDistance_high", format ["View Distance: %1", viewDistance], _menuRsc],
+		[
+			[
 				"6000",
 				"setViewDistance 6000;",
 				"","","",-1,true,
@@ -183,6 +196,12 @@ if (_menuName isEqualTo "settings_objectViewDistance") then {
 		["3000", "setObjectViewDistance 3000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 3000],
 		["3500", "setObjectViewDistance 3500;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 3500],
 		["4000", "setObjectViewDistance 4000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 4000],
+		["Higher Object View Distance >", "", "", "", [QUOTE(call FUNC(flexi_InteractSelf_Settings)), "settings_objectViewDistance_high", 1]
+	]];
+};
+
+if (_menuName isEqualTo "settings_objectViewDistance_high") then {
+	_menus pushBack [["settings_objectViewDistance_high", format ["Object View Distance: %1", getObjectViewDistance select 0], _menuRsc], [
 		["6000", "setObjectViewDistance 6000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 6000],
 		["8000", "setObjectViewDistance 8000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 8000],
 		["10000", "setObjectViewDistance 10000;", "", "", "", -1, true, GVAR(viewDistance_Max) >= 10000],

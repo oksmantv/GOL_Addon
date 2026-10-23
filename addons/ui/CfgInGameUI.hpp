@@ -1,10 +1,8 @@
 
 class CfgInGameUI  {
-/*
-	class Actions {	// Move menu closer to crosshair
-		x = "(profilenamespace getvariable [""IGUI_GRID_MENU_X"", (1.5 * (((safezoneW / safezoneH) min 1.2) / 40) + safezoneX)])";
+	class Actions {	// Keep the player-configured position, but clear the protection-status HUD.
+		y = "((profilenamespace getvariable [""IGUI_GRID_MENU_Y"", (0.5 * (((safezoneW / safezoneH) min 1.2) / 25) + safezoneY)]) + (3 * (((safezoneW / safezoneH) min 1.2) / 25)))";
 	};
-*/
 	class CommandBar  {
 		left = 0;
 		top = 9999;

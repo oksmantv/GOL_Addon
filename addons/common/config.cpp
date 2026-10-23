@@ -31,11 +31,11 @@ class RscTitles {
 			class Status: RscStructuredText {
 				idc = 31001;
 				style = 2;
-				x = "safeZoneX + (safeZoneW * 0.5) - 0.15";
+				x = "safeZoneX + 0.02";
 				y = "safeZoneY + 0.02";
 				w = 0.30;
 				h = 0.36;
-				colorBackground[] = {0, 0, 0, 0.65};
+				colorBackground[] = {0, 0, 0, 0};
 				text = "";
 			};
 		};
