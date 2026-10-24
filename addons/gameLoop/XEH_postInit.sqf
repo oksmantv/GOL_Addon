@@ -68,6 +68,12 @@ if (isServer) then {
 	};
 }] call CBA_fnc_addEventHandler;
 
+[QGVARMAIN(loadingScreenDone), {
+	GVAR(IntroLoadingScreenDone) = true;
+	diag_log "[GW][Intro] loading-screen transition ready";
+	[] call FUNC(startIntro);
+}] call CBA_fnc_addEventHandler;
+
 [QGVARMAIN(playerReady), {
 	diag_log format ["[GW][SafeMode] playerReady useType=%1 enabled=%2", GVAR(SafeMode_useType), GVAR(SafeMode_Enabled)];
 	// The server owns SafeMode_Enabled. Request its current value so clients do not
@@ -76,7 +82,9 @@ if (isServer) then {
 
 	private _showLocalIntro = getMissionConfigValue ["GW_ShowIntroInSingleplayer", false];
 	if (isMultiplayer || _showLocalIntro) then {
-		#include "XEH_postInitPlayer.sqf"
+		GVAR(IntroPlayerReady) = true;
+		diag_log "[GW][Intro] player ready";
+		[] call FUNC(startIntro);
 	};
 }] call CBA_fnc_addEventHandler;
 

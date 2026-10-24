@@ -90,16 +90,23 @@ if (hasInterface) then {
 				diag_log "[GW][Core] displaying GOL loading logo";
 				startLoadingScreen ["", "GW_loadingScreen"];
 
-				_progress = 0;
-				for "_i" from 1 to 1000 step 1 do {
-					_progress = _progress + 0.001;
-					progressLoadingScreen _progress;
-					uisleep 0.005;
+				// uiSleep is frame-bound. A 1,000-step animation with a 5 ms sleep can
+				// take much longer than intended on a loaded dedicated-server client.
+				for "_i" from 1 to 100 do {
+					progressLoadingScreen (_i / 100);
+					uisleep 0.02;
 				};
+				// Keep the completed bar visible long enough for the final state to render.
+				uisleep 0.25;
 
+				// Own the black frame before dismissing the loading display. This prevents
+				// the world briefly appearing between endLoadingScreen and BLACK IN.
+				cutText ["", "BLACK FADED", 0];
 				endLoadingScreen;
-				cutText ["","BLACK IN",10];
+				cutText ["", "BLACK IN", 1.5];
+				uisleep 1.5;
 			};
+			diag_log "[GW][Core] loading-screen transition complete";
 			[QGVARMAIN(loadingScreenDone), []] call CBA_fnc_localEvent;
 		};
 	}] call CBA_fnc_addEventHandler;
