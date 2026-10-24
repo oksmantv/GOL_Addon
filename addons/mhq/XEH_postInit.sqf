@@ -53,7 +53,7 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 	if (typeOf _mhq isNotEqualTo "GOL_Mobile_HQ") then {
 		[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
 	} else {
-		_mhq animateSource ["Terminal_source_sound", 0, true];
+		[_mhq, "Terminal_source_sound", 0, true] call FUNC(setMHQMobileSource);
 		[_mhq, _toggle && {_mhq getVariable [QGVAR(Assembled), false]}] call FUNC(loopMHQSatellite);
 	};
 	[QGVAR(Actions), [_mhq]] call CBA_fnc_globalEvent;
@@ -94,7 +94,7 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		} else {
 			[_mhq, false] call FUNC(loopMHQSatellite);
 			if (_mhq getVariable [QGVAR(Active), false]) then {
-				_mhq animateSource ["Terminal_source", 45, false];
+				[_mhq, "Terminal_source", 45, false] call FUNC(setMHQMobileSource);
 			};
 		};
 	};
@@ -115,13 +115,13 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		_args params ["", "_duration", "_mobileHQAction"];
 		if (typeOf _target isEqualTo "GOL_Mobile_HQ" && {_mobileHQAction in ["activate", "deactivate"]}) then {
 			if (_mobileHQAction isEqualTo "activate") then {
-				_target animateSource ["Terminal_source", 45, false];
+				[_target, "Terminal_source", 45, false] call FUNC(setMHQMobileSource);
 				[QGVAR(PlayMechanicalSounds), [_target, "activate"]] call CBA_fnc_globalEvent;
 			} else {
 				[_target, false] call FUNC(loopMHQSatellite);
-				_target animateSource ["Terminal_source", 100, true];
+				[_target, "Terminal_source", 100, true] call FUNC(setMHQMobileSource);
 			};
-			_target animateSource ["Progress_source", [0, 100] select (_mobileHQAction isEqualTo "deactivate"), true];
+			[_target, "Progress_source", [0, 100] select (_mobileHQAction isEqualTo "deactivate"), true] call FUNC(setMHQMobileSource);
 			_caller setVariable [format ["GW_MHQ_HoldActionStarted_%1", _actionId], diag_tickTime];
 			_caller setVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], false];
 		};
@@ -135,10 +135,10 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		if (typeOf _target isEqualTo "GOL_Mobile_HQ" && {_mobileHQAction in ["activate", "deactivate"]}) then {
 			private _startedAt = _caller getVariable [format ["GW_MHQ_HoldActionStarted_%1", _actionId], diag_tickTime];
 			private _progress = 100 * (((diag_tickTime - _startedAt) / _duration) min 1);
-			_target animateSource ["Progress_source", [_progress, 100 - _progress] select (_mobileHQAction isEqualTo "deactivate"), true];
+			[_target, "Progress_source", [_progress, 100 - _progress] select (_mobileHQAction isEqualTo "deactivate"), true] call FUNC(setMHQMobileSource);
 			if (_mobileHQAction isEqualTo "deactivate" && {_progress >= 70} && {!(_caller getVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], false])}) then {
 				_caller setVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], true];
-				_target animateSource ["Terminal_source", 0, false];
+				[_target, "Terminal_source", 0, false] call FUNC(setMHQMobileSource);
 			};
 		};
 		if (vehicle _caller isNotEqualTo _caller || {!(_caller getVariable [format ["GW_MHQ_HoldActionAnimated_%1", _actionId], false])}) exitWith {};
@@ -153,16 +153,16 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		if (typeOf _target isEqualTo "GOL_Mobile_HQ" && {_mobileHQAction in ["activate", "deactivate"]}) then {
 			if (!_completed) then {
 				private _cancelState = [0, 100] select (_mobileHQAction isEqualTo "deactivate");
-				_target animateSource ["Progress_source", _cancelState, false];
-				_target animateSource ["Terminal_source", _cancelState, false];
+				[_target, "Progress_source", _cancelState, false] call FUNC(setMHQMobileSource);
+				[_target, "Terminal_source", _cancelState, false] call FUNC(setMHQMobileSource);
 				if (_mobileHQAction isEqualTo "deactivate") then {
 					[_target, true] call FUNC(loopMHQSatellite);
 				};
 			} else {
 				if (_mobileHQAction isEqualTo "activate") then {
-					_target animateSource ["Progress_source", 100, true];
+					[_target, "Progress_source", 100, true] call FUNC(setMHQMobileSource);
 				} else {
-					_target animateSource ["Progress_source", 0, true];
+					[_target, "Progress_source", 0, true] call FUNC(setMHQMobileSource);
 					[QGVAR(PlayMechanicalSounds), [_target, "deactivate"]] call CBA_fnc_globalEvent;
 				};
 			};

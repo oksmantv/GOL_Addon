@@ -11,3 +11,4 @@ PREP(loopMHQSatellite);
 PREP(playMHQMechanicalSounds);
 PREP(prefabCopy);
 PREP(prefabCreate);
+PREP(setMHQMobileSource);
