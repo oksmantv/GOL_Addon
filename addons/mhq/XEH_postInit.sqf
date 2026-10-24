@@ -89,6 +89,20 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 	#define CONDITION_4 "(gunner _target) == player || (driver _target) == player || (commander _target) == player || vehicle player isNotEqualTo _target"
 	params ["_mhq"];
 	diag_log format["[MHQ DEBUG] _MHQ Variable: %1",_mhq];
+	private _startMaintenanceAnimation = {
+		params ["_target", "_caller"];
+		_caller playMove "AinvPknlMstpSnonWnonDnon_medic4";
+	};
+	private _loopMaintenanceAnimation = {
+		params ["_target", "_caller"];
+		if !((toLowerANSI animationState _caller) find "ainvpknlmstpsnonwnondnon_medic4" == 0) then {
+			_caller playMove "AinvPknlMstpSnonWnonDnon_medic4";
+		};
+	};
+	private _finishMaintenanceAnimation = {
+		params ["_caller"];
+		_caller switchMove "AinvPknlMstpSnonWnonDnon";
+	};
 
 	private	_add = [];
 	private _mhqActiveActions = (_mhq getVariable [QGVAR(ActiveActions), []]);
@@ -100,45 +114,85 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 
 	if (_mhq getVariable QGVAR(Active)) then {
 		diag_log format["[MHQ DEBUG DEACTIVATE] _MHQ Variable: %1",_mhq];
-		_id = _mhq addAction ["<t color='#ec2b14'>Deactivate MHQ</t>",{ player PlayMove "Acts_carFixingWheel";
-			["Deactivating MHQ", 5, {(((_this select 0) select 0) getVariable "GW_MHQ_Active")}, {
-				([QGVAR(Enabled), [((_this select 0) select 0), false, str([player] call EFUNC(Common,getSide))]] call CBA_fnc_serverEvent);
-				if(objectParent player != ((_this select 0) select 0)) then {
-					player SwitchMove "";
-				};
-				_mhqMarkerId = ((_this select 0) select 0) getVariable ["MHQ_MarkerId",""];
-				_mhqMarkerId setMarkerAlpha 0;
-				_mhqMarkerAreaId = format["%1_Area",_mhqMarkerId];
-				_mhqMarkerAreaId setMarkerAlpha 0;
-			},
+		_id = [
+			_mhq,
+			"<t color='#ec2b14'>Deactivate MHQ</t>",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_unbind_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_unbind_ca.paa",
+			CONDITION_4 + " && " + CONDITION_3 + " && !" + CONDITION_2,
+			CONDITION_4 + " && " + CONDITION_3 + " && !" + CONDITION_2,
+			_startMaintenanceAnimation,
+			_loopMaintenanceAnimation,
 			{
-				if(objectParent player != ((_this select 0) select 0)) then {
-					player SwitchMove "";
-				};
-				hint "Aborted";
-			} , [(_this select 0)]] call CBA_fnc_progressBar;
-		},ARGUMENT(_mhq),(CONDITION_4 +" && "+ CONDITION_3 + "&& !" + CONDITION_2),7];
-		_add pushback [_mhq, _id];
-
-		_id = _mhq addAction ["<t color='#0fdf29'>Assemble MHQ</t>",{
-			player PlayMove "Acts_carFixingWheel"; ["Assembling MHQ", 10, {!(((_this select 0) select 0) getVariable "GW_MHQ_Assembled")}, {
-				([QGVAR(Assembled), [((_this select 0) select 0), true]] call CBA_fnc_serverEvent); player SwitchMove "";
-			}, {hint "Aborted"; player SwitchMove "";}, [(_this select 0)]] call CBA_fnc_progressBar;
-		},ARGUMENT(_mhq),(CONDITION_1 + "&& !" + CONDITION_2),7];
-		_add pushback [_mhq, _id];
-
-		_id = _mhq addAction ["<t color='#ec2b14'>Disassemble MHQ</t>",{ player PlayMove "Acts_carFixingWheel";
-			["Disassemble MHQ", 10, {(((_this select 0) select 0) getVariable "GW_MHQ_Assembled")}, {
-				([QGVAR(Assembled), [((_this select 0) select 0), false]] call CBA_fnc_serverEvent); player SwitchMove "";
-			}, {hint "Aborted"; player SwitchMove "";}, [(_this select 0)]] call CBA_fnc_progressBar;
-		},ARGUMENT(_mhq),(CONDITION_1 + "&& " + CONDITION_2),7];
-		_add pushback [_mhq, _id];
+				params ["_target", "_caller", "_actionId", "_args"];
+				_args params ["_finishMaintenanceAnimation"];
+				[QGVAR(Enabled), [_target, false, str([player] call EFUNC(Common,getSide))]] call CBA_fnc_serverEvent;
+				private _mhqMarkerId = _target getVariable ["MHQ_MarkerId", ""];
+				_mhqMarkerId setMarkerAlpha 0;
+				(format ["%1_Area", _mhqMarkerId]) setMarkerAlpha 0;
+				[_caller] call _finishMaintenanceAnimation;
+			},
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation],
+			5,
+			7,
+			false,
+			false
+		] call BIS_fnc_holdActionAdd;
+		_add pushBack [_mhq, _id, true];
 
 		_id = [
 			_mhq,
+			"<t color='#0fdf29'>Assemble MHQ</t>",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_loaddevice_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_loaddevice_ca.paa",
+			CONDITION_1 + " && !" + CONDITION_2,
+			CONDITION_1 + " && !" + CONDITION_2,
+			_startMaintenanceAnimation,
+			_loopMaintenanceAnimation,
+			{
+				params ["_target", "_caller", "_actionId", "_args"];
+				_args params ["_finishMaintenanceAnimation"];
+				[QGVAR(Assembled), [_target, true]] call CBA_fnc_serverEvent;
+				[_caller] call _finishMaintenanceAnimation;
+			},
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation],
+			10,
+			7,
+			false,
+			false
+		] call BIS_fnc_holdActionAdd;
+		_add pushBack [_mhq, _id, true];
+
+		_id = [
+			_mhq,
+			"<t color='#ec2b14'>Disassemble MHQ</t>",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_unloaddevice_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_unloaddevice_ca.paa",
+			CONDITION_1 + " && " + CONDITION_2,
+			CONDITION_1 + " && " + CONDITION_2,
+			_startMaintenanceAnimation,
+			_loopMaintenanceAnimation,
+			{
+				params ["_target", "_caller", "_actionId", "_args"];
+				_args params ["_finishMaintenanceAnimation"];
+				[QGVAR(Assembled), [_target, false]] call CBA_fnc_serverEvent;
+				[_caller] call _finishMaintenanceAnimation;
+			},
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation],
+			10,
+			7,
+			false,
+			false
+		] call BIS_fnc_holdActionAdd;
+		_add pushBack [_mhq, _id, true];
+		_id = [
+			_mhq,
 			"<t color='#eeb20e'>Teleport to Staging Area</t>",
-			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
-			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_connect_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_connect_ca.paa",
 			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
 			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
 			{},
@@ -162,8 +216,8 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		_id = [
 			([_mhq] call FUNC(getFlag)),
 			format ["<t color='#eeb20e'>Teleport to %1</t>", _mhqName],
-			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
-			"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_connect_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_connect_ca.paa",
 			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
 			"(alive _target) && (vehicle _this isEqualTo _this) && !(_this getVariable ['GOL_TeleportDelay', false])",
 			{},
@@ -191,59 +245,43 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 					};	
 					showCinemaBorder true;
 					_camera cameraEffect ["internal", "back"];
-					
 					waitUntil { camCommitted _camera; };
 					1 fadeSound 1;
-					
-					_camera camSetPos [getPosATL _mhq select 0,getPosATL _mhq select 1,_height];
+
+					_camera camSetPos [getPosATL _mhq select 0, getPosATL _mhq select 1, _height];
 					_camera camCommit 4.5;
 					sleep _sleep;
-					cutText ["", "BLACK OUT",1];
-					waitUntil { sleep 1; camCommitted _camera; };				
-					_camera cameraEffect ["terminate", "back"];			
+					cutText ["", "BLACK OUT", 1];
+					waitUntil { sleep 1; camCommitted _camera; };
+					_camera cameraEffect ["terminate", "back"];
 					camDestroy _camera;
-					if(vehicleVarName _mhq != "Mobile_HQ") then {
+					if (vehicleVarName _mhq != "Mobile_HQ") then {
 						[_caller, _mhq] call BIS_fnc_moveToRespawnPosition;
-					};	
-					sleep 1.1;	
-					cutText ["", "BLACK IN",1];		
+					};
+					sleep 1.1;
+					cutText ["", "BLACK IN", 1];
 				} else {
-					_MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
-					if(count crew _mhq > 0) then {
-						systemChat format["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). The crew has been notified.",_MhqSafeZone];
-						(format["Reinsert: %1 attempted to move to the MHQ.",name _caller]) remoteExec ["SystemChat",crew _mhq];
+					if (count crew _mhq > 0) then {
+						systemChat format ["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). The crew has been notified.", _MhqSafeZone];
+						(format ["Reinsert: %1 attempted to move to the MHQ.", name _caller]) remoteExec ["SystemChat", crew _mhq];
 					} else {
-						private ["_GroupLeaders"];
-						systemChat format["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). Group leaders have been notified",_MhqSafeZone];
-						if(!isNil "flag_west_1") then {
-							_GroupLeaders = allPlayers select {leader (group _X) == _X && (_X distance flag_west_1 > 100)};
-						};
-						if(!isNil "flag_east_1") then {
-							_GroupLeaders = allPlayers select {leader (group _X) == _X && (_X distance flag_east_1 > 100)};
-						};				
-						(format["Reinsert: %1 attempted to move to the MHQ.",name _caller]) remoteExec ["SystemChat",_GroupLeaders];
-					};	
+						private _groupLeaders = [];
+						systemChat format ["Enemies are near the MHQ. You cannot move to the MHQ until the immediate area is secure (%1m). Group leaders have been notified", _MhqSafeZone];
+						if (!isNil "flag_west_1") then { _groupLeaders = allPlayers select {leader group _x isEqualTo _x && _x distance flag_west_1 > 100}; };
+						if (!isNil "flag_east_1") then { _groupLeaders = allPlayers select {leader group _x isEqualTo _x && _x distance flag_east_1 > 100}; };
+						(format ["Reinsert: %1 attempted to move to the MHQ.", name _caller]) remoteExec ["SystemChat", _groupLeaders];
+					};
 					_caller spawn {
-							_this setVariable ["GOL_TeleportDelay",true,true];
-							_Delay = 10;
-							for [{ private _i = _Delay }, { _i > 0 }, { _i = _i - 1}] do {
-								[parseText format[
-									("<t color='#f5791b'>"+
-									"<t size='1.3'>RESPAWN DELAY</t>"+
-									"<br/><t size='1.1'>YOU MAY USE SCRIPTED REINSERT IN:<br/><br/>"+
-									"<t size='2'>%1</t></t></t>")
-								,_i]] remoteExec ["hintSilent",_this];
-								sleep 1;
-							};
-							[parseText
-									("<t color='#f5791b'>"+
-									"<t size='1.3'>RESPAWN DELAY</t>"+
-									"<br/><br/><t size='1.1'>YOU MAY NOW USED SCRIPTED REINSERT.</t></t>")
-							] remoteExec ["hintSilent",_this];
-							sleep 2;
-							_this setVariable ["GOL_TeleportDelay",false,true];
-					};						
-				}
+						_this setVariable ["GOL_TeleportDelay", true, true];
+						for [{private _i = 10}, {_i > 0}, {_i = _i - 1}] do {
+							[parseText format ["<t color='#f5791b'><t size='1.3'>RESPAWN DELAY</t><br/><t size='1.1'>YOU MAY USE SCRIPTED REINSERT IN:<br/><br/><t size='2'>%1</t></t></t>", _i]] remoteExec ["hintSilent", _this];
+							sleep 1;
+						};
+						[parseText "<t color='#f5791b'><t size='1.3'>RESPAWN DELAY</t><br/><br/><t size='1.1'>YOU MAY NOW USED SCRIPTED REINSERT.</t></t>"] remoteExec ["hintSilent", _this];
+						sleep 2;
+						_this setVariable ["GOL_TeleportDelay", false, true];
+					};
+				};
 			},
 			{},
 			[_mhq],
@@ -256,60 +294,52 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 	} else {
 		diag_log format["[MHQ DEBUG ELSE] _MHQ Variable: %1",_mhq];
 
-		_id = _mhq addAction ["<t color='#0fdf29'>Activate MHQ</t>",{
-			_MhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE",50];
-			_EnemyNearUnits = ((_this select 3) nearEntities ["Man", _MhqSafeZone]) select {(side _X) getFriend (side player) < 0.6 && side _X != civilian};
-			if(count _EnemyNearUnits == 0) then {			
-				if(objectParent player != (_this select 3)) then {
-					player PlayMove "Acts_carFixingWheel";
-				};		
-				["Activating MHQ", 5, {!(((_this select 0) select 0) getVariable "GW_MHQ_Active")}, {
-					([QGVAR(Enabled), [((_this select 0) select 0), true, str([player] call EFUNC(Common,getSide))]] call CBA_fnc_serverEvent);
-					if(objectParent player != ((_this select 0) select 0)) then {
-						player SwitchMove "";
-					};
-					_mhqMarkerId = ((_this select 0) select 0) getVariable ["MHQ_MarkerId",""];
+		_id = [
+			_mhq,
+			"<t color='#0fdf29'>Activate MHQ</t>",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_connect_ca.paa",
+			"\A3\ui_f\data\IGUI\Cfg\holdactions\holdaction_connect_ca.paa",
+			CONDITION_4 + " && " + CONDITION_3,
+			CONDITION_4 + " && " + CONDITION_3,
+			_startMaintenanceAnimation,
+			_loopMaintenanceAnimation,
+			{
+				params ["_target", "_caller", "_actionId", "_args"];
+				_args params ["_finishMaintenanceAnimation"];
+				private _mhqSafeZone = missionNamespace getVariable ["MHQSAFEZONE", 50];
+				private _enemyNearUnits = (_target nearEntities ["Man", _mhqSafeZone]) select {(side _x) getFriend (side player) < 0.6 && side _x != civilian};
+				if (_enemyNearUnits isEqualTo []) then {
+					[QGVAR(Enabled), [_target, true, str([player] call EFUNC(Common,getSide))]] call CBA_fnc_serverEvent;
+					private _mhqMarkerId = _target getVariable ["MHQ_MarkerId", ""];
 					_mhqMarkerId setMarkerAlpha 1;
-					_mhqMarkerId setMarkerPos (getPos ((_this select 0) select 0));
-					_mhqMarkerAreaId = format["%1_Area",_mhqMarkerId];
+					_mhqMarkerId setMarkerPos (getPos _target);
+					private _mhqMarkerAreaId = format ["%1_Area", _mhqMarkerId];
 					_mhqMarkerAreaId setMarkerAlpha 1;
-					_mhqMarkerAreaId setMarkerPos (getPos ((_this select 0) select 0));
-					Private ["_Players"];
-					if(!isNil "flag_west_1") then {
-						_Players = allPlayers select {_X distance flag_west_1 < 100};
-					};
-					if(!isNil "flag_east_1") then {
-						_Players = allPlayers select {_X distance flag_east_1 < 100};
-					};
-					
+					_mhqMarkerAreaId setMarkerPos (getPos _target);
+					private _players = [];
+					if (!isNil "flag_west_1") then { _players = allPlayers select {_x distance flag_west_1 < 100}; };
+					if (!isNil "flag_east_1") then { _players = allPlayers select {_x distance flag_east_1 < 100}; };
 					MHQ_waitUntilDelayOver = {
-						Params ["_MHQ"];
-						waituntil{sleep 1; !(player getVariable ["GOL_TeleportDelay",false])};
-
-						if(_MHQ getVariable "GW_MHQ_Active") then {					
-							hint (parseText
-							("<t color='#f5791b'>"+
-							"<t size='1.3'>MOBILE HQ ACTIVE</t>"+
-							"<br/><br/><t size='1.1'>YOU MAY NOW TELEPORT TO MHQ.</t></t>")) 
+						params ["_mhq"];
+						waitUntil { sleep 1; !(player getVariable ["GOL_TeleportDelay", false]) };
+						if (_mhq getVariable "GW_MHQ_Active") then {
+							hint parseText "<t color='#f5791b'><t size='1.3'>MOBILE HQ ACTIVE</t><br/><br/><t size='1.1'>YOU MAY NOW TELEPORT TO MHQ.</t></t>";
 						};
 					};
-
-					if(!isNil "_Players") then {
-						[((_this select 0) select 0)] remoteExec ["MHQ_waitUntilDelayOver",_Players];
-					};					
-				},
-				{
-					hint "Aborted";
-					if(objectParent player != ((_this select 0) select 0)) then {
-						player SwitchMove "";
-					};
-				}, [(_this select 0)]] call CBA_fnc_progressBar;
-			} else {
-				systemChat format["Enemies are near the MHQ. You cannot activate the MHQ until the immediate area is secure (%1m).",_MhqSafeZone];
-			};
-
-		},ARGUMENT(_mhq),(CONDITION_4 + "&&" + CONDITION_3),7];
-		_add pushback [_mhq, _id];
+					if !(_players isEqualTo []) then { [_target] remoteExec ["MHQ_waitUntilDelayOver", _players]; };
+				} else {
+					systemChat format ["Enemies are near the MHQ. You cannot activate the MHQ until the immediate area is secure (%1m).", _mhqSafeZone];
+				};
+				[_caller] call _finishMaintenanceAnimation;
+			},
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation],
+			5,
+			7,
+			false,
+			false
+		] call BIS_fnc_holdActionAdd;
+		_add pushBack [_mhq, _id, true];
 	};
 	_mhq setVariable [QGVAR(ActiveActions), _add];
 	TRACE_2("QGVAR(Actions)", _mhq, _mhqActiveActions);

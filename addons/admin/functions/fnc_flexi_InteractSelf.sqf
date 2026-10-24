@@ -133,7 +133,7 @@ if (_menuName isEqualTo "actions") then {
 				"", "", -1, true, true
 			],
 			[
-				"End Mission >",
+				"Exit Scenario >",
 				"", "\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\exit_ca.paa", "",
 				[QUOTE(call FUNC(flexi_InteractSelf)),"endMissionCommand", 1],
 				-1, true, true
@@ -151,7 +151,7 @@ if (_menuName isEqualTo "actions") then {
 						[QGVAR(healObject), _object, _object] call CBA_fnc_targetEvent;
 					};
 				},
-				"\A3\ui_f\data\igui\cfg\actions\heal_ca.paa", "", "", -1, _canHealCursorObject, true
+				"\A3\ui_f\data\igui\cfg\holdactions\holdaction_revive_ca.paa", "", "", -1, _canHealCursorObject, true
 			],
 			[
 				"Heal All Players", {
@@ -159,7 +159,7 @@ if (_menuName isEqualTo "actions") then {
 						[QGVAR(fullHeal), _x, _x] call CBA_fnc_targetEvent;
 					} forEach allPlayers;
 				},
-				"\A3\ui_f\data\igui\cfg\actions\heal_ca.paa", "", "", -1, true,true
+				"\A3\ui_f\data\igui\cfg\holdactions\holdaction_revivemedic_ca.paa", "", "", -1, true,true
 			],
 			[
 				"Move Mobile HQ", {
@@ -168,7 +168,7 @@ if (_menuName isEqualTo "actions") then {
 						[_mobileHQ, player, 5] call GW_Menu_fnc_MoveVehicle;
 					};
 				},
-				"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\move_ca.paa", "", "", -1, _canMoveMobileHQ, true
+				"\A3\ui_f\data\IGUI\Cfg\simpleTasks\types\backpack_ca.paa", "", "", -1, _canMoveMobileHQ, true
 			]
 		]
 	];
@@ -176,16 +176,16 @@ if (_menuName isEqualTo "actions") then {
 
 if (_menuName isEqualTo "endMissionCommand") then {
 	_menus pushBack [
-		["endMissionCommand", "End Mission", _menuRsc],
+		["endMissionCommand", "Exit Scenario (Exit to Slot Screen)", _menuRsc],
 		[
 			[
-				"End Mission: Successful", {
+				"Exit Scenario: Successful", {
 					[QGVAR(endMissionCommand), [true]] call CBA_fnc_serverEvent;
 				},
 				"\A3\ui_f\data\igui\cfg\actions\ico_on_ca.paa", "", "", -1, true, true
 			],
 			[
-				"End Mission: Failed", {
+				"Exit Scenario: Failed", {
 					[QGVAR(endMissionCommand), [false]] call CBA_fnc_serverEvent;
 				},
 				"\A3\ui_f\data\igui\cfg\actions\ico_off_ca.paa", "", "", -1, true, true
@@ -304,7 +304,7 @@ if (_menuName isEqualTo "spawn_loadout") then {
 		[
 			[
 				"Loadouts >",
-				"", "\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "",
+				"", "\A3\ui_f\data\igui\cfg\actions\obsolete\ui_action_gear_ca.paa", "",			
 				[QUOTE(call FUNC(flexi_InteractSelf)),"loadouts", 1],
 				-1, true, true
 			],
@@ -317,7 +317,7 @@ if (_menuName isEqualTo "spawn_loadout") then {
 			[
 				"Refresh Nearby Player Loadouts (200m)",
 				{[QGVAR(refreshNearbyLoadouts), player] call CBA_fnc_serverEvent;},
-				"\A3\ui_f\data\igui\cfg\actions\gear_ca.paa", "", "", -1, true, true
+				"\A3\ui_f\data\igui\cfg\actions\reload_ca.paa", "", "", -1, true, true
 			]
 		]
 	];
