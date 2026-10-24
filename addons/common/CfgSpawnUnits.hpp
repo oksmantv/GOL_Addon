@@ -66,7 +66,37 @@ class Guer {
 		"I_Soldier_LAT_F"
 	};
 };
+
+class Resistance {
+	Side = 2;
+	Leaders[] = {
+		"I_Soldier_SL_F",
+		"I_Soldier_TL_F"
+	};
+	Units[] = {			
+		"I_Soldier_AR_F",
+		"I_medic_F",
+		"I_Soldier_GL_F",
+		"I_support_MG_F",
+		"I_Soldier_F",
+		"I_Soldier_F",
+		"I_Soldier_F",
+		"I_Soldier_LAT_F"
+	};
+};
+
 class Civilian {
+	Side = 3;
+	Leaders[] = {"C_man_1"};
+	Units[] = {
+		"C_Man_casual_1_F","C_Man_casual_2_F","C_Man_casual_3_F",
+		"C_Man_casual_4_F","C_Man_casual_5_F","C_Man_casual_6_F",
+		"C_Man_polo_1_F","C_Man_polo_2_F","C_Man_polo_3_F",
+		"C_Man_polo_4_F","C_Man_polo_5_F","C_Man_polo_6_F"
+	};
+};
+
+class Civ {
 	Side = 3;
 	Leaders[] = {"C_man_1"};
 	Units[] = {

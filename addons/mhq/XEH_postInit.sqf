@@ -29,6 +29,10 @@ diag_log "[GW][MHQ] XEH_postInit started";
 
 diag_log "[GW][MHQ] XEH_postInit finished";
 
+[QGVAR(PlayMechanicalSounds), {
+	_this call FUNC(playMHQMechanicalSounds);
+}] call CBA_fnc_addEventHandler;
+
 [QGVAR(Enabled), {
 	params [
 		"_mhq",
@@ -46,7 +50,12 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		[_mhq,(_mhq getVariable [QGVAR(Fuel), (fuel _mhq)])] remoteExecCall ["setFuel", _mhq];
 		[QGVAR(Assembled), [_mhq, false]] call CBA_fnc_LocalEvent;
 	};
-	[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
+	if (typeOf _mhq isNotEqualTo "GOL_Mobile_HQ") then {
+		[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
+	} else {
+		_mhq animateSource ["Terminal_source_sound", 0, true];
+		[_mhq, _toggle && {_mhq getVariable [QGVAR(Assembled), false]}] call FUNC(loopMHQSatellite);
+	};
 	[QGVAR(Actions), [_mhq]] call CBA_fnc_globalEvent;
 }] call CBA_fnc_addEventHandler;
 
@@ -77,7 +86,18 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 		GVAR(AssembledArray) deleteAt (GVAR(AssembledArray) find _mhq);
 		publicVariable QGVAR(AssembledArray);
 	};
-	[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
+	if (typeOf _mhq isNotEqualTo "GOL_Mobile_HQ") then {
+		[_mhq, ((_mhq getVariable [QGVAR(Active), false]) || (_mhq getVariable [QGVAR(Assembled), false]))] call FUNC(applyMHQAnimations);
+	} else {
+		if (_toggle && {_mhq getVariable [QGVAR(Active), false]}) then {
+			[_mhq, true] call FUNC(loopMHQSatellite);
+		} else {
+			[_mhq, false] call FUNC(loopMHQSatellite);
+			if (_mhq getVariable [QGVAR(Active), false]) then {
+				_mhq animateSource ["Terminal_source", 45, false];
+			};
+		};
+	};
 	TRACE_3("QGVAR(Assembled)", _mhq, (_mhq getVariable [QGVAR(Assembled), false]), _toggle);
 }] call CBA_fnc_addEventHandler;
 
@@ -88,20 +108,70 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 	#define	CONDITION_3 "(alive _target) && (speed _target) < 0.1"
 	#define CONDITION_4 "(gunner _target) == player || (driver _target) == player || (commander _target) == player || vehicle player isNotEqualTo _target"
 	params ["_mhq"];
+	[_mhq, _mhq getVariable [QGVAR(Active), false]] call FUNC(loopMHQActiveSound);
 	diag_log format["[MHQ DEBUG] _MHQ Variable: %1",_mhq];
 	private _startMaintenanceAnimation = {
-		params ["_target", "_caller"];
+		params ["_target", "_caller", "_actionId", "_args"];
+		_args params ["", "_duration", "_mobileHQAction"];
+		if (typeOf _target isEqualTo "GOL_Mobile_HQ" && {_mobileHQAction in ["activate", "deactivate"]}) then {
+			if (_mobileHQAction isEqualTo "activate") then {
+				_target animateSource ["Terminal_source", 45, false];
+				[QGVAR(PlayMechanicalSounds), [_target, "activate"]] call CBA_fnc_globalEvent;
+			} else {
+				[_target, false] call FUNC(loopMHQSatellite);
+				_target animateSource ["Terminal_source", 100, true];
+			};
+			_target animateSource ["Progress_source", [0, 100] select (_mobileHQAction isEqualTo "deactivate"), true];
+			_caller setVariable [format ["GW_MHQ_HoldActionStarted_%1", _actionId], diag_tickTime];
+			_caller setVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], false];
+		};
+		if (vehicle _caller isNotEqualTo _caller) exitWith {};
+		_caller setVariable [format ["GW_MHQ_HoldActionAnimated_%1", _actionId], true];
 		_caller playMove "AinvPknlMstpSnonWnonDnon_medic4";
 	};
 	private _loopMaintenanceAnimation = {
-		params ["_target", "_caller"];
+		params ["_target", "_caller", "_actionId", "_args"];
+		_args params ["", "_duration", "_mobileHQAction"];
+		if (typeOf _target isEqualTo "GOL_Mobile_HQ" && {_mobileHQAction in ["activate", "deactivate"]}) then {
+			private _startedAt = _caller getVariable [format ["GW_MHQ_HoldActionStarted_%1", _actionId], diag_tickTime];
+			private _progress = 100 * (((diag_tickTime - _startedAt) / _duration) min 1);
+			_target animateSource ["Progress_source", [_progress, 100 - _progress] select (_mobileHQAction isEqualTo "deactivate"), true];
+			if (_mobileHQAction isEqualTo "deactivate" && {_progress >= 70} && {!(_caller getVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], false])}) then {
+				_caller setVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], true];
+				_target animateSource ["Terminal_source", 0, false];
+			};
+		};
+		if (vehicle _caller isNotEqualTo _caller || {!(_caller getVariable [format ["GW_MHQ_HoldActionAnimated_%1", _actionId], false])}) exitWith {};
 		if !((toLowerANSI animationState _caller) find "ainvpknlmstpsnonwnondnon_medic4" == 0) then {
 			_caller playMove "AinvPknlMstpSnonWnonDnon_medic4";
 		};
 	};
 	private _finishMaintenanceAnimation = {
-		params ["_caller"];
-		_caller switchMove "AinvPknlMstpSnonWnonDnon";
+		params ["_target", "_caller", "_actionId", "_completed", "_mobileHQAction"];
+		_caller setVariable [format ["GW_MHQ_HoldActionStarted_%1", _actionId], nil];
+		_caller setVariable [format ["GW_MHQ_HoldActionTerminalClosing_%1", _actionId], nil];
+		if (typeOf _target isEqualTo "GOL_Mobile_HQ" && {_mobileHQAction in ["activate", "deactivate"]}) then {
+			if (!_completed) then {
+				private _cancelState = [0, 100] select (_mobileHQAction isEqualTo "deactivate");
+				_target animateSource ["Progress_source", _cancelState, false];
+				_target animateSource ["Terminal_source", _cancelState, false];
+				if (_mobileHQAction isEqualTo "deactivate") then {
+					[_target, true] call FUNC(loopMHQSatellite);
+				};
+			} else {
+				if (_mobileHQAction isEqualTo "activate") then {
+					_target animateSource ["Progress_source", 100, true];
+				} else {
+					_target animateSource ["Progress_source", 0, true];
+					[QGVAR(PlayMechanicalSounds), [_target, "deactivate"]] call CBA_fnc_globalEvent;
+				};
+			};
+		};
+		private _variableName = format ["GW_MHQ_HoldActionAnimated_%1", _actionId];
+		if !(_caller getVariable [_variableName, false]) exitWith {};
+		_caller setVariable [_variableName, nil];
+		if (vehicle _caller isNotEqualTo _caller) exitWith {};
+		_caller switchMove "AinvPknlMstpSnonWnonDnon_medicEnd";
 	};
 
 	private	_add = [];
@@ -127,13 +197,12 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 				params ["_target", "_caller", "_actionId", "_args"];
 				_args params ["_finishMaintenanceAnimation"];
 				[QGVAR(Enabled), [_target, false, str([player] call EFUNC(Common,getSide))]] call CBA_fnc_serverEvent;
-				private _mhqMarkerId = _target getVariable ["MHQ_MarkerId", ""];
 				_mhqMarkerId setMarkerAlpha 0;
 				(format ["%1_Area", _mhqMarkerId]) setMarkerAlpha 0;
-				[_caller] call _finishMaintenanceAnimation;
+				[_target, _caller, _actionId, true, "deactivate"] call _finishMaintenanceAnimation;
 			},
-			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
-			[_finishMaintenanceAnimation],
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_target, _caller, _actionId, false, "deactivate"] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation, 5, "deactivate"],
 			5,
 			7,
 			false,
@@ -154,10 +223,11 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 				params ["_target", "_caller", "_actionId", "_args"];
 				_args params ["_finishMaintenanceAnimation"];
 				[QGVAR(Assembled), [_target, true]] call CBA_fnc_serverEvent;
-				[_caller] call _finishMaintenanceAnimation;
+				[QGVAR(PlayMechanicalSounds), [_target, "assemble"]] call CBA_fnc_globalEvent;
+				[_target, _caller, _actionId, true, ""] call _finishMaintenanceAnimation;
 			},
-			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
-			[_finishMaintenanceAnimation],
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_target, _caller, _actionId, false, ""] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation, 10, ""],
 			10,
 			7,
 			false,
@@ -178,10 +248,11 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 				params ["_target", "_caller", "_actionId", "_args"];
 				_args params ["_finishMaintenanceAnimation"];
 				[QGVAR(Assembled), [_target, false]] call CBA_fnc_serverEvent;
-				[_caller] call _finishMaintenanceAnimation;
+				[QGVAR(PlayMechanicalSounds), [_target, "disassemble"]] call CBA_fnc_globalEvent;
+				[_target, _caller, _actionId, true, ""] call _finishMaintenanceAnimation;
 			},
-			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
-			[_finishMaintenanceAnimation],
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_target, _caller, _actionId, false, ""] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation, 10, ""],
 			10,
 			7,
 			false,
@@ -330,10 +401,10 @@ diag_log "[GW][MHQ] XEH_postInit finished";
 				} else {
 					systemChat format ["Enemies are near the MHQ. You cannot activate the MHQ until the immediate area is secure (%1m).", _mhqSafeZone];
 				};
-				[_caller] call _finishMaintenanceAnimation;
+				[_target, _caller, _actionId, true, "activate"] call _finishMaintenanceAnimation;
 			},
-			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_caller] call _finishMaintenanceAnimation; },
-			[_finishMaintenanceAnimation],
+			{ params ["_target", "_caller", "_actionId", "_args"]; _args params ["_finishMaintenanceAnimation"]; [_target, _caller, _actionId, false, "activate"] call _finishMaintenanceAnimation; },
+			[_finishMaintenanceAnimation, 5, "activate"],
 			5,
 			7,
 			false,

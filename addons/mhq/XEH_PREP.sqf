@@ -6,5 +6,8 @@ PREP(getDeployType);
 PREP(getFlag);
 PREP(Handler);
 PREP(HandlerRespawn);
+PREP(loopMHQActiveSound);
+PREP(loopMHQSatellite);
+PREP(playMHQMechanicalSounds);
 PREP(prefabCopy);
 PREP(prefabCreate);
