@@ -1,6 +1,7 @@
 #include "script_Component.hpp"
 /*
 	Loop the GOL Mobile HQ satellite sweep while the MHQ is active.
+	Called on the dedicated server, which is authoritative for these sources.
 
 	Arguments:
 	0: MHQ object <OBJECT>
@@ -10,10 +11,6 @@
 params ["_mhq", ["_enabled", false, [false]]];
 
 if (isNull _mhq || {typeOf _mhq isNotEqualTo "GOL_Mobile_HQ"}) exitWith {false};
-if (!local _mhq) exitWith {
-	[_mhq, _enabled] remoteExecCall [QFUNC(loopMHQSatellite), _mhq];
-	true
-};
 
 private _loopId = (_mhq getVariable [QGVAR(SatelliteLoopId), 0]) + 1;
 _mhq setVariable [QGVAR(SatelliteLoopId), _loopId];
