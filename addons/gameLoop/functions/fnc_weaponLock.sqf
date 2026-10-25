@@ -21,6 +21,10 @@ params [
 ];
 
 if (_toggle) then {
+	if (isNil QGVAR(weaponLockState)) then {
+		private _hadAceDamageState = !isNil {player getVariable "ACE_Medical_AllowDamage"};
+		player setVariable [QGVAR(weaponLockState), [captive player, isDamageAllowed player, _hadAceDamageState, player getVariable ["ACE_Medical_AllowDamage", true]]];
+	};
 	player setCaptive true;
 	player allowDamage false;
 	player setVariable [QGVAR(weaponLock), true];
@@ -72,11 +76,12 @@ if (_toggle) then {
 		systemChat "[SafeMode]: Enabled";
 	};
 } else {
-	private _adminProtectionActive = !((player getVariable [QEGVAR(admin,playerProtectionState), []]) isEqualTo []);
+	private _adminProtectionActive = EGVAR(admin,playerProtectionEnabled) && {!((player getVariable [QEGVAR(admin,playerProtectionState), []]) isEqualTo [])};
 	if !_adminProtectionActive then {
 		player setCaptive false;
 		player allowDamage true;
 	};
+	player setVariable [QGVAR(weaponLockState), nil];
 	player setVariable [QGVAR(weaponLock), false];
 
 	if (GVARMAIN(mod_ACE3) && !_adminProtectionActive) then {

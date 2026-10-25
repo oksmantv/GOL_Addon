@@ -107,6 +107,9 @@ if (isServer) then {
 [QGVAR(requestSafetyMode), {
 	params [["_unit", objNull, [objNull]]];
 	if (isServer && {!isNull _unit}) then {
+		if (GVAR(SafeMode_Enabled) && {GVAR(SafeMode_StartAreaExpiry)}) then {
+			_unit setVariable [QGVAR(SafeMode_StartPosition), getPosATL (vehicle _unit)];
+		};
 		[QGVAR(setSafetyMode), [GVAR(SafeMode_Enabled), GVAR(SafeMode_StartAreaExpiry)], _unit] call CBA_fnc_targetEvent;
 	};
 }] call CBA_fnc_addEventHandler;
@@ -127,6 +130,32 @@ if (isServer) then {
 	if (isServer) then {
 		publicVariable QGVAR(SafeMode_Enabled);
 		publicVariable QGVAR(SafeMode_StartAreaExpiry);
+		if (_enabled && {_startAreaExpiry}) then {
+			{
+				_x setVariable [QGVAR(SafeMode_StartPosition), getPosATL (vehicle _x)];
+			} forEach allPlayers;
+
+			if (isNil QGVAR(SafeMode_ServerReleasePFH)) then {
+				GVAR(SafeMode_ServerReleasePFH) = [{
+					private _hasLeftStartArea = allPlayers findIf {
+						private _startPosition = _x getVariable [QGVAR(SafeMode_StartPosition), []];
+						!(_startPosition isEqualTo [])
+						&& {(getPosATL (vehicle _x)) distance2D _startPosition >= 50}
+					};
+					if (_hasLeftStartArea >= 0) then {
+						[QGVAR(cancelSafetyMode), [allPlayers select _hasLeftStartArea]] call CBA_fnc_localEvent;
+					};
+				}, 0.25] call CBA_fnc_addPerFrameHandler;
+			};
+		} else {
+			if !(isNil QGVAR(SafeMode_ServerReleasePFH)) then {
+				[GVAR(SafeMode_ServerReleasePFH)] call CBA_fnc_removePerFrameHandler;
+				GVAR(SafeMode_ServerReleasePFH) = nil;
+			};
+			{
+				_x setVariable [QGVAR(SafeMode_StartPosition), nil];
+			} forEach allPlayers;
+		};
 		// Framework 3+ Safe Start still owns its own projectile-deletion handler.
 		// Release it when GW SafeMode releases so old mission templates unlock too.
 		if (!_enabled) then {

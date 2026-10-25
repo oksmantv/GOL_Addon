@@ -450,6 +450,32 @@ if (hasInterface) then {
 	GVAR(playerProtectionStartAreaExpiry) = _startAreaExpiry;
 	publicVariable QGVAR(playerProtectionEnabled);
 	publicVariable QGVAR(playerProtectionStartAreaExpiry);
+	if (_enabled && {_startAreaExpiry}) then {
+		{
+			_x setVariable [QGVAR(playerProtectionStartPosition), getPosATL (vehicle _x)];
+		} forEach allPlayers;
+
+		if (isNil QGVAR(playerProtectionServerPFH)) then {
+			GVAR(playerProtectionServerPFH) = [{
+				private _hasLeftStartArea = allPlayers findIf {
+					private _startPosition = _x getVariable [QGVAR(playerProtectionStartPosition), []];
+					!(_startPosition isEqualTo [])
+					&& {(getPosATL (vehicle _x)) distance2D _startPosition >= 50}
+				};
+				if (_hasLeftStartArea >= 0) then {
+					[QGVAR(cancelPlayerProtection), [allPlayers select _hasLeftStartArea]] call CBA_fnc_localEvent;
+				};
+			}, 0.25] call CBA_fnc_addPerFrameHandler;
+		};
+	} else {
+		if !(isNil QGVAR(playerProtectionServerPFH)) then {
+			[GVAR(playerProtectionServerPFH)] call CBA_fnc_removePerFrameHandler;
+			GVAR(playerProtectionServerPFH) = nil;
+		};
+		{
+			_x setVariable [QGVAR(playerProtectionStartPosition), nil];
+		} forEach allPlayers;
+	};
 	[QGVAR(playerProtectionStatus), [_enabled, _startAreaExpiry]] call CBA_fnc_globalEvent;
 	{
 		if !(_x isKindOf "HeadlessClient_F") then {
@@ -465,6 +491,9 @@ if (hasInterface) then {
 [QGVAR(requestPlayerProtection), {
 	params [["_unit", objNull, [objNull]]];
 	if (isServer && {!isNull _unit}) then {
+		if (GVAR(playerProtectionEnabled) && {GVAR(playerProtectionStartAreaExpiry)}) then {
+			_unit setVariable [QGVAR(playerProtectionStartPosition), getPosATL (vehicle _unit)];
+		};
 		[QGVAR(playerProtectionStatus), [GVAR(playerProtectionEnabled), GVAR(playerProtectionStartAreaExpiry)], _unit] call CBA_fnc_targetEvent;
 		if !(_unit isKindOf "HeadlessClient_F") then {
 			if (GVAR(playerProtectionEnabled)) then {
@@ -529,6 +558,16 @@ if (isServer) then {
 	_unit setVariable [QGVAR(playerProtectionState), nil];
 	_unit setVariable [QGVAR(playerProtectionPFH), nil];
 
+	// SafeMode and Player Protection can release in either network-event order.
+	// Once both global modes are off, neither layer may retain captive or godmode.
+	if !(EGVAR(gameLoop,SafeMode_Enabled)) then {
+		_unit setCaptive false;
+		_unit allowDamage true;
+		if (GVARMAIN(mod_ACE3)) then {
+			_unit setVariable ["ACE_Medical_AllowDamage", true];
+		};
+	};
+
 	if (_notify && {_unit isEqualTo player}) then {
 		["Player protection ended after leaving the starting area", 5] call GW_Common_Fnc_Hint;
 	};
@@ -541,9 +580,14 @@ if (isServer) then {
 	};
 
 	private _startArea = getPosATL _unit;
+	private _safeModeState = _unit getVariable [QEGVAR(gameLoop,weaponLockState), []];
 	private _hadAceDamageState = !isNil {_unit getVariable "ACE_Medical_AllowDamage"};
 	private _aceDamageState = _unit getVariable ["ACE_Medical_AllowDamage", true];
-	_unit setVariable [QGVAR(playerProtectionState), [captive _unit, isDamageAllowed _unit, _hadAceDamageState, _aceDamageState]];
+	private _protectionState = [captive _unit, isDamageAllowed _unit, _hadAceDamageState, _aceDamageState];
+	if !(_safeModeState isEqualTo []) then {
+		_protectionState = _safeModeState;
+	};
+	_unit setVariable [QGVAR(playerProtectionState), _protectionState];
 	_unit setCaptive true;
 	_unit allowDamage false;
 	if (GVARMAIN(mod_ACE3)) then {
