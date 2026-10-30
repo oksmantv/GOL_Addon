@@ -212,6 +212,13 @@ if ((count _vehicleArray) > 0) then {
 			};
 		} forEach _crewList;
 
+		if (
+			missionNamespace getVariable ["GOL_Stealth_EnableVehicleLights", false]
+			&& {!isNil "OKS_fnc_Stealth_EnableVehicleLights"}
+		) then {
+			[_vehicle] call OKS_fnc_Stealth_EnableVehicleLights;
+		};
+
 		_vehicle enableSimulationGlobal true;
 		TRACE_1("Units added to vehicle", _groupNew);
 		if (((count _vehicleArray) > 1) && !_skipDelays) then {
@@ -266,6 +273,37 @@ if !(_waypointArray isEqualTo []) then {
 } else {
 	_group setVariable ["lambs_danger_disableGroupAI", true];
 	_group setVariable ["GOL_IsStatic",true,true];
+
+	// Static spawn-list groups must be separated while this server-side spawn
+	// transaction still owns every unit. Waiting for the Stealth auto-enable
+	// listener permits Headless Controller transfer before joinSilent can run.
+	if (
+		missionNamespace getVariable ["GOL_Stealth_Enabled", false]
+		&& {missionNamespace getVariable ["GOL_Stealth_AutoEnableStatics", false]}
+		&& {!isNil "OKS_fnc_Stealth_EnemySentry_SetupUnit"}
+	) then {
+		_group setVariable ["OKS_Stealth_AutoSentryAttached", true, true];
+		_group setVariable ["acex_headless_blacklist", true, true];
+
+		private _staticUnits = +units _group;
+		{
+			[_x] spawn OKS_fnc_Stealth_EnemySentry_SetupUnit;
+		} forEach _staticUnits;
+
+		// Hard fallback: retry the exact per-unit splitter if sentries still share
+		// a group after the first setup pass.
+		[_staticUnits] spawn {
+			params ["_staticUnits"];
+			sleep 30;
+
+			{
+				if (alive _x && {count units group _x > 1}) then {
+					diag_log format ["[GW][Common][Static] Retrying sentry split for unit=%1 group=%2", _x, group _x];
+					[_x] spawn OKS_fnc_Stealth_EnemySentry_SetupUnit;
+				};
+			} forEach _staticUnits;
+		};
+	};
 	diag_log format ["[GW][Common][Static] group=%1 has no waypoints -> marked static", _group];
 };
 

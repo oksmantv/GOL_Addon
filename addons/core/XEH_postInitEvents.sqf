@@ -23,7 +23,7 @@
 				<br/>
 				<br/>	==============================================
 				<br/>
-				<br/>	Framework by: GuzzenVonLidl - Modified by Oksman for example
+				<br/>	Framework by: GuzzenVonLidl - Perfected by Oksman
 				<br/>	Version: "+(getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version"))+"
 				<br/>
 				<br/>	==============================================

@@ -1,13 +1,31 @@
 #include "script_Component.hpp"
 
+if !(_this isEqualType []) exitWith {
+	WARNING(FORMAT_1("setAttributes3DEN: expected parameter array, received %1; attributes skipped", typeName _this));
+	false
+};
+
 params [
-	"_object",
-	"_specials"
+	["_object", objNull],
+	["_specials", []]
 ];
 
+if !(_object isEqualType objNull) exitWith {
+	WARNING(FORMAT_1("setAttributes3DEN: expected OBJECT, received %1; attributes skipped", typeName _object));
+	false
+};
+
+if !(_specials isEqualType []) exitWith {
+	WARNING(FORMAT_1("setAttributes3DEN: expected _specials to be an ARRAY of [selector, value] pairs, received %1; attributes skipped", typeName _specials));
+	false
+};
+
 {
-	_x params ["_switch","_value"];
-	switch (_switch) do {
+	if !(_x isEqualType [] && {count _x >= 2}) then {
+		WARNING(FORMAT_2("setAttributes3DEN: special at index %1 must be a [selector, value] pair, received %2; entry skipped", _forEachIndex, typeName _x));
+	} else {
+		_x params ["_switch", "_value"];
+		switch (_switch) do {
 		case 0: {
 			_object set3DENAttribute ["init", _value];
 		};
@@ -32,10 +50,18 @@ params [
 			[_object, nil, _value] call bis_fnc_initVehicle;
 		};
 		case 8: {	// Pylons
-			_getPylons = (call EFUNC(Common,getPylonsAvailable));
-			{
-				_object setPylonLoadOut [_getPylons select _forEachIndex, _x];
-			} forEach _value;
+			if !(_value isEqualType []) then {
+				WARNING(FORMAT_1("setAttributes3DEN: pylon loadout must be an ARRAY, received %1; entry skipped", typeName _value));
+			} else {
+				private _getPylons = [_object] call EFUNC(Common,getPylonsAvailable);
+				{
+					if (_forEachIndex < count _getPylons) then {
+						_object setPylonLoadOut [_getPylons select _forEachIndex, _x];
+					} else {
+						WARNING(FORMAT_1("setAttributes3DEN: pylon loadout contains more entries than the object has pylons; extra entry at index %1 skipped", _forEachIndex));
+					};
+				} forEach _value;
+			};
 		};
 		case 9: {
 			_object set3DENAttribute ["ReportRemoteTargets", _value];
@@ -57,6 +83,7 @@ params [
 		};
 		case 15: {
 			_object set3DENAttribute ["GW_LoadoutSelector", _value];
+		};
 		};
 	};
 } forEach _specials;
