@@ -100,5 +100,21 @@ class CfgAmmo {
 
 	//	>>>	RHS	- AFRF	<<<
 
+	class rhs_rpg26_rocket: RocketBase {
+		LAUNCHER
+	};
+	class rhs_rpg7v2_pg7vl: rhs_rpg26_rocket {
+		LAUNCHER
+	};
+	class rhs_rpg7v2_og7v: rhs_rpg7v2_pg7vl {
+		LAUNCHER
+	};
+	class rhs_rpg7v2_type63_airburst: rhs_rpg7v2_og7v {
+		LAUNCHER
+	};
+	class rhs_rpg7v2_tbg7v: rhs_rpg7v2_pg7vl {
+		LAUNCHER
+	};
+
 	//	>>>	RHS	- USAF	<<<
 };
