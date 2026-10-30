@@ -672,7 +672,6 @@ class FSM
                          "" \n
                          "" \n
                          "_dangerEnum = ([""EnemyDetected"",""Fire"",""Hit"",""EnemyNear"",""Explosion"",""DeadBodyGroup"",""DeadBody"",""Scream"",""CanFire"",""BulletClose""] select _dangerCause);" \n
-                         "diag_log format [""Danger.fsm: %1, (@T %2 %3) %4"", _this, time, side _this, [_dangerEnum]];" \n
                          "" \n
                          "// Retrieve the highest priority event from the _queue" \n
                          "private _priors = [3, 4, 5, 1, 4, 1, 1, 2, 4, 1];" \n
@@ -690,9 +689,6 @@ class FSM
                          "} forEach _queue;" \n
                          "" \n
                          "_queue = [];" \n
-                         "" \n
-                         "systemChat format[""%1"", [_dangerEnum, _dangerPos, _dangerUntil, _dangerCausedBy]];" \n
-                         "diag_log format[""%1: %2"",_this, [_dangerEnum, _dangerPos, _dangerUntil, _dangerCausedBy]];" \n
                          "" \n
                          ""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;

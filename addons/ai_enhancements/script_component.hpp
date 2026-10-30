@@ -45,6 +45,19 @@
 	minRange = 10; \
 	minRangeProbab = 0.4;
 
+#define LAUNCHER_SINGLE_RPG_LONGRANGE_POOR_AIM \
+	aiDispersionCoefX = 1.6; \
+	aiDispersionCoefY = 1.9; \
+	aiRateOfFire = 10; \
+	aiRateOfFireDistance = 500; \
+	aiRateOfFireDispersion = 1.5; \
+	maxRange = 1000; \
+	maxRangeProbab = 0.2; \
+	midRange = 400; \
+	midRangeProbab = 0.5; \
+	minRange = 10; \
+	minRangeProbab = 0.8;
+
 
 #define RIFLE_SINGLE \
 	aiRateOfFire = 1; \

@@ -2,12 +2,12 @@
 
 if !(hasInterface) exitWith {};
 
-[QGVARMAIN(playerReady), {
 //	[DIK code, [Shift, Ctrl, Alt]]
-	[QUOTE(PREFIX),"flexi_InteractSelfClient", "Client Menu", {
-		["player",[],100, [QUOTE(call FUNC(flexi_InteractSelf)),"main"]] call cba_fnc_fleximenu_openMenuByDef;
-	}, {}, [DIK_RWIN,[false,false,false]]] call CBA_fnc_addKeybind;
+[[QUOTE(PREFIX), "Menu"],"flexi_InteractSelfClient", "Client Menu", {
+	["player",[],100, [QUOTE(call FUNC(flexi_InteractSelf)),"main"]] call cba_fnc_fleximenu_openMenuByDef;
+}, {}, [DIK_RWIN,[false,false,false]]] call CBA_fnc_addKeybind;
 
+[QGVARMAIN(playerReady), {
 	if (isNil {profileNamespace getVariable QGVAR(clientSettingsV3)}) then {
 		[QGVAR(settings), "save"] call CBA_fnc_localEvent;
 	} else {
@@ -75,16 +75,5 @@ if !(hasInterface) exitWith {};
 				};
 			};
 		};
-	};
-}] call CBA_fnc_addEventHandler;
-
-[QGVAR(paradropMode), {
-	params ["_enable"];
-	if (_enable) then {
-		GVAR(ParadropHalo) = true;
-		publicVariable QGVAR(ParadropHalo);
-	} else {
-		GVAR(ParadropHalo) = false;
-		publicVariable QGVAR(ParadropHalo);
 	};
 }] call CBA_fnc_addEventHandler;

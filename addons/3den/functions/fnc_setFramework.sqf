@@ -17,17 +17,30 @@
 collect3DENHistory {
 	if !("GW_MissionPreferences" get3DENMissionAttribute "GW_isConfigured") then {
 		if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
-			set3DENMissionAttributes [
+		// Get Framework version and update overviewText
+		_frameworkVersion = getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version");
+		_overviewText = format["Framework Version %1", _frameworkVersion];
+			
+		// Extract mission name from briefingName (removes "COOP@36 " prefix)
+		_fullName = getText(missionConfigFile >> "briefingName");
+		_nameParts = _fullName splitString " ";
+		_nameParts deleteAt 0; // Remove "COOP@36" part
+		_missionName = _nameParts joinString " ";
+		
+		set3DENMissionAttributes [
 				["Scenario", "Author", getText(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "Author")],
-				["Scenario", "IntelBriefingName", getText(missionConfigFile >> "briefingName")],
+				["Scenario", "IntelBriefingName", _missionName],
+				["Scenario", "OverviewText", _overviewText],
+				["Scenario", "OverviewPicture", "\OKS_GOL_Misc\data\images\loadImage.jpg"],
+				["Scenario", "OverviewPictureLocked", "\OKS_GOL_Misc\data\images\loadImage.jpg"],
 				["Scenario", "OnLoadMission", ""],
-				["Scenario", "LoadScreen", ""]
+				["Scenario", "LoadScreen", "\OKS_GOL_Misc\data\images\loadImage.jpg"],
+				["Multiplayer", "IntelOverviewText", _overviewText]
 			];
 
 			if ((getNumber(missionConfigFile >> "GW_FRAMEWORK" >> "Naming" >> "isPVPMode")) isEqualTo 0) then {
 				"Multiplayer" set3DENMissionAttribute ["GameType", "COOP"];
 			} else {
-	//			"Multiplayer" set3DENMissionAttribute ["GameType", "Unknown"];
 				"Multiplayer" set3DENMissionAttribute ["GameType", "Sandbox"];
 			};
 		};
@@ -55,29 +68,11 @@ collect3DENHistory {
 
 		"GW_MissionPreferences" set3DENMissionAttribute ["GW_isConfigured", true];
 		LOG("fnc_addEH_onMessage: GW_isConfigured");
+		
+		// Import CBA settings automatically
+		[] spawn GW_3DEN_fnc_importCBASettings;
 	};
-/*
-	if (GVARMAIN(mod_ACE3) && !("GW_MissionPreferences" get3DENMissionAttribute "GW_isConfigured_ACE")) then {
-		disableUserInput true;
-		[] spawn {
-			((findDisplay 313) call CBA_settings_fnc_openSettingsMenu);
-			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\cba_settings.sqf"), "mission"] call CBA_settings_fnc_import;
-			[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new.sqf"), "mission"] call CBA_settings_fnc_import;
-			if (EGVAR(settings_ACE,medical_level) isEqualTo 2) then {
-				[(preprocessFile "x\gw\addons\ACE_Settings\Settings\medical_new_adv.sqf"), "mission"] call CBA_settings_fnc_import;
-			};
-			[] call CBA_settings_fnc_gui_saveTempData;
-			(uiNamespace getVariable "RscDisplayGameOptions") closeDisplay 1;
-			"GW_MissionPreferences" set3DENMissionAttribute ["GW_isConfigured_ACE", true];
-			uisleep 0.5;
-			disableUserInput false;
-			uisleep 1;
-			if (userInputDisabled) then {
-				disableUserInput false;
-			};
-		};
-	};
-*/
+	
 	if (isclass (configfile >> "CfgPatches" >> "3denEnhanced")) then {
 		set3DENMissionAttributes[["Multiplayer", "Enh_DynamicGroups", false]];
 		set3DENMissionAttributes[["Multiplayer", "Enh_SaveLoadout", false]];

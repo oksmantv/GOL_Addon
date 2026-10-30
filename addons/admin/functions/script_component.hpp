@@ -1,1 +1,1 @@
-#include "\x\gw\addons\Admin\script_component.hpp"
+#include "\x\gw\addons\admin\script_component.hpp"

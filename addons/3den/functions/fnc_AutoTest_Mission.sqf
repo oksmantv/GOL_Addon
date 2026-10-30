@@ -48,7 +48,7 @@ if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
 		_output pushBack [_approved,"Author Configured"];
 	};
 
-	if (((SETTING("Picture")) isEqualTo "") || ((SETTING("Picture")) isEqualTo "\x\gw\addons\3den\data\Logo_GOL_1.paa")) then {
+	if (((SETTING("Picture")) isEqualTo "") || ((SETTING("Picture")) isEqualTo "\x\GW\addons\3den\data\Logo_GOL_1.paa")) then {
 		_output pushBack [_warning,"No Picture Found or default loaded", "Make sure you edit this in the description.ext", [5], "Opens Description.ext", "Folder >"];
 	} else {
 		_output pushBack [_approved,"Usage Of Picture"];
@@ -65,7 +65,8 @@ if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
 		_output pushBack [_error,"Framework requires a newer version of @GW Addon to properly function", "", [-1]];
 	};
 
-	if (isNull _required) then {
+	_frameworkVersion = getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version");
+	if (_frameworkVersion isEqualTo "" || (parseNumber _frameworkVersion) < 0.8) then {
 		_output pushBack [_warning,"You are using a legacy version of GW-Framework", "Use latest version or things might not work as intended", [-1]];
 	};
 

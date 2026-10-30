@@ -13,6 +13,7 @@ class CfgPatches {
 		requiredVersion = REQUIRED_VERSION;
 		requiredAddons[] = {
 			"GW_Common",
+			"GW_Gear",
 			"A3_Modules_F",
 			"A3_Data_F",
 			"A3_Misc_F",

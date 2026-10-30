@@ -1,18 +1,34 @@
 #include "script_Component.hpp"
 
-//	if !(isClass(missionConfigFile >> "GW_FRAMEWORK")) exitWith {false};
-if (isClass(missionConfigFile >> "GW_Modules" >> "StartUp")) exitWith {false};
+private _safeModeUseType = missionNamespace getVariable [QGVAR(SafeMode_useType), -999];
+private _safeModeTimer = missionNamespace getVariable [QGVAR(SafeMode_Timer), -999];
+private _safeModeBlockVeh = missionNamespace getVariable [QGVAR(SafeMode_blockVeh), false];
+diag_log format ["[GW][SafeMode] XEH_postInit loaded useType=%1 timer=%2 blockVeh=%3", _safeModeUseType, _safeModeTimer, _safeModeBlockVeh];
 
 if (isServer) then {
 	[QGVARMAIN(missionStarted), {
-		if (GVAR(SafeMode_useType) > 0) then {
-			GVAR(SafeMode_Enabled) = true;
-			publicVariable QGVAR(SafeMode_Enabled);
-		};
+		GVAR(SafeMode_Enabled) = GVAR(SafeMode_useType) > 0;
+		[QGVAR(setSafetyMode), [GVAR(SafeMode_Enabled), true]] call CBA_fnc_globalEvent;
+		diag_log format ["[GW][SafeMode] missionStarted -> enabled=%1 useType=%2", GVAR(SafeMode_Enabled), GVAR(SafeMode_useType)];
 	}] call CBA_fnc_addEventHandler;
+
+	// Restore legacy Safe Start coverage for AI and vehicle weapons. Player weapons
+	// are handled locally by WeaponLock; this server-side class handler suppresses
+	// projectiles fired by server-owned AI, including Zeus-spawned artillery.
+	["AllVehicles", "Fired", {
+		params ["_unit", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile"];
+		if !(GVAR(SafeMode_Enabled) && {!isNull _projectile}) exitWith {};
+		// Player weapons are removed by their local WeaponLock handler.
+		if (isPlayer _unit || {isPlayer (effectiveCommander _unit)}) exitWith {};
+		if (GVARMAIN(mod_ACE3)) then {
+			[_projectile] call ACE_FRAG_Fnc_addBlackList;
+		};
+		deleteVehicle _projectile;
+	}, true, [], true] call CBA_fnc_addClassEventHandler;
 };
 
 [QGVARMAIN(serverReady), {
+	diag_log format ["[GW][SafeMode] serverReady useType=%1 enabled=%2", GVAR(SafeMode_useType), GVAR(SafeMode_Enabled)];
 	if (GVAR(SafeMode_useType) > 0) then {
 		[] spawn {
 			_count = -1;
@@ -23,7 +39,8 @@ if (isServer) then {
 					_time = (GVAR(SafeMode_Timer) - _count);
 
 					if (GVAR(SafeMode_Timer) <= _count) then {
-						[QGVAR(setSafetyMode), false] call CBA_fnc_globalEvent;
+						diag_log format ["[GW][SafeMode] countdown reached end at count=%1", _count];
+						[QGVAR(setSafetyMode), [false, false]] call CBA_fnc_globalEvent;
 					};
 				};
 				[QGVAR(SafeMode_CountDown), [([_time, (_time + 1)] select (GVAR(SafeMode_useType) isEqualTo 2))]] call CBA_fnc_globalEvent;
@@ -51,47 +68,23 @@ if (isServer) then {
 	};
 }] call CBA_fnc_addEventHandler;
 
+[QGVARMAIN(loadingScreenDone), {
+	GVAR(IntroLoadingScreenDone) = true;
+	diag_log "[GW][Intro] loading-screen transition ready";
+	[] call FUNC(startIntro);
+}] call CBA_fnc_addEventHandler;
+
 [QGVARMAIN(playerReady), {
-	if (GVAR(SafeMode_useType) isEqualTo 0) exitWith {false};
+	diag_log format ["[GW][SafeMode] playerReady useType=%1 enabled=%2", GVAR(SafeMode_useType), GVAR(SafeMode_Enabled)];
+	// The server owns SafeMode_Enabled. Request its current value so clients do not
+	// unlock themselves when playerReady fires before publicVariable propagation.
+	[QGVAR(requestSafetyMode), [player]] call CBA_fnc_serverEvent;
 
-	[QGVAR(setSafetyMode), GVAR(SafeMode_Enabled)] call CBA_fnc_localEvent;
-
-	#include "XEH_postInitPlayer.sqf"
-
-	[] spawn {
-		if !((markerType "protection_west") isEqualTo "") then {
-			GVAR(SafeZoneMarkers) pushBackUnique [west, "protection_west"];
-		};
-		if !((markerType "protection_east") isEqualTo "") then {
-			GVAR(SafeZoneMarkers) pushBackUnique [east, "protection_east"];
-		};
-		if !((markerType "protection_resistance") isEqualTo "") then {
-			GVAR(SafeZoneMarkers) pushBackUnique [independent, "protection_resistance"];
-		};
-		private _marker = "";
-		{
-			if ((([player] call EFUNC(Common,getSide)) isEqualTo (_x select 0)) && ((getPosATL player) inArea (_x select 1))) then {
-				_marker = (_x select 1);
-			};
-		} forEach GVAR(SafeZoneMarkers);
-
-		waitUntil {
-			_pos = (getPosATL (vehicle player));
-
-			if (_pos inArea _marker) then {
-				GVAR(SafeZonePos) = _pos;
-			} else {
-				if !(isNIl QGVAR(SafeZonePos)) then {
-					player setPosATL GVAR(SafeZonePos);
-					["You can leave the zone during warmup", 5] call GW_Common_Fnc_Hint;
-				};
-			};
-			sleep 0.1;
-			!(GVAR(SafeMode_Enabled) && !(_marker isEqualTo ""))
-		};
-		_marker setMarkerAlphaLocal 0;
-		GVAR(SafeZoneMarkers) = nil;
-		GVAR(SafeZonePos) = nil;
+	private _showLocalIntro = getMissionConfigValue ["GW_ShowIntroInSingleplayer", false];
+	if (isMultiplayer || _showLocalIntro) then {
+		GVAR(IntroPlayerReady) = true;
+		diag_log "[GW][Intro] player ready";
+		[] call FUNC(startIntro);
 	};
 }] call CBA_fnc_addEventHandler;
 
@@ -111,15 +104,106 @@ if (isServer) then {
 	};
 }] call CBA_fnc_addEventHandler;
 
+[QGVAR(requestSafetyMode), {
+	params [["_unit", objNull, [objNull]]];
+	if (isServer && {!isNull _unit}) then {
+		if (GVAR(SafeMode_Enabled) && {GVAR(SafeMode_StartAreaExpiry)}) then {
+			_unit setVariable [QGVAR(SafeMode_StartPosition), getPosATL (vehicle _unit)];
+		};
+		[QGVAR(setSafetyMode), [GVAR(SafeMode_Enabled), GVAR(SafeMode_StartAreaExpiry)], _unit] call CBA_fnc_targetEvent;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(cancelSafetyMode), {
+	params [["_unit", objNull, [objNull]]];
+	if (isServer && {GVAR(SafeMode_Enabled)} && {GVAR(SafeMode_StartAreaExpiry)} && {!isNull _unit}) then {
+		diag_log format ["[GW][SafeMode] cancelled after %1 left the starting area", name _unit];
+		[QGVAR(setSafetyMode), [false, false]] call CBA_fnc_globalEvent;
+	};
+}] call CBA_fnc_addEventHandler;
+
 [QGVAR(setSafetyMode), {
+	params [["_enabled", false, [true]], ["_startAreaExpiry", false, [true]]];
+	diag_log format ["[GW][SafeMode] setSafetyMode enabled=%1 startAreaExpiry=%2 isServer=%3 hasInterface=%4", _enabled, _startAreaExpiry, isServer, hasInterface];
+	GVAR(SafeMode_Enabled) = _enabled;
+	GVAR(SafeMode_StartAreaExpiry) = _startAreaExpiry;
 	if (isServer) then {
-		GVAR(SafeMode_Enabled) = _this;
 		publicVariable QGVAR(SafeMode_Enabled);
+		publicVariable QGVAR(SafeMode_StartAreaExpiry);
+		if (_enabled && {_startAreaExpiry}) then {
+			{
+				_x setVariable [QGVAR(SafeMode_StartPosition), getPosATL (vehicle _x)];
+			} forEach allPlayers;
+
+			if (isNil QGVAR(SafeMode_ServerReleasePFH)) then {
+				GVAR(SafeMode_ServerReleasePFH) = [{
+					private _hasLeftStartArea = allPlayers findIf {
+						private _startPosition = _x getVariable [QGVAR(SafeMode_StartPosition), []];
+						!(_startPosition isEqualTo [])
+						&& {(getPosATL (vehicle _x)) distance2D _startPosition >= 50}
+					};
+					if (_hasLeftStartArea >= 0) then {
+						[QGVAR(cancelSafetyMode), [allPlayers select _hasLeftStartArea]] call CBA_fnc_localEvent;
+					};
+				}, 0.25] call CBA_fnc_addPerFrameHandler;
+			};
+		} else {
+			if !(isNil QGVAR(SafeMode_ServerReleasePFH)) then {
+				[GVAR(SafeMode_ServerReleasePFH)] call CBA_fnc_removePerFrameHandler;
+				GVAR(SafeMode_ServerReleasePFH) = nil;
+			};
+			{
+				_x setVariable [QGVAR(SafeMode_StartPosition), nil];
+			} forEach allPlayers;
+		};
+		// Framework 3+ Safe Start still owns its own projectile-deletion handler.
+		// Release it when GW SafeMode releases so old mission templates unlock too.
+		if (!_enabled) then {
+			["StartUp_setSafetyMode", false] call CBA_fnc_globalEvent;
+		};
 	};
 	if (hasInterface) then {
-		TRACE_1("QGVAR(setSafetyMode)", _this);
-		[_this, false] call FUNC(WeaponLock);
-		if (!GVAR(SafeMode_Enabled) && (GVAR(SafeMode_useType) isEqualTo 2)) then {
+		TRACE_1("QGVAR(setSafetyMode)", _enabled);
+		[] call GW_Common_fnc_protectionStatusHint;
+		if (_enabled) then {
+			[true, false] call FUNC(WeaponLock);
+
+			if (_startAreaExpiry && {!GVAR(SafeMode_ReleaseMonitorActive)}) then {
+				private _spawnPosition = getPosATL (vehicle player);
+				private _releaseGeneration = GVAR(SafeMode_ReleaseGeneration);
+				GVAR(SafeMode_ReleaseMonitorActive) = true;
+
+				[_spawnPosition, _releaseGeneration] spawn {
+					params ["_spawnPosition", "_releaseGeneration"];
+					private _releaseDistance = 50;
+
+					waitUntil {
+						sleep 0.25;
+						!(GVAR(SafeMode_Enabled))
+						|| {GVAR(SafeMode_ReleaseGeneration) isNotEqualTo _releaseGeneration}
+						|| {(vehicle player) distance2D _spawnPosition >= _releaseDistance}
+					};
+
+					if (
+						GVAR(SafeMode_Enabled)
+						&& {GVAR(SafeMode_ReleaseGeneration) isEqualTo _releaseGeneration}
+						&& {(vehicle player) distance2D _spawnPosition >= _releaseDistance}
+					) then {
+						[QGVAR(cancelSafetyMode), [player]] call CBA_fnc_serverEvent;
+					};
+
+					if (GVAR(SafeMode_ReleaseGeneration) isEqualTo _releaseGeneration) then {
+						GVAR(SafeMode_ReleaseMonitorActive) = false;
+					};
+				};
+			};
+		} else {
+			GVAR(SafeMode_ReleaseGeneration) = GVAR(SafeMode_ReleaseGeneration) + 1;
+			GVAR(SafeMode_ReleaseMonitorActive) = false;
+			[false, false] call FUNC(WeaponLock);
+		};
+
+		if (!_enabled && (GVAR(SafeMode_useType) isEqualTo 2)) then {
 			systemChat "[SafeMode]: Weapons & Vehicles are now active";
 		};
 	};

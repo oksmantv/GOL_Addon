@@ -13,13 +13,26 @@
 	Public: NO
 */
 
-params [["_pos", [0,0,0]]];
+private _args = _this;
+if (isNil "_args") then { _args = []; };
+if !(_args isEqualType []) then { _args = [_args]; };
+
+_args params [
+	["_pos", [0,0,0], [[]]],
+	["_selectedUnitsParam", [], [[]]]
+];
 
 private _buildingPos = [];
 private _buildingPosSort = [];
 private _buildingPosUsed = [];
 private _radius = ("Preferences" get3DENMissionAttribute "GW_GarrisonRadius");
-private _selectedUnits = ((get3DENSelected "object") select {(_x isKindOf "CAManBase")});
+if !(_radius isEqualType 0) then { _radius = 75; };
+_radius = (_radius max 5) min 500;
+private _selectedUnits = _selectedUnitsParam;
+if (_selectedUnits isEqualTo []) then {
+	_selectedUnits = ((get3DENSelected "object") select {(_x isKindOf "CAManBase")});
+};
+_selectedUnits = _selectedUnits select {!isNull _x};
 
 if (count _selectedUnits isEqualTo 0) exitWith {
 	["No units were selected!", 1, 5, false] call BIS_fnc_3DENNotification;

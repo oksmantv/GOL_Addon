@@ -1,5 +1,19 @@
 #include "script_component.hpp"
-#include "XEH_PREP.sqf"
+
+diag_log "[GW][Phase1] core preInit entered (before PREP)";
+
+if (isNil "CBA_fnc_compileFunction") then {
+	diag_log "[GW][Phase1] WARNING: CBA_fnc_compileFunction is nil during Core preInit; using fallback compile for core functions.";
+	missionNamespace setVariable [QFUNCMAIN(changeSetting), compile preprocessFileLineNumbers QPATHTOF(functions\fnc_changeSetting.sqf)];
+	missionNamespace setVariable [QFUNCMAIN(Log), compile preprocessFileLineNumbers QPATHTOF(functions\fnc_Log.sqf)];
+	missionNamespace setVariable [QFUNCMAIN(LogAdmin), compile preprocessFileLineNumbers QPATHTOF(functions\fnc_LogAdmin.sqf)];
+	missionNamespace setVariable [QFUNCMAIN(remoteCommand), compile preprocessFileLineNumbers QPATHTOF(functions\fnc_remoteCommand.sqf)];
+	missionNamespace setVariable [QFUNCMAIN(settingsInit), compile preprocessFileLineNumbers QPATHTOF(functions\fnc_settingsInit.sqf)];
+} else {
+	#include "XEH_PREP.sqf"
+};
+
+diag_log "[GW][Phase1] core PREP complete";
 
 LOG("Prepping all main variables");
 // Get addon/mod/dlc availability from the A3 config file and store them in easy to use variables
@@ -25,33 +39,46 @@ GVARMAIN(mod_CTAB) 			= isClass (configFile >> "CfgPatches" >> "cTab");
 GVARMAIN(mod_RHS)	 		= isClass (configFile >> "CfgPatches" >> "rhsusf_main");
 GVARMAIN(mod_TFAR) 			= isClass (configFile >> "CfgPatches" >> "Task_Force_Radio");
 GVARMAIN(mod_TFAR_CORE) 	= isClass (configFile >> "CfgPatches" >> "TFAR_Core");
+GVARMAIN(mod_DUI)			= isClass (configFile >> "CfgPatches" >> "diwako_dui_main");
+
+diag_log format [
+	"[GW][Phase1] preflight env isServer=%1 hasInterface=%2 isMultiplayer=%3 | mods CBA=%4 ACE=%5 TFAR=%6 TFAR_CORE=%7 ZEN=%8 LAMBS=%9",
+	isServer,
+	hasInterface,
+	isMultiplayer,
+	GVARMAIN(mod_CBA),
+	GVARMAIN(mod_ACE3),
+	GVARMAIN(mod_TFAR),
+	GVARMAIN(mod_TFAR_CORE),
+	isClass (configFile >> "CfgPatches" >> "zen_main"),
+	isClass (configFile >> "CfgPatches" >> "lambs_main")
+];
+
+if !(GVARMAIN(mod_CBA)) exitWith {
+	diag_log "[GW][Phase1] BLOCKER: CBA_Main missing. Aborting GW core preInit to avoid cascading undefined cba_* errors.";
+	false
+};
 
 enableSaving [false, false];
+enableEngineArtillery true;
+enableSentences false;
+enableRadio false;
+enableTeamSwitch false;
+useAISteeringComponent true;
+0 fadeRadio 0;
 
-if (isServer) then {
-	private _LogicCenter = createCenter sideLogic;
-	private _moduleGroup = createGroup _LogicCenter;
+GVARMAIN(settings3denArray) = [];
+GVARMAIN(Version) = (getText(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version"));
 
-	GVARMAIN(Gamelogic) = true call CBA_fnc_createNamespace;
-	publicVariable QGVARMAIN(Gamelogic);
-
-	GVARMAIN(ZeuzModuleAdminLogged) = _moduleGroup createUnit ["ModuleCurator_F",[0,0,1000],[],0,"CAN_COLLIDE"];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Owner", "#adminLogged", true];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Name", "AdminZeusLogged", true];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Addons", 3, true];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["Forced", 0, true];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["birdType", "", true];
-	GVARMAIN(ZeuzModuleAdminLogged) setVariable ["showNotification", false, true];
-	GVARMAIN(ZeuzModuleAdminLogged) setCuratorWaypointCost 0;
-	{
-		GVARMAIN(ZeuzModuleAdminLogged) setCuratorCoef [_x,0];
-	} forEach ["place","edit","delete","destroy","group","synchronize"];
-
-	publicVariable QGVARMAIN(ZeuzModuleAdminLogged);
+if (is3DEN) then {
+	if !(GVARMAIN(mod_GW)) exitWith {
+		["ADDON is not loaded, Exiting Framework","WARNING"] spawn BIS_fnc_3DENShowMessage;
+	};
+	if (GVARMAIN(mod_GW) && ((getNumber (configFile >> "CfgPatches" >> "GW_Main" >> "version")) < 0.7)) exitWith {
+		["ADDON And Framework versions are not compatible!   Exiting Framework","WARNING"] spawn BIS_fnc_3DENShowMessage;
+	};
 };
 
 if !(isClass(missionConfigFile >> "GW_FRAMEWORK")) exitWith {false};
 
-if (VERSION >= 0.8) then {
-	#include "XEH_preInitModules.sqf"
-};
+#include "XEH_preInitModules.sqf"

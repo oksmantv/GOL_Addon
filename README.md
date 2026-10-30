@@ -35,6 +35,8 @@ The main author [GuzzenVonLidl](https://github.com/GuzzenVonLidl) is responsible
 Now each module includes a couple of feature
 Note: these are the main things.
 
+This is the dev branch
+
 ### 3den:
 * New "tab" for easy copying
 * Copy highlighted units/objects, No more scripting needed, just copy and paste!

@@ -25,11 +25,25 @@ private _units = [];
 private _vehicles = [];
 private _objects = [];
 private _return = 0;
+private _groups = [];
+private _includeExportComments = missionNamespace getVariable ["OKS_3DEN_COPY_EXPORT_COMMENTS", false];
+if !(_includeExportComments isEqualType true) then { _includeExportComments = false };
+
+{
+	private _group = group _x;
+	if !(isNull _group) then {
+		_groups pushBackUnique _group;
+	};
+} forEach (get3DENSelected "object");
+
+private _groupCallsigns = (_groups apply { groupId _x }) select { !(_x isEqualTo "") };
+private _groupText = if (_groupCallsigns isEqualTo []) then { "No group" } else { _groupCallsigns joinString ", " };
 
 {
 	private _special = [];
 	switch (_type) do {
-		case 1: { // Units && Vehicles
+		case 1: {
+			// Units && Vehicles
 			if (_x isKindOf "AllVehicles") then {
 				private _special = ([_x] call FUNC(getAttributes));
 
@@ -49,15 +63,20 @@ private _return = 0;
 
 				if (_x isKindOf "CAManBase") then {
 					private _stance = ["Up","Middle","Down","Auto"] select ((_x get3DENAttribute "UnitPos") select 0);
-
 					if ((isNull (objectParent _x)) || !((objectParent _x) in (get3DENSelected "object"))) then {
-						_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special];
+						if ("Preferences" get3DENMissionAttribute "GW_CopyRoles") then {
+							_role = [_x] call FUNC(getLoadoutClass);
+							_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special, _role];
+						} else {
+							_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special];
+						}	
 					};
 				};
 			};
 		};
 
-		case 2: { // Objects
+		case 2: {
+			// Objects
 			if ((_x isKindOf "All") && !(_x isKindOf "CAManBase")) then {
 				private _special = ([_x] call FUNC(getAttributes));
 
@@ -65,7 +84,6 @@ private _return = 0;
 				(vectorUp _x) params ["_upX","_upY","_upZ"];
 
 				_objects pushBack [GETATTRIBUTE("itemClass"), (getPosWorld _x), [((_x call BIS_fnc_getPitchBank) + [(getDir _x)]), GETATTRIBUTE("rotation")], _special, GETATTRIBUTE("objectIsSimple")];
-//				_objects pushBack [GETATTRIBUTE("itemClass"), (getPosWorld _x), [CUT_XYZ(_dirX,_dirY,_dirZ), CUT_XYZ(_upX,_upY,_upZ)], _special, GETATTRIBUTE("objectIsSimple")];
 			};
 		};
 	};
@@ -74,40 +92,70 @@ private _return = 0;
 switch (_type) do {
 	case 1: {
 		_objects = (get3DENSelected "object") select {(_x isKindOf "CAManBase")};
-		_side = "civilian";
+		_side = civilian;
 		if (_objects isEqualTo []) then {
 			_crew = (get3DENSelected "object") select {count (crew _x) > 0};
 			if !(_crew isEqualTo []) then {
-				_side = str(side (_crew select 0));
+				_side = side (_crew select 0);
 			};
 		} else {
-			_side = str(side(_objects select 0));
-		};
-		if (_side isEqualTo "CIV") then {
-			_side = "civilian";
-		};
-		if (_side isEqualTo "GUER") then {
-			_side = "independent";
+			_side = side (_objects select 0);
 		};
 
-		_return = (str([_side, _units, _vehicles, []]) + (" call GW_Common_fnc_addToSpawnList;"));
+		_sideStr = switch (_side) do {
+			case west: {"west"};
+			case east: {"east"};
+			case independent: {"independent"};
+			case civilian: {"civilian"};
+			default {"civilian"};
+		};
+
+		_return = format ["[%1,%2,[],%3] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), _sideStr];
+		if (_includeExportComments) then {
+			_return = _return + format [" // 3DEN | %1 | Groups: %2 | U:%3 V:%4", toUpper _sideStr, _groupText, count _units, count _vehicles];
+		};
+		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
+		if !(_cache isEqualType []) then { _cache = [] };
+		_cache pushBack _return;
+		uiNamespace setVariable ["OKS_3DEN_CLIPBOARD_CACHE", _cache];
+		private _cacheCount = count _cache;
 		TRACE_1("Units", _units);
 		TRACE_1("Vehicles", _vehicles);
-		systemChat format ["Copy Static: %3, %1 units, %2 vehicles copied", (count _units), (count _vehicles), _side];
+		private _copyText = format ["Copy Static | %1 | %2 | U:%3 V:%4 | Cache:%5", toUpper _sideStr, _groupText, count _units, count _vehicles, _cacheCount];
+		systemChat _copyText;
+		[_copyText, 0, 5, true] call BIS_fnc_3DENNotification;
 	};
 	case 2: {
-		_return = (str(_objects) + (" call GW_Common_fnc_spawnObjects;"));
+		_return = format ["%1 call GW_Common_fnc_spawnObjects;", str _objects];
+		if (_includeExportComments) then {
+			_return = _return + format [" // 3DEN | Groups: %1 | O:%2", _groupText, count _objects];
+		};
+		private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
+		if !(_cache isEqualType []) then { _cache = [] };
+		_cache pushBack _return;
+		uiNamespace setVariable ["OKS_3DEN_CLIPBOARD_CACHE", _cache];
+		private _cacheCount = count _cache;
 		TRACE_1("Objects", _objects);
-		systemChat format ["Copy Objects: %1 objects copied", (count _objects)];
+		private _copyText = format ["Copy Objects | %1 | O:%2 | Cache:%3", _groupText, count _objects, _cacheCount];
+		systemChat _copyText;
+		[_copyText, 0, 5, true] call BIS_fnc_3DENNotification;
 	};
+	default {
+		systemChat "Copy Static: No valid copy mode selected!";
+		[format["Copy Static: No valid copy mode selected!", (count _objects)], 0, 5, true] call BIS_fnc_3DENNotification;
+	}
 };
 
-if ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy") then {
+private _deleteOnCopy = uiNamespace getVariable ["GW_DeleteOnCopy", ("Preferences" get3DENMissionAttribute "GW_DeleteOnCopy")];
+if (_deleteOnCopy) then {
 	_delete = (get3DENSelected "object") + (get3DENSelected "group");
 	delete3DENEntities _delete;
 };
 
 if ("Preferences" get3DENMissionAttribute "GW_CopyToClipboard") then {
+	if(_return isEqualTo 0) exitWith {
+		systemChat "Copy Static: Nothing to copy to clipboard!";
+	};
 	copyToClipboard _return;
 };
 

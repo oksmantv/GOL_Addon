@@ -4,9 +4,19 @@
 
 #include "initSettings.sqf"
 
+diag_log "[GW][SafeMode] XEH_preInit started";
+
 GVAR(Timer) = -1;	// useType == false
 
 GVAR(CiviKillCount) = 0;
 
 GVAR(SafeMode_Enabled) = false;
-GVAR(SafeZoneMarkers) = [];
+GVAR(SafeMode_StartAreaExpiry) = false;
+GVAR(SafeMode_ReleaseMonitorActive) = false;
+GVAR(SafeMode_ReleaseGeneration) = 0;
+
+// The player-ready and loading-screen-complete events can arrive in either
+// order on remote clients. Start the visual intro only after both are true.
+GVAR(IntroPlayerReady) = false;
+GVAR(IntroLoadingScreenDone) = false;
+GVAR(IntroStarted) = false;

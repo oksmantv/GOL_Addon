@@ -4,7 +4,6 @@ private _output = [];
 private _approved = 0;
 private _warning = 1;
 private _error = 2;
-private _legacyVersion = ((getNumber(missionConfigFile >> "GW_FRAMEWORK" >> "Core" >> "Version")) < 0.8);
 
 if (call EFUNC(Common,isDevBuild)) then {
 	_output pushBack [_warning,"Debug mode is enabled", "", [-1]];
@@ -31,135 +30,167 @@ _allPlayable = ((all3DENEntities select 0) select {((_x get3DENAttribute "Contro
 _west = (_allPlayable select {(side _x) isEqualTo blufor});
 _east = (_allPlayable select {(side _x) isEqualTo opfor});
 _indep = (_allPlayable select {(side _x) isEqualTo independent});
+_civilian = (_allPlayable select {(side _x) isEqualTo civilian});
+_respawneast = [];
+_respawnwest = [];
+_respawnindep = [];
 
-if (_legacyVersion) then {
-	if !((count _west) isEqualTo 0) then {
-		_respawn = ((all3DENEntities select 5) select {!((_x find "respawn_west") isEqualTo -1)});
-		if ((count _respawn) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn marker found for BLUFOR", "If this is not fixed BLUFOR can not respawn!, Either consider adding the marker or removing any playable units on this side", [-1]];
-		} else {
-			if ((count _respawn) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn markers found for BLUFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_west select 0);
-				_distance = (_unit distance2D (((_respawn select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["BLUFOR Respawn marker is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawn select 0)], "Move To .."];
-				};
-			};
-		};
-	};
-
-	if !((count _east) isEqualTo 0) then {
-		_respawn = ((all3DENEntities select 5) select {!((_x find "respawn_east") isEqualTo -1)});
-		if ((count _respawn) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn marker found for OPFOR", "If this is not fixed OPFOR can not respawn!, Either consider adding the marker or removing any playable units on this side", [-1]];
-		} else {
-			if ((count _respawn) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn markers found for OPFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_east select 0);
-				_distance = (_unit distance2D (((_respawn select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["OPFOR Respawn marker is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawn select 0)], "Move To .."];
-				};
-			};
-		};
-	};
-
-	if !((count _indep) isEqualTo 0) then {
-		_respawn = ((all3DENEntities select 5) select {!((_x find "respawn_resistance") isEqualTo -1)});
-		if ((count _respawn) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn marker found for INDEPENDENT", "If this is not fixed INDEPENDENT can not respawn!, Either consider adding the marker or removing any playable units on this side", [-1]];
-		} else {
-			if ((count _respawn) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn markers found for INDEPENDENT", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_indep select 0);
-				_distance = (_unit distance2D (((_respawn select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["INDEPENDENT Respawn marker is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawn select 0)], "Move To .."];
-				};
-			};
-		};
-	};
-} else {
-	_respawneast = [];
-	_respawnwest = [];
-	_respawnindep = [];
-
+{
+	_x params ["_object"];
+	_init = (toLower((_object get3DENAttribute "init") select 0));
+	_strArr = (_init splitString "[],");
+	_index = ((_strArr find """gw_isrespawnpos""") + 1);
+	_sideArr = ((_strArr select _index) splitString """");
 	{
-		_x params ["_object"];
-		_init = (toLower((_object get3DENAttribute "init") select 0));
-		_strArr = (_init splitString "[],");
-		_index = ((_strArr find """gw_isrespawnpos""") + 1);
-		_sideArr = ((_strArr select _index) splitString """");
-		{
-			if (_x isEqualTo "east") then {
-				_respawneast pushBack _object;
-			};
-			if (_x isEqualTo "west") then {
-				_respawnwest pushBack _object;
-			};
-			if (_x isEqualTo "independent") then {
-				_respawnindep pushBack _object;
-			};
-		} forEach _sideArr;
-	} forEach ((all3DENEntities select 3) select {((typeOf _x) isEqualTo "LocationRespawnPoint_F")});
+		if (_x isEqualTo "east") then {
+			_respawneast pushBack _object;
+		};
+		if (_x isEqualTo "west") then {
+			_respawnwest pushBack _object;
+		};
+		if (_x isEqualTo "independent") then {
+			_respawnindep pushBack _object;
+		};
+	} forEach _sideArr;
+} forEach ((all3DENEntities select 3) select {((typeOf _x) isEqualTo "LocationRespawnPoint_F")});
 
 
-	if ((count _west) > 0) then {
-		if ((count _respawnwest) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn object found for BLUFOR", "If this is not fixed BLUFOR will respawn at starting location", [7]];
+if ((count _west) > 0) then {
+	if ((count _respawnwest) isEqualTo 0) then {
+		_output pushBack [_error,"No Respawn object found for BLUFOR", "If this is not fixed BLUFOR will respawn at starting location", [7]];
+	} else {
+		if ((count _respawnwest) > 1) then {
+			_output pushBack [_warning, "Multiple Respawn objects found for BLUFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
 		} else {
-			if ((count _respawnwest) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn objects found for BLUFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_west select 0);
-				_distance = (_unit distance2D (((_respawnwest select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["BLUFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnwest select 0)], "Move To .."];
-				};
+			_unit = (_west select 0);
+			_distance = (_unit distance2D (((_respawnwest select 0) get3DENAttribute "position") select 0));
+			if (_distance >= 100) then {
+				_output pushBack [_warning, format ["BLUFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnwest select 0)], "Move To .."];
 			};
 		};
 	};
-	if ((count _east) > 0) then {
-		if ((count _respawneast) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn object found for OPFOR", "If this is not fixed OPFOR will respawn at starting location", [8]];
+};
+if ((count _east) > 0) then {
+	if ((count _respawneast) isEqualTo 0) then {
+		_output pushBack [_error,"No Respawn object found for OPFOR", "If this is not fixed OPFOR will respawn at starting location", [8]];
+	} else {
+		if ((count _respawneast) > 1) then {
+			_output pushBack [_warning, "Multiple Respawn objects found for OPFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
 		} else {
-			if ((count _respawneast) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn objects found for OPFOR", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_east select 0);
-				_distance = (_unit distance2D (((_respawneast select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["OPFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawneast select 0)], "Move To .."];
-				};
+			_unit = (_east select 0);
+			_distance = (_unit distance2D (((_respawneast select 0) get3DENAttribute "position") select 0));
+			if (_distance >= 100) then {
+				_output pushBack [_warning, format ["OPFOR Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawneast select 0)], "Move To .."];
 			};
 		};
 	};
-	if ((count _indep) > 0) then {
-		if ((count _respawnindep) isEqualTo 0) then {
-			_output pushBack [_error,"No Respawn object found for INDEPENDENT", "If this is not fixed INDEPENDENT will respawn at starting location", [9]];
+};
+if ((count _indep) > 0) then {
+	if ((count _respawnindep) isEqualTo 0) then {
+		_output pushBack [_error,"No Respawn object found for INDEPENDENT", "If this is not fixed INDEPENDENT will respawn at starting location", [9]];
+	} else {
+		if ((count _respawnindep) > 1) then {
+			_output pushBack [_warning, "Multiple Respawn objects found for INDEPENDENT", "If there is more then one, players will randomly spawn at one of them", [-1]];
 		} else {
-			if ((count _respawnindep) > 1) then {
-				_output pushBack [_warning, "Multiple Respawn objects found for INDEPENDENT", "If there is more then one, players will randomly spawn at one of them", [-1]];
-			} else {
-				_unit = (_indep select 0);
-				_distance = (_unit distance2D (((_respawnindep select 0) get3DENAttribute "position") select 0));
-				if (_distance >= 100) then {
-					_output pushBack [_warning, format ["INDEPENDENT Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnindep select 0)], "Move To .."];
-				};
+			_unit = (_indep select 0);
+			_distance = (_unit distance2D (((_respawnindep select 0) get3DENAttribute "position") select 0));
+			if (_distance >= 100) then {
+				_output pushBack [_warning, format ["INDEPENDENT Respawn is %2m from %1.", ((_unit get3DENAttribute "description") select 0), round(_distance)], "", [4, (_respawnindep select 0)], "Move To .."];
 			};
 		};
 	};
 };
 
-if (isClass(missionConfigFile >> "GW_Modules" >> "Respawn")) then {
-	if !("spectator" in (all3DENEntities select 5)) then {
-		_output pushBack [_error,"Spectator marker is missing, Create a new marker and name it 'spectator', place it on land and out of AO", "", [-1]];
+// Validate only factions that supply playable units. The gear handler evaluates
+// every selectable player role and reports candidate groups that would force an
+// unsupported DLC watermark without an approved fallback.
+private _getFactionSetting = {
+	params ["_setting"];
+	private _value = "";
+	if !(isNil "CBA_settings_fnc_get") then {
+		_value = [_setting] call CBA_settings_fnc_get;
+	};
+	if !(_value isEqualType "") then {
+		_value = missionNamespace getVariable [_setting, ""];
+	};
+	_value
+};
+private _playerFactionSides = [
+	["BLUFOR", _west, "GW_Gear_Blufor", west],
+	["OPFOR", _east, "GW_Gear_Opfor", east],
+	["INDEPENDENT", _indep, "GW_Gear_Independent", independent],
+	["CIVILIAN", _civilian, "GW_Gear_Civilian", civilian]
+];
+private _getRoleDisplayName = {
+	params ["_role"];
+	switch (_role) do {
+		case "officer": {"Officer"};
+		case "pl": {"Platoon Leader"};
+		case "pm": {"Platoon Medic"};
+		case "fac": {"Forward Air Controller"};
+		case "sl": {"Squad Leader"};
+		case "sm": {"Squad Medic"};
+		case "ftl": {"Fireteam Leader"};
+		case "r": {"Rifleman"};
+		case "g": {"Grenadier"};
+		case "ag": {"Assistant Gunner"};
+		case "ar": {"Automatic Rifleman"};
+		case "ab": {"AR Ammo Bearer"};
+		case "atab": {"AT Ammo Bearer"};
+		case "lightdragon": {"Mortar Operator"};
+		case "ammg": {"Assistant Medium Machine Gunner"};
+		case "mmg": {"Medium Machine Gunner"};
+		case "dragon": {"Dragon"};
+		case "aa": {"Anti-Air"};
+		case "amat": {"Assistant Heavy AT"};
+		case "mat": {"Heavy AT"};
+		case "drone": {"Drone Operator"};
+		case "engineer": {"Engineer"};
+		case "lr": {"Light Rifleman"};
+		case "marksman": {"Marksman"};
+		case "crew": {"Vehicle Crew"};
+		case "diver": {"Combat Diver"};
+		case "p": {"Chopper Pilot"};
+		case "pj": {"Para-Rescueman"};
+		case "jetp": {"Jet Pilot"};
+		default {_role};
 	};
 };
+{
+	_x params ["_sideName", "_units", "_setting", "_side"];
+	if ((count _units) > 0) then {
+		private _faction = [_setting] call _getFactionSetting;
+		if (_faction isEqualTo "") then {
+			_output pushBack [_error, format ["%1 player faction is not configured", _sideName], format ["Set %1 in Addon Options before export.", _setting], [-1]];
+		} else {
+			private _watermarkRisks = [_faction, _side] call EFUNC(Gear,validateFactionDlc);
+			if (_watermarkRisks isEqualTo []) then {
+				_output pushBack [_approved, format ["%1 player faction %2 has no DLC watermark risks", _sideName, _faction], "All selectable player roles were checked.", [-1]];
+			} else {
+				private _groupedRisks = [];
+				{
+					_x params ["_role", "_slot", "_items"];
+					private _groupIndex = _groupedRisks findIf {(_x select 0) isEqualTo _slot && {(_x select 1) isEqualTo _items}};
+					if (_groupIndex isEqualTo -1) then {
+						_groupedRisks pushBack [_slot, _items, [_role]];
+					} else {
+						(_groupedRisks select _groupIndex select 2) pushBackUnique _role;
+					};
+				} forEach _watermarkRisks;
+				{
+					_x params ["_slot", "_items", "_roles"];
+					private _roleNames = (_roles apply {[_x] call _getRoleDisplayName}) joinString ", ";
+					private _candidateClasses = _items apply {_x select 0};
+					private _dlcLabels = (_items apply {_x select 1}) arrayIntersect (_items apply {_x select 1});
+					private _tooltip = format ["Side / selected gear: %1 / %2\n\nAffected roles:\n%3\n\nDefined candidates: %4\nBlocked DLC: %5", _sideName, _faction, _roleNames, str _candidateClasses, _dlcLabels joinString ", "];
+					_output pushBack [_error, format ["No non-DLC %1 support - Number of Roles: %2", _slot, count _roles], _tooltip, [-1]];
+				} forEach _groupedRisks;
+			};
+		};
+	};
+} forEach _playerFactionSides;
+
+
 
 if (isClass(missionConfigFile >> "GW_Modules" >> "MHQ")) then {
 	_MHQs = ((all3DENEntities select 0) select {((((_x get3DENAttribute "name") select 0) find "mhq") isEqualTo 0)});
@@ -193,6 +224,89 @@ if (_aiCount > 100) then {
 	} else {
 		_output pushBack [_error,format["%1 Units placed in the senario. You may wish to consider the performance impact.",_aiCount], "", [-1]];
 	};
+};
+
+// Check for critical framework objects
+_allObjects = all3DENEntities select 0;
+
+// spawnList.sqf supplies scripted spawn assets that are not represented by
+// placed 3DEN entities. Audit its source with the same blocked-prefix setting
+// used by Gear validation so removed addon content cannot bypass export checks.
+{
+	_x params ["_prefix", "_lines"];
+	_output pushBack [
+		_error,
+		format ["spawnList.sqf uses unsupported addon prefix %1", toUpper _prefix],
+		format ["Blocked prefix found on source line(s): %1. Replace these classnames with supported assets before export.", _lines joinString ", "],
+		[-1]
+	];
+} forEach (call FUNC(validateSpawnListPrefixes));
+
+// Named player assets are part of the intended mission experience. Check only
+// these explicitly named vehicles, avoiding unrelated editor props and AI assets.
+private _namedPlayerAssets = _allObjects select {
+	private _name = toLower ((_x get3DENAttribute "name") select 0);
+	(["vehicle_", "helicopter_", "jet_", "mhq_"] findIf {(_name find _x) isEqualTo 0}) isNotEqualTo -1 && {_x isKindOf "AllVehicles"}
+};
+{
+	private _assetName = (_x get3DENAttribute "name") select 0;
+	private _assetClass = typeOf _x;
+	private _assetRisks = [_assetClass, "Vehicle"] call EFUNC(Gear,validateDlcCandidates);
+	if !(_assetRisks isEqualTo []) then {
+		_assetRisks select 0 params ["", "_items"];
+		private _itemText = _items apply {format ["%1 (%2)", _x select 0, _x select 1]};
+		private _displayName = getText (configFile >> "CfgVehicles" >> _assetClass >> "displayName");
+		_output pushBack [_error, format ["%1 (%2) uses unsupported DLC", _assetName, _displayName], _itemText joinString ", ", [4, _x], "Move To .."];
+	};
+} forEach _namedPlayerAssets;
+
+_HasGearBox = ({(typeOf _x) find "GOL_GearBox" > -1} count _allObjects > 0);
+if !(_HasGearBox) then {
+	_output pushBack [_error, "Gear Box not found", "Missing GOL_GearBox object in mission", [-1]];
+};
+
+_HasResupplyStation = ({(typeOf _x) find "GOL_ResupplyStation" > -1} count _allObjects > 0);
+if !(_HasResupplyStation) then {
+	_output pushBack [_error, "Resupply Station not found", "Missing GOL_ResupplyStation object in mission", [-1]];
+};
+
+_HasSupportBox = ({(typeOf _x) find "GOL_SupportBox" > -1} count _allObjects > 0);
+if !(_HasSupportBox) then {
+	_output pushBack [_warning, "Support Box not found", "No GOL_SupportBox object placed. This is optional (can be spawned via the Resupply Station).", [-1]];
+};
+
+_HasAacServiceHelipad = ({(typeOf _x) == "GOL_Helipad"} count _allObjects > 0);
+if !(_HasAacServiceHelipad) then {
+	_output pushBack [_warning, "AAC Service Helipad not found", "Missing GOL_Helipad object in mission", [-1]];
+};
+
+_HasMobileHQ = ({((_x get3DENAttribute "name") select 0) == "Mobile_HQ"} count _allObjects > 0);
+if !(_HasMobileHQ) then {
+	_output pushBack [_warning, "Mobile HQ not found", "Missing respawn point 'Mobile_HQ' in mission", [-1]];
+};
+
+private _markersLower = (all3DENEntities select 5) apply { toLower _x };
+if !("helicopter_spawn" in _markersLower) then {
+	_output pushBack [_warning, "Helicopter spawn marker not found", "Missing marker 'helicopter_spawn' (AI resupply only)", [-1]];
+};
+if !("helicopter_despawn" in _markersLower) then {
+	_output pushBack [_warning, "Helicopter despawn marker not found", "Missing marker 'helicopter_despawn' (AI resupply only)", [-1]];
+};
+
+_Flag_1 = ({((_x get3DENAttribute "name") select 0) find "flag_" > -1 && ((_x get3DENAttribute "name") select 0) find "_1" > -1} count _allObjects > 0);
+if !(_Flag_1) then {
+	_output pushBack [_warning, "Flag Staging Area not found", "Missing flag object with name containing 'flag_' and '_1'", [-1]];
+};
+
+_Flag_2 = ({((_x get3DENAttribute "name") select 0) find "flag_" > -1 && ((_x get3DENAttribute "name") select 0) find "_2" > -1} count _allObjects > 0);
+if !(_Flag_2) then {
+	_output pushBack [_warning, "Flag FARP not found", "Missing flag object with name containing 'flag_' and '_2'", [-1]];
+};
+
+_allLogics = all3DENEntities select 3;
+_HasHeadless = ({((_x get3DENAttribute "name") select 0) in ["HC","HC2","HC3"]} count _allLogics > 0);
+if !(_HasHeadless) then {
+	_output pushBack [_error, "Headless Clients not found", "Missing logic entities named 'HC', 'HC2', or 'HC3' in mission", [-1]];
 };
 
 {
@@ -240,5 +354,30 @@ if !(isNil QEGVAR(Common,Faction)) then {
 	};
 };
 */
+
+// Check for player designated vehicles
+_HasPlayerVehicle = ({
+	private _name = toLower((_x get3DENAttribute "name") select 0);
+	(_name find "vehicle_") == 0
+} count _allObjects > 0);
+if !(_HasPlayerVehicle) then {
+	_output pushBack [_warning, "No player designated vehicles found", "No objects found with name pattern 'vehicle_X' where X is a number", [-1]];
+};
+
+_HasPlayerHelicopter = ({
+	private _name = toLower((_x get3DENAttribute "name") select 0);
+	(_name find "helicopter_") == 0
+} count _allObjects > 0);
+if !(_HasPlayerHelicopter) then {
+	_output pushBack [_warning, "No player designated helicopters found", "No objects found with name pattern 'helicopter_X' where X is a number", [-1]];
+};
+
+_HasPlayerJet = ({
+	private _name = toLower((_x get3DENAttribute "name") select 0);
+	(_name find "jet_") == 0
+} count _allObjects > 0);
+if !(_HasPlayerJet) then {
+	_output pushBack [_warning, "No player designated jets found", "No objects found with name pattern 'jet_X' where X is a number", [-1]];
+};
 
 _output

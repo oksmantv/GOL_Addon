@@ -21,6 +21,10 @@ params [
 ];
 
 if (_toggle) then {
+	if (isNil QGVAR(weaponLockState)) then {
+		private _hadAceDamageState = !isNil {player getVariable "ACE_Medical_AllowDamage"};
+		player setVariable [QGVAR(weaponLockState), [captive player, isDamageAllowed player, _hadAceDamageState, player getVariable ["ACE_Medical_AllowDamage", true]]];
+	};
 	player setCaptive true;
 	player allowDamage false;
 	player setVariable [QGVAR(weaponLock), true];
@@ -51,28 +55,52 @@ if (_toggle) then {
 			};
 		}];
 	};
+	// ACE Advanced Throwing launches its own throwable object rather than using
+	// the player's FiredMan event handler. Its event fires before ACE finishes
+	// cleanup, so defer deletion by one frame to preserve ACE's throw state.
+	if (GVARMAIN(mod_ACE3) && {isNil QGVAR(BlockAceThrowable)}) then {
+		GVAR(BlockAceThrowable) = ["ace_throwableThrown", {
+			params [["_unit", objNull, [objNull]], ["_throwable", objNull, [objNull]]];
+			if (_unit isEqualTo player && {!isNull _throwable}) then {
+				[{
+					params ["_throwable"];
+					if (!isNull _throwable) then {
+						deleteVehicle _throwable;
+					};
+				}, [_throwable]] call CBA_fnc_execNextFrame;
+				["You can't throw while SafeMode is active", 5] call GW_Common_Fnc_Hint;
+			};
+		}] call CBA_fnc_addEventHandler;
+	};
 	if (time > 2 && _displayText) then {
 		systemChat "[SafeMode]: Enabled";
 	};
 } else {
-	player setCaptive false;
-	player allowDamage true;
+	private _adminProtectionActive = EGVAR(admin,playerProtectionEnabled) && {!((player getVariable [QEGVAR(admin,playerProtectionState), []]) isEqualTo [])};
+	if !_adminProtectionActive then {
+		player setCaptive false;
+		player allowDamage true;
+	};
+	player setVariable [QGVAR(weaponLockState), nil];
 	player setVariable [QGVAR(weaponLock), false];
 
-	if (GVARMAIN(mod_ACE3)) then {
+	if (GVARMAIN(mod_ACE3) && !_adminProtectionActive) then {
 		player setVariable ["ACE_Medical_AllowDamage", true];
 	};
 
-	if (isNull (objectParent player)) then {
-		player playActionNow (getText (configfile >> "CfgWeapons" >> (currentWeapon player) >> "reloadAction"));
-	};
-	[{
-		if (GVARMAIN(mod_ACE3)) then {
-			if ((currentWeapon player) in (player getVariable ["ACE_SafeMode_safedWeapons", []])) then {
-				[CURRENT_WEAPONS] call ACE_SafeMode_fnc_unlockSafety;
-			};
+	if (isNull (objectParent player) && {currentWeapon player isNotEqualTo ""}) then {
+		private _reloadAction = getText (configfile >> "CfgWeapons" >> (currentWeapon player) >> "reloadAction");
+		if (_reloadAction isNotEqualTo "") then {
+			player playActionNow _reloadAction;
 		};
-	}, [], (random 5)] call CBA_fnc_waitAndExecute;
+	};
+	// Unlock before removing FiredMan. The previous delayed unlock could leave
+	// ACE safety active for up to five seconds after the local lock was removed.
+	if (GVARMAIN(mod_ACE3)) then {
+		if ((currentWeapon player) in (player getVariable ["ACE_SafeMode_safedWeapons", []])) then {
+			[CURRENT_WEAPONS] call ACE_SafeMode_fnc_unlockSafety;
+		};
+	};
 
 	if !(isNil QGVAR(BlockFire)) then {
 		player removeEventHandler ["FiredMan", GVAR(BlockFire)];
@@ -81,6 +109,10 @@ if (_toggle) then {
 	if !(isNil QGVAR(BlockVehicle)) then {
 		player removeEventHandler ["GetInMan", GVAR(BlockVehicle)];
 		GVAR(BlockVehicle) = nil;
+	};
+	if !(isNil QGVAR(BlockAceThrowable)) then {
+		["ace_throwableThrown", GVAR(BlockAceThrowable)] call CBA_fnc_removeEventHandler;
+		GVAR(BlockAceThrowable) = nil;
 	};
 	if (time > 2 && _displayText) then {
 		systemChat "[SafeMode]: Disabled";

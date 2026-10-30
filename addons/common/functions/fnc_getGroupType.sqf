@@ -1,20 +1,17 @@
-#include "script_Component.hpp"
 /*	================================================================
 	AUTHOR: GuzzenVonLidl
 	Selects a new faction to spawn
 
 	Usage:
-	[west] call GW_Common_Fnc_getGroupType;
+	["West"] call GW_Common_Fnc_getGroupType;
 
 	Parameters:
-	#0:	Side - Side to get units from
+	#0:	STRING - Name of the faction to select
 
 	Returning Value: ARRAY
-	#0: SIDE - Side to spawn
+	#0: SIDE - Side of group
 	#1: STRING - Classname of team leader
 	#2: ARRAY - Classnames
-
-	Public: NO
 
 	#define NO_SIDE -1
 	#define EAST 0
@@ -26,15 +23,26 @@
 	#define FRIENDLY 6
 	#define LOGIC 7
 
-	[0] call BIS_fnc_sideName;
-	[0] call BIS_fnc_sideType;
+	Public: NO
 // ================================================================ */
+#include "script_Component.hpp"
 
 params ["_faction"];
 
-private _configs = (missionConfigFile >> "GW_FRAMEWORK" >> "SpawnUnits" >> toLower(_faction));
-private _side = ([east,west,resistance,civilian] select (getNumber(_configs >> "Side")));
-private _leader = getText(_configs >> "Leader");
-private _unitList = getArray(_configs >> "Units");
+if(_faction isEqualType sideUnknown) then {
+	_faction = str _faction;
+};
+if (_faction isEqualType 0) then {
+	// Number passed (e.g. from EAST/WEST macro collision) — map to side string
+	_faction = (["East","West","Independent","Civilian"] param [_faction, "East"]);
+};
+if (isNil "_faction" || {!(_faction isEqualType "")}) exitWith {
+	WARNING_1("getGroupType: unexpected _faction type: %1", typeName _faction);
+	[east, [], []]
+};
+private _factionStr = toUpper _faction;
+private _side = ([east,west,independent,civilian] select (getNumber(configFile >> "GW_FRAMEWORK" >> "SpawnUnits" >> _factionStr >> "Side")));
+private _leader = getArray(configFile >> "GW_FRAMEWORK" >> "SpawnUnits" >> _factionStr >> "Leaders");
+private _unitList = getArray(configFile >> "GW_FRAMEWORK" >> "SpawnUnits" >> _factionStr >> "Units");
 
 [_side, _leader, _unitList]

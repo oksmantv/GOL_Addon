@@ -18,6 +18,7 @@
 
 params ["_unit",["_dir", -1]];
 private _grp = (group _unit);
+diag_log format ["[GW][Common][Static] setAIStatic start unit=%1 dir=%2", _unit, _dir];
 _unit setVariable [QGVAR(disableAI_Path), true, true];
 
 if ((skill _unit) > 0.6) then {
@@ -57,9 +58,8 @@ if ((leader _grp) isEqualTo (leader _unit)) then {
 	_this enableGunLights "forceOff";
 }, _unit, 5] call CBA_fnc_waitAndExecute;
 
-if (_unit getVariable QGVAR(Fortify)) then {
-	[_unit] execFSM "x\gw\addons\ai_enhancements\ai_bunker.fsm";
-} else {
+
+if !(_unit getVariable QGVAR(Fortify)) then {
 	if ((leader _grp) isEqualTo (leader _unit)) then {
 		[_grp] call CBA_fnc_clearWaypoints;
 		_wp = _grp addWaypoint [(getposATL _unit), 0];

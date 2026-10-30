@@ -1,4 +1,3 @@
-
 class Cfg3DEN {
 	class Group {
 		class AttributeCategories {
@@ -6,8 +5,6 @@ class Cfg3DEN {
 				class Attributes {
 					delete Behaviour;
 					delete CombatMode;
-//					delete DeleteWhenEmpty;
-//					delete DynamicSimulation;
 					delete Formation;
 					delete SpeedMode;
 				};
@@ -30,7 +27,6 @@ class Cfg3DEN {
 
 		class GW_AutoTest_Box : Toolbox {
 			attributeLoad = "_this call GW_3den_fnc_AutoTest";
-//			attributeLoad = "_this call GW_fnc_AutoTest";
 			attributeSave = "";
 			w = (ATTRIBUTE_TITLE_W + ATTRIBUTE_CONTENT_W) * GRID_W;
 			h = 23 * SIZE_M * GRID_H;
@@ -63,7 +59,6 @@ class Cfg3DEN {
                     idcLeft = -1;
                     idcRight = -1;
 					disableOverflow = 1;
-//					onLBDblClick = "_this spawn GW_3den_fnc_AutoTest_Events; false";
 					onLBSelChanged = "_this spawn {(_this select 0) lbSetCurSel -1}; false";
 				};
 				class ActionListButton: ctrlListBox {
@@ -95,6 +90,14 @@ class Cfg3DEN {
 						class loadout_pl {
 							text = "Platoon leader";
 							data = "pl";
+						};
+						class loadout_pm {
+							text = "Platoon Medic";
+							data = "pm";
+						};
+						class loadout_officer {
+							text = "Officer";
+							data = "officer";
 						};
 						class loadout_fac {
 							text = "Forward Air Controller";
@@ -128,6 +131,58 @@ class Cfg3DEN {
 							text = "Automatic Rifleman";
 							data = "ar";
 						};
+						class loadout_ab {
+							text = "AR Ammo Bearer";
+							data = "ab";
+						};
+						class loadout_atab {
+							text = "AT Ammo Bearer";
+							data = "atab";
+						};
+						class loadout_lightdragon {
+							text = "Mortar Operator";
+							data = "lightdragon";
+						};
+						class loadout_ammg {
+							text = "Assistant Medium Machine Gunner";
+							data = "ammg";
+						};
+						class loadout_mmg {
+							text = "Medium Machine Gunner";
+							data = "mmg";
+						};
+						class loadout_dragon {
+							text = "Dragon";
+							data = "dragon";
+						};
+						class loadout_aa {
+							text = "Anti-Air";
+							data = "aa";
+						};
+						class loadout_amat {
+							text = "Assistant Heavy AT";
+							data = "amat";
+						};
+						class loadout_mat {
+							text = "Heavy AT";
+							data = "mat";
+						};
+						class loadout_drone {
+							text = "Drone Operator";
+							data = "drone";
+						};
+						class loadout_engineer {
+							text = "Engineer";
+							data = "engineer";
+						};
+						class loadout_lr {
+							text = "Light Rifleman";
+							data = "lr";
+						};
+						class loadout_marksman {
+							text = "Marksman";
+							data = "marksman";
+						};
 						class loadout_crew {
 							text = "Crew Member";
 							data = "crew";
@@ -135,6 +190,18 @@ class Cfg3DEN {
 						class loadout_p {
 							text = "Pilot";
 							data = "p";
+						};
+						class loadout_diver {
+							text = "Combat Diver";
+							data = "diver";
+						};
+						class loadout_pj {
+							text = "Para-Rescueman";
+							data = "pj";
+						};
+						class loadout_jetp {
+							text = "Jet Pilot";
+							data = "jetp";
 						};
 					};
 				};
@@ -172,6 +239,33 @@ class Cfg3DEN {
 			};
 		};
 
+		class GW_SelectWaypointPattern: Combo {
+			class Controls: Controls {
+				class Title: Title{};
+				class Value: Value {
+					class Items {
+						class gw_wp_circle {
+							text = "Circle";
+							data = "CIRCLE";
+							default = 1;
+						};
+						class gw_wp_triangle {
+							text = "Triangle";
+							data = "TRIANGLE";
+						};
+						class gw_wp_rectangle {
+							text = "Rectangle";
+							data = "RECTANGLE";
+						};
+						class gw_wp_column {
+							text = "Column (Back-and-forth)";
+							data = "COLUMN";
+						};
+					};
+				};
+			};
+		};
+
 		class GW_copyOnEmptyMode: GarbageCollectorMode {
 			class Controls: Controls {
 				class Title: Title{};
@@ -181,16 +275,6 @@ class Cfg3DEN {
 							text = "Framework (0.8 or higher)";
 							data = "0.8";
 							default = 1;
-						};
-						class legacy08 {
-//							text = "Copy version 1.8";
-							text = "Framework Legacy (0.6)";
-							data = "0.6";
-						};
-						class legacy07 {
-//							text = "Copy version 1.5";
-							text = "Framework Legacy (0.5 or less)";
-							data = "0.5";
 						};
 					};
 				};
@@ -236,6 +320,15 @@ class Cfg3DEN {
 							displayName = "Enable Debug";
 							tooltip = "";
 							property = "GW_isDebug";
+							value = 1;
+							control = "Checkbox";
+							defaultValue = "false";
+							expression = "true";
+						};
+						class GW_ShowIntroInSingleplayer {
+							displayName = "Show Intro in Local Preview";
+							tooltip = "Displays the GOL logo splash and mission intro text in editor and singleplayer preview. Multiplayer always displays the intro.";
+							property = "GW_ShowIntroInSingleplayer";
 							value = 1;
 							control = "Checkbox";
 							defaultValue = "false";
@@ -322,6 +415,14 @@ class Cfg3DEN {
 				class GW_Options_Copy {
 					displayName = "GW Tools: Copy Settings";
 					class Attributes {
+						class GW_CopyRoles {
+							displayName = "Copy Roles";
+							tooltip = "Include unit roles when copying groups (if disabled, units will use random roles)";
+							property = "GW_CopyRoles";
+							control = "Checkbox";
+							defaultValue = "true";
+							expression = "true";
+						};
 						class GW_DeleteOnCopy {
 							displayName = "Delete on copy";
 							tooltip = "Delete all selected things successful upon copying";
@@ -378,6 +479,12 @@ class Cfg3DEN {
 				class GW_Options_Waypoint {
 					displayName = "GW Tools: Generate Waypoint";
 					class Attributes {
+						class GW_WaypointPattern {
+							displayName = "Waypoint Pattern";
+							tooltip = "Shape used when generating waypoints";
+							property = "GW_WaypointPattern";
+							control = "GW_SelectWaypointPattern";
+						};
 						class GW_WaypointRadius {
 							displayName = "Waypoint Radius";
 							tooltip = "Places waypoints in a radius around right clicked";
@@ -488,11 +595,11 @@ class Cfg3DEN {
 					};
 */
 					class GW_DisableHC {
-						displayName = "Disable HC Transfer";
-						tooltip = "Disables Auto Transfer Group to Headless Client   (Requires GW Framework)";
+						displayName = "Disable ACE HC Transfer";
+						tooltip = "Disables Auto Transfer Group to Headless Client (Requires GW Framework)";
 						property = "GW_DisableHC";
 						control = "Checkbox";
-						expression = "(group _this) setVariable ['GW_HeadlessController_BlackList', _value, true]; (group _this) setVariable ['acex_headless_blacklist', _value, true];";
+						expression = "(group _this) setVariable ['acex_headless_blacklist', _value, true];";
 						defaultValue = "false";
 						condition = "objectBrain";
 					};
@@ -532,6 +639,7 @@ class Cfg3DEN {
 			OnMessage = QUOTE(call FUNC(addEH_onMessage));
 			onMissionLoad = QUOTE(call FUNC(addEH_onMessage));
 			onMissionNew = QUOTE(call FUNC(addEH_onMessage));
+			onMissionSave = QUOTE([] call FUNC(refreshPlayerGearPreview));
 			onMissionPreviewEnd = QUOTE(call FUNC(addEH_onMessage));
 			onTerrainNew = QUOTE(call FUNC(addEH_onMessage));
 		};

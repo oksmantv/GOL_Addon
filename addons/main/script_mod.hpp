@@ -1,12 +1,14 @@
 #define PREFIX GW
-#define MAJOR 1
-#define MINOR 2
-#define PATCHLVL 1
-#define BUILD 130825	// We will use the DATE for the BUILD# in the format DDMMYY
+#include "version.hpp"
+#define MAJOR GW_MAJOR
+#define MINOR GW_MINOR
+#define PATCHLVL GW_PATCHLVL
+#define BUILD GW_BUILD
 
-#define VERSION MAJOR.MINOR.PATCHLVL.BUILD
-#define VERSION_AR MAJOR,MINOR,PATCHLVL,BUILD
-#define VERSION_CONFIG version = VERSION; versionStr = QUOTE(VERSION); versionAr[] = {VERSION_AR}
+#define VERSION GW_VERSION
+#define VERSION_AR GW_VERSION_AR
+#define EXPAND_VERSION(var1) var1
+#define VERSION_CONFIG version = VERSION; versionStr = QUOTE(EXPAND_VERSION(VERSION)); versionAr[] = {VERSION_AR}
 
 #define ADDON DOUBLES(PREFIX,COMPONENT)
 

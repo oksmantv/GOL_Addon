@@ -1,4 +1,4 @@
-#include "script_Component.hpp"
+#include "script_component.hpp"
 /*
 	Author:
 		Killzone_Kid

@@ -84,7 +84,7 @@ GVAR(ignoreDead) = allDead;
 			};
 
 			{
-				if ((_object getVariable [QGVAR(ObjectRemovalTimer), 20]) < 9) then {
+				if ((_x getVariable [QGVAR(ObjectRemovalTimer), 20]) < 9) then {
 					if ((count ((_x nearEntities ["Man", 25]) select {isPlayer _x})) > 0) then {
 						if !(simulationEnabled _x) then {
 							_x enableSimulationGlobal true;
@@ -94,7 +94,7 @@ GVAR(ignoreDead) = allDead;
 							_x enableSimulationGlobal false;
 						};
 					};
-					if ((_object getVariable [QGVAR(ObjectRemovalTimer), 20]) < 5) then {
+					if ((_x getVariable [QGVAR(ObjectRemovalTimer), 20]) < 5) then {
 						if ((count ((_x nearEntities ["Man", 150]) select {isPlayer _x})) > 0) then {
 							if (isObjectHidden _x) then {
 								_x hideObjectGlobal false;

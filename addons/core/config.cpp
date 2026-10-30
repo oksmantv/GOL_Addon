@@ -1,11 +1,9 @@
-#include "script_component.hpp"
-#include "CfgEventHandlers.hpp"
 
 class CfgPatches {
-	class ADDON {
+	class GW_Core {
 		name = "GW - Core Component";
 		author = "GuzzenVonlidl";
-		url = "https://github.com/GuzzenVonLidl/";
+		url = "https://github.com/OksmanTV/";
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = REQUIRED_VERSION;
@@ -19,6 +17,20 @@ class CfgPatches {
 			"GuzzenVonlidl",
 			"Blu.",
 			"OksmanTV"
+		};
+	};
+};
+
+#include "script_component.hpp"
+#include "CfgEventHandlers.hpp"
+
+// Functions that must be available before preInit (e.g. Description.ext param functions).
+class CfgFunctions {
+	class GW {
+		class Core {
+			class paramDaytime {
+				file = QPATHTOF(functions\DOUBLES(fnc,paramDaytime).sqf);
+			};
 		};
 	};
 };
