@@ -3,8 +3,14 @@
 #include "XEH_PREP.sqf"
 #include "initSettings.sqf"
 
+diag_log "[GW][Common] XEH_preInit started";
+
 GVAR(HintInt) = 0;
+GVAR(protectionStatusExpiresAt) = -1;
+GVAR(protectionStatusClosing) = false;
 GVAR(tempCurator) = [];
+GVAR(spawnActive) = false;
+GVAR(spawnQueue) = [];
 
 if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
 	[] spawn {
@@ -19,3 +25,5 @@ if (isClass(missionConfigFile >> "GW_FRAMEWORK")) then {
 		uiNamespace setVariable ["cba_settings_addonIndex", _index];
 	};
 };
+
+diag_log "[GW][Common] XEH_preInit finished";

@@ -49,4 +49,10 @@ switch (playerSide) do {
 if !(player diarySubjectExists QGVAR(simpleRoster)) then {
 	player createDiarySubject [QGVAR(simpleRoster),"Platoon Roster"];
 };
-player createDiaryRecord [QGVAR(simpleRoster),[format ["Platoon Roster - %1", [time, "H:MM:SS"] call CBA_fnc_formatElapsedTime], _strFinal]];
+
+private _recordTitle = "Platoon Roster";
+if (player diaryRecordExists [QGVAR(simpleRoster), _recordTitle]) then {
+	player removeDiaryRecord [QGVAR(simpleRoster), _recordTitle];
+};
+
+player createDiaryRecord [QGVAR(simpleRoster), [_recordTitle, format ["Updated: %1<br/>%2", [time, "H:MM:SS"] call CBA_fnc_formatElapsedTime, _strFinal]]];

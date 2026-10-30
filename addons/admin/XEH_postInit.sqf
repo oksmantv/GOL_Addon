@@ -1,6 +1,6 @@
 #include "script_component.hpp"
 
-[QGVARMAIN(playerReady), {
+if (hasInterface) then {
 	if (((getArray(ConfigFile >> "CfgPatches" >> "CBA_Main" >> "versionAr")) select 1) > 9) then { //	Dirty fix for number counting 3.9 > 3.13 || 13 > 9
 		[[QUOTE(PREFIX), "Admin"], "flexi_InteractSelfAdmin", "Admin Menu", {
 			if (ISADMIN) then {
@@ -38,7 +38,7 @@
 			};
 		}, {}, [DIK_INSERT,[true,false,true]], false] call CBA_fnc_addKeybind;
 	};
-}] call CBA_fnc_addEventHandler;
+};
 
 [{
 	if (hasInterface) then {
@@ -74,8 +74,8 @@
 				if (diag_fps < 25) then {
 					[QGVARMAIN(sendMessage), format ["Warning: Server low fps %1", diag_fps], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
-				if (((count allUnits) - (count allPlayers)) > 150) then {
-					[QGVARMAIN(sendMessage), format ["Warning: High unit count %1", ((count allUnits) - (count allPlayers))], ACTIVE_LIST] call CBA_fnc_targetEvent;
+				if ((({_x isKindOf "MAN"} count allUnits) - (count allPlayers)) > 150) then {
+					[QGVARMAIN(sendMessage), format ["Warning: High unit count %1", (({_x isKindOf "MAN"} count allUnits) - (count allPlayers))], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 				if ((count allGroups) > 125) then {
 					[QGVARMAIN(sendMessage), format ["Warning: High group count %1", (count allGroups)], ACTIVE_LIST] call CBA_fnc_targetEvent;
@@ -104,11 +104,34 @@
 					_ZeuzModule addCuratorEditableObjects [[_x],true];
 				} forEach (allUnits + vehicles);
 
-				if !(toLower(_ZeuzModule getVariable ["Name", ""]) isEqualTo "AdminZeusLogged") then {
+				private _name = toLower(_ZeuzModule getVariable ["Name", ""]);
+				if !(_name isEqualTo "adminzeuslogged" || { _name isEqualTo "gw_admin_curator_sp" }) then {
 					[QGVAR(shameList), [1, (getAssignedCuratorUnit _ZeuzModule)], ACTIVE_LIST] call CBA_fnc_targetEvent;
 				};
 			},	_this, 5] call CBA_fnc_waitAndExecute;
 		}, true, [], true] call CBA_fnc_addClassEventHandler;
+
+		// SP: one curator for admin/Zeus access, created here in postInit (CBA/ACE already initialized)
+		if !isMultiplayer then {
+			private _LogicCenter = createCenter sideLogic;
+			private _moduleGroup = createGroup _LogicCenter;
+			private _curtor = _moduleGroup createUnit ["ModuleCurator_F",[0,0,1000],[],0,"CAN_COLLIDE"];
+			_curtor setVariable ["Owner", getPlayerUID player, true];
+			_curtor setVariable ["Name", "GW_Admin_Curator_SP", true];
+			_curtor setVariable ["Addons", 3, true];
+			_curtor setVariable ["Forced", 0, true];
+			_curtor setVariable ["birdType", "", true];
+			_curtor setVariable ["showNotification", false, true];
+			_curtor setVariable ["adminvar", ""];
+			_curtor setVariable ["bis_fnc_moduleexecute_activate", true];
+			_curtor setVariable ["bis_fnc_moduleinit_status", true];
+			_curtor setVariable ["bis_fnc_initmodules_activate", true];
+			_curtor setCuratorWaypointCost 0;
+			{ _curtor setCuratorCoef [_x,0]; } forEach ["place","edit","delete","destroy","group","synchronize"];
+			GVARMAIN(adminCurators) pushBack _curtor;
+			player assignCurator _curtor;
+			player call bis_fnc_curatorRespawn;
+		};
 	};
 }, [], 1] call CBA_fnc_waitAndExecute;
 
@@ -246,13 +269,42 @@
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(spawnBox), {
-	params ["_type","_class","_unit"];
+	params ["_type","_unit"];
+	private ["_class"];
 
-	_box = createVehicle [_class, [0,0,0], [], 0, "NONE"];
-	_pos = (_unit getRelPos [3, 0]);
-	_pos set [2, (getPosASL _unit) select 2];
-	_box setPos _pos;
-	[_box, [_type, toLower(str([_unit] call GW_Common_Fnc_getSide)), true]] call GW_Gear_Fnc_Handler;
+	if(_type != "GOL_MobileServiceStation") then {
+		switch (side _unit) do {
+			case west: {_class = _type + "WEST";};
+			case east: {_class = _type + "EAST";};
+			case independent: {_class = _type + "GUER";};
+			default {_class = _type + "WEST";};
+		};
+	} else {
+		_class = _type;
+	};
+
+	private _box = createVehicle [_class, [0,0,0], [], 0, "NONE"];
+	_box allowDamage false;
+	_box hideObjectGlobal true;
+	_box disableCollisionWith _unit;
+	_box setDir (getDir _unit);
+	// Admin boxes are created on the server, so make their ACE carry offset available to the requesting client.
+	[_box, true, [0, 1.25, 0.5], 0, false, true] call ace_dragging_fnc_setCarryable;
+
+	[_box, _unit] spawn {
+		params ["_box", "_unit"];
+		sleep 0.1;
+
+		private _spawnPos = _unit modelToWorldWorld [0, 1.5, 0];
+		_box setPosASL _spawnPos;
+
+		// ACE carry must execute where the player object is local.
+		[_unit, _box] remoteExecCall ["ace_dragging_fnc_startCarry", _unit];
+
+		_box hideObjectGlobal false;
+		sleep 3;
+		_box allowDamage true;
+	};
 }] call CBA_fnc_addEventHandler;
 
 [QGVAR(shameList), {
@@ -307,6 +359,25 @@
 	systemChat format ["Admin: %1 - %2", (name _unit), _msg];
 }] call CBA_fnc_addEventHandler;
 
+[QGVAR(endMissionCommand), {
+	params [["_successful", false, [true]]];
+	if (!isServer) exitWith {};
+
+	private _result = ["failed", "successful"] select _successful;
+	private _endings = [
+		["GW_DEBRIEF_FAILURE_1", "GW_DEBRIEF_FAILURE_2", "GW_DEBRIEF_FAILURE_3", "GW_DEBRIEF_FAILURE_4", "GW_DEBRIEF_FAILURE_5", "GW_DEBRIEF_FAILURE_6", "GW_DEBRIEF_FAILURE_7", "GW_DEBRIEF_FAILURE_8", "GW_DEBRIEF_FAILURE_9", "GW_DEBRIEF_FAILURE_10", "GW_DEBRIEF_FAILURE_11", "GW_DEBRIEF_FAILURE_12", "GW_DEBRIEF_FAILURE_13", "GW_DEBRIEF_FAILURE_14", "GW_DEBRIEF_FAILURE_15", "GW_DEBRIEF_FAILURE_16"],
+		["GW_DEBRIEF_SUCCESS_1", "GW_DEBRIEF_SUCCESS_2", "GW_DEBRIEF_SUCCESS_3", "GW_DEBRIEF_SUCCESS_4", "GW_DEBRIEF_SUCCESS_5", "GW_DEBRIEF_SUCCESS_6", "GW_DEBRIEF_SUCCESS_7", "GW_DEBRIEF_SUCCESS_8", "GW_DEBRIEF_SUCCESS_9", "GW_DEBRIEF_SUCCESS_10", "GW_DEBRIEF_SUCCESS_11", "GW_DEBRIEF_SUCCESS_12", "GW_DEBRIEF_SUCCESS_13", "GW_DEBRIEF_SUCCESS_14", "GW_DEBRIEF_SUCCESS_15", "GW_DEBRIEF_SUCCESS_16"]
+	] select _successful;
+	private _end = selectRandom _endings;
+	private _debriefingTitle = getText (missionConfigFile >> "CfgDebriefing" >> _end >> "title");
+
+	diag_log format ["[GW][Admin] Ending mission as %1 with debriefing %2 (%3)", _result, _end, _debriefingTitle];
+	if (_debriefingTitle isEqualTo "") then {
+		diag_log format ["[GW][Admin] ERROR: %1 is not defined in missionConfigFile >> CfgDebriefing", _end];
+	};
+	[_end, _successful, true, true] remoteExec ["BIS_fnc_endMission",0];
+}] call CBA_fnc_addEventHandler;
+
 [QGVAR(treatmentAdvanced_CPRLocal), {
 	if (getNumber(configFile >> "CfgPatches" >> "ACE_Common" >> "version") < 3.13) then {
 		_this call (treatmentAdvanced_CPRLocal);
@@ -320,6 +391,228 @@
 	} else {
 		[_unit, _unit] call ACE_medical_fnc_treatmentAdvanced_fullHealLocal;
 	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(healObject), {
+	params ["_object"];
+	if (_object isKindOf "CAManBase") then {
+		[QGVAR(fullHeal), _object] call CBA_fnc_localEvent;
+	} else {
+		_object setDamage 0;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(giveLoadout), {
+	params ["_unit", "_role"];
+	if (alive _unit && {_unit isKindOf "CAManBase"} && {!(_unit isKindOf "HeadlessClient_F")}) then {
+		[_unit, _role] call GW_Gear_fnc_Handler;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(refreshNearbyLoadouts), {
+	params ["_admin"];
+	if (!isServer || {!isPlayer _admin} || {!(_admin in GVARMAIN(adminList))}) exitWith {};
+
+	private _refreshed = 0;
+	private _nearbyUnits = (allPlayers + playableUnits) arrayIntersect (allPlayers + playableUnits);
+	{
+		private _unit = _x;
+		if (alive _unit && {_unit distance _admin <= 200}) then {
+			private _role = _unit getVariable [QEGVAR(Gear,Loadout), ""];
+			if (_role isEqualTo "") then {
+				private _selectedRole = _unit getVariable ["GOL_SelectedRole", []];
+				_role = _selectedRole param [0, ""];
+			};
+			if !(_role isEqualTo "") then {
+				[QGVAR(giveLoadout), [_unit, _role], _unit] call CBA_fnc_targetEvent;
+				_refreshed = _refreshed + 1;
+			};
+		};
+	} forEach _nearbyUnits;
+
+	[QGVARMAIN(sendMessage), format ["Refreshed %1 nearby player/playable loadout(s).", _refreshed], _admin] call CBA_fnc_targetEvent;
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(playerProtectionStatus), {
+	params [["_enabled", false, [true]], ["_startAreaExpiry", false, [true]]];
+	GVAR(playerProtectionEnabled) = _enabled;
+	GVAR(playerProtectionStartAreaExpiry) = _startAreaExpiry;
+	if (hasInterface) then {
+		[] call GW_Common_fnc_protectionStatusHint;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(setPlayerProtection), {
+	params [["_enabled", false, [true]], ["_startAreaExpiry", false, [true]]];
+	if (!isServer) exitWith {};
+
+	GVAR(playerProtectionEnabled) = _enabled;
+	GVAR(playerProtectionStartAreaExpiry) = _startAreaExpiry;
+	publicVariable QGVAR(playerProtectionEnabled);
+	publicVariable QGVAR(playerProtectionStartAreaExpiry);
+	if (_enabled && {_startAreaExpiry}) then {
+		{
+			_x setVariable [QGVAR(playerProtectionStartPosition), getPosATL (vehicle _x)];
+		} forEach allPlayers;
+
+		if (isNil QGVAR(playerProtectionServerPFH)) then {
+			GVAR(playerProtectionServerPFH) = [{
+				private _hasLeftStartArea = allPlayers findIf {
+					private _startPosition = _x getVariable [QGVAR(playerProtectionStartPosition), []];
+					!(_startPosition isEqualTo [])
+					&& {(getPosATL (vehicle _x)) distance2D _startPosition >= 50}
+				};
+				if (_hasLeftStartArea >= 0) then {
+					[QGVAR(cancelPlayerProtection), [allPlayers select _hasLeftStartArea]] call CBA_fnc_localEvent;
+				};
+			}, 0.25] call CBA_fnc_addPerFrameHandler;
+		};
+	} else {
+		if !(isNil QGVAR(playerProtectionServerPFH)) then {
+			[GVAR(playerProtectionServerPFH)] call CBA_fnc_removePerFrameHandler;
+			GVAR(playerProtectionServerPFH) = nil;
+		};
+		{
+			_x setVariable [QGVAR(playerProtectionStartPosition), nil];
+		} forEach allPlayers;
+	};
+	[QGVAR(playerProtectionStatus), [_enabled, _startAreaExpiry]] call CBA_fnc_globalEvent;
+	{
+		if !(_x isKindOf "HeadlessClient_F") then {
+			if (_enabled) then {
+				[QGVAR(enablePlayerProtection), [_x, _startAreaExpiry], _x] call CBA_fnc_targetEvent;
+			} else {
+				[QGVAR(disablePlayerProtection), [_x, false], _x] call CBA_fnc_targetEvent;
+			};
+		};
+	} forEach allPlayers;
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(requestPlayerProtection), {
+	params [["_unit", objNull, [objNull]]];
+	if (isServer && {!isNull _unit}) then {
+		if (GVAR(playerProtectionEnabled) && {GVAR(playerProtectionStartAreaExpiry)}) then {
+			_unit setVariable [QGVAR(playerProtectionStartPosition), getPosATL (vehicle _unit)];
+		};
+		[QGVAR(playerProtectionStatus), [GVAR(playerProtectionEnabled), GVAR(playerProtectionStartAreaExpiry)], _unit] call CBA_fnc_targetEvent;
+		if !(_unit isKindOf "HeadlessClient_F") then {
+			if (GVAR(playerProtectionEnabled)) then {
+				[QGVAR(enablePlayerProtection), [_unit, GVAR(playerProtectionStartAreaExpiry)], _unit] call CBA_fnc_targetEvent;
+			} else {
+				[QGVAR(disablePlayerProtection), [_unit, false], _unit] call CBA_fnc_targetEvent;
+			};
+		};
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVARMAIN(playerReady), {
+	if (hasInterface) then {
+		if (GVAR(playerProtectionEnabled)) then {
+			[QGVAR(enablePlayerProtection), [player, GVAR(playerProtectionStartAreaExpiry)]] call CBA_fnc_localEvent;
+		};
+		[QGVAR(requestPlayerProtection), [player]] call CBA_fnc_serverEvent;
+	};
+}] call CBA_fnc_addEventHandler;
+
+if (isServer) then {
+	[QGVARMAIN(missionStarted), {
+		[QGVAR(setPlayerProtection), [true, true]] call CBA_fnc_localEvent;
+	}] call CBA_fnc_addEventHandler;
+};
+
+[QGVAR(cancelPlayerProtection), {
+	params [["_unit", objNull, [objNull]]];
+	if (isServer && {GVAR(playerProtectionEnabled)} && {GVAR(playerProtectionStartAreaExpiry)} && {!isNull _unit}) then {
+		diag_log format ["[GW][PlayerProtection] cancelled after %1 left the starting area", name _unit];
+		[QGVAR(setPlayerProtection), [false, false]] call CBA_fnc_localEvent;
+	};
+}] call CBA_fnc_addEventHandler;
+
+// Initial Player Protection shares SafeMode's authoritative departure trigger.
+// This guarantees that one player leaving the 50m spawn radius removes both
+// mission-start protections globally, even when a large protection marker exists.
+[QEGVAR(gameLoop,cancelSafetyMode), {
+	params [["_unit", objNull, [objNull]]];
+	[QGVAR(cancelPlayerProtection), [_unit]] call CBA_fnc_localEvent;
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(disablePlayerProtection), {
+	params ["_unit", ["_notify", false]];
+	private _state = _unit getVariable [QGVAR(playerProtectionState), []];
+	if (_state isEqualTo []) exitWith {};
+	private _pfh = _unit getVariable [QGVAR(playerProtectionPFH), -1];
+	if (_pfh >= 0) then {
+		[_pfh] call CBA_fnc_removePerFrameHandler;
+	};
+
+	_state params ["_wasCaptive", "_damageAllowed", "_hadAceDamageState", "_aceDamageAllowed"];
+	_unit setCaptive _wasCaptive;
+	_unit allowDamage _damageAllowed;
+	if (GVARMAIN(mod_ACE3)) then {
+		if (_hadAceDamageState) then {
+			_unit setVariable ["ACE_Medical_AllowDamage", _aceDamageAllowed];
+		} else {
+			_unit setVariable ["ACE_Medical_AllowDamage", nil];
+		};
+	};
+	_unit setVariable [QGVAR(playerProtectionState), nil];
+	_unit setVariable [QGVAR(playerProtectionPFH), nil];
+
+	// SafeMode and Player Protection can release in either network-event order.
+	// Once both global modes are off, neither layer may retain captive or godmode.
+	if !(EGVAR(gameLoop,SafeMode_Enabled)) then {
+		_unit setCaptive false;
+		_unit allowDamage true;
+		if (GVARMAIN(mod_ACE3)) then {
+			_unit setVariable ["ACE_Medical_AllowDamage", true];
+		};
+	};
+
+	if (_notify && {_unit isEqualTo player}) then {
+		["Player protection ended after leaving the starting area", 5] call GW_Common_Fnc_Hint;
+	};
+}] call CBA_fnc_addEventHandler;
+
+[QGVAR(enablePlayerProtection), {
+	params ["_unit", ["_startAreaExpiry", false, [true]]];
+	if !(_unit getVariable [QGVAR(playerProtectionState), []] isEqualTo []) then {
+		[QGVAR(disablePlayerProtection), [_unit]] call CBA_fnc_localEvent;
+	};
+
+	private _startArea = getPosATL _unit;
+	private _safeModeState = _unit getVariable [QEGVAR(gameLoop,weaponLockState), []];
+	private _hadAceDamageState = !isNil {_unit getVariable "ACE_Medical_AllowDamage"};
+	private _aceDamageState = _unit getVariable ["ACE_Medical_AllowDamage", true];
+	private _protectionState = [captive _unit, isDamageAllowed _unit, _hadAceDamageState, _aceDamageState];
+	if !(_safeModeState isEqualTo []) then {
+		_protectionState = _safeModeState;
+	};
+	_unit setVariable [QGVAR(playerProtectionState), _protectionState];
+	_unit setCaptive true;
+	_unit allowDamage false;
+	if (GVARMAIN(mod_ACE3)) then {
+		_unit setVariable ["ACE_Medical_AllowDamage", false];
+	};
+
+	if !_startAreaExpiry exitWith {};
+
+	private _pfh = [{
+		params ["_args", "_pfh"];
+		_args params ["_unit", "_startArea"];
+		if (isNull _unit || {!alive _unit} || {!local _unit}) exitWith {
+			[_pfh] call CBA_fnc_removePerFrameHandler;
+			if (!isNull _unit) then {
+				_unit setVariable [QGVAR(playerProtectionState), nil];
+				_unit setVariable [QGVAR(playerProtectionPFH), nil];
+			};
+		};
+
+		private _position = getPosATL (vehicle _unit);
+		if (_position distance2D _startArea > 50) then {
+			[QGVAR(cancelPlayerProtection), [_unit]] call CBA_fnc_serverEvent;
+		};
+	}, 1, [_unit, _startArea]] call CBA_fnc_addPerFrameHandler;
+	_unit setVariable [QGVAR(playerProtectionPFH), _pfh];
 }] call CBA_fnc_addEventHandler;
 
 #include "ChatCommands.sqf"

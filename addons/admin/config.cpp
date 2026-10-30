@@ -1,5 +1,7 @@
 #include "script_component.hpp"
 
+#include "CfgDebriefing.hpp"
+
 class CfgPatches {
 	class ADDON {
 		author = "GuzzenVonlidl";

@@ -4,6 +4,7 @@ PREP(AutoTest);
 PREP(AutoTest_Common);
 PREP(AutoTest_Events);
 PREP(AutoTest_Mission);
+PREP(validateSpawnListPrefixes);
 PREP(configViewerExport);
 PREP(copyGroup);
 PREP(copyLoadout);
@@ -16,6 +17,8 @@ PREP(createComposition);
 PREP(createWaypoints);
 PREP(doAction);
 PREP(doActionMisc);
+
+PREP(refreshPlayerGearPreview);
 PREP(getAttributes);
 PREP(getAttributesLegacy);
 PREP(getLoadoutClass);

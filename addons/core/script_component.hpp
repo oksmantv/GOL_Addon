@@ -28,3 +28,4 @@
 #else
     #undef VERSION
     #define VERSION VERSION_AR
+#endif

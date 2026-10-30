@@ -8,16 +8,12 @@ GVAR(MissionMenu) = false;
 GVAR(viewDistance_Enabled) = true;
 GVAR(viewDistance_Default) = 0;
 GVAR(viewObjectDistance_Default) = 0;
-GVAR(viewDistance_Max) = 10000;
+GVAR(viewDistance_Max) = 25000;
 GVAR(Grass_Enabled) = true;
 GVAR(Grass_allowDisable) = true;
 
 GVAR(UnitCaching_Enabled) = false;
 GVAR(UnitCaching_Objects) = [];
-
-GVAR(ParadropHalo) = true;
-GVAR(ParadropHaloHeight) = 150;
-GVAR(ParadropStaticHeight) = 125;
 
 GVAR(STHud_EnabledOld) = isClass(configFile >> "CfgPatches" >> "ST_STHud");
 GVAR(STHud_Enabled) = isClass(configFile >> "CfgPatches" >> "STUI_Core");

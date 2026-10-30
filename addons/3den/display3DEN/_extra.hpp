@@ -27,6 +27,11 @@ class MENU(ClearServerSettings) {
 	Text = "Clear Addons Options... (Server)";
 };
 
+class MENU(RefreshPlayerGearPreview) {
+	action = "[true] call GW_3den_fnc_refreshPlayerGearPreview";
+	Text = "Refresh Map Unit Gear Preview";
+};
+
 class MENU_SUB(Extra,Help) {	// Help
 	text = "Help...";
 	action = "[4] call GW_3DEN_fnc_showMessage;";

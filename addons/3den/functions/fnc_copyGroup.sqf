@@ -50,12 +50,17 @@ private _vehicles = [];
 
 private _waypoints = [];
 private _grps = [];
+private _includeExportComments = missionNamespace getVariable ["OKS_3DEN_COPY_EXPORT_COMMENTS", false];
+if !(_includeExportComments isEqualType true) then { _includeExportComments = false };
 
 {
 	if !(isNull(group _x)) then {
 		_grps pushBackUnique (group _x);
 	};
 } forEach (get3DENSelected "object");
+
+private _groupCallsigns = (_grps apply { groupId _x }) select { !(_x isEqualTo "") };
+private _groupText = if (_groupCallsigns isEqualTo []) then { "No group" } else { _groupCallsigns joinString ", " };
 
 if ((count _grps) > 1) then {
 	["Multiple groups selected, Could not copy waypoints", 1, 5, true] call BIS_fnc_3DENNotification;
@@ -182,6 +187,9 @@ if ((count _grps) > 1) then {
 	};
 
 	_return = format ["[%1,%2,%3,%4] call GW_Common_fnc_spawnGroup;", str(_units), str(_vehicles), str(_groupWaypoint), _sideStr];
+	if (_includeExportComments) then {
+		_return = _return + format [" // 3DEN | %1 | Groups: %2 | U:%3 V:%4 WP:%5", toUpper _sideStr, _groupText, count _units, count _vehicles, count _groupWaypoint];
+	};
 
 	private _cache = uiNamespace getVariable ["OKS_3DEN_CLIPBOARD_CACHE", []];
 	if !(_cache isEqualType []) then { _cache = [] };
@@ -209,8 +217,9 @@ if ((count _grps) > 1) then {
 
 	[[], QFUNC(copyGroup)] call FUNC(uiSaveFunction);
 
-	systemChat format ["Copy Group: %4, %1 units, %2 vehicles, %3 waypoints copied (Cache=%5)", (count _units), (count _vehicles), (count _groupWaypoint), _sideStr, _cacheCount];
-	[format ["Copy Group: %4: %1 units, %2 vehicles, %3 waypoints copied (Cache=%5)", (count _units), (count _vehicles), (count _groupWaypoint), _sideStr, _cacheCount], 0, 5, true, 0.5] call BIS_fnc_3DENNotification;
+	private _copyText = format ["Copy Group | %1 | %2 | U:%3 V:%4 WP:%5 | Cache:%6", toUpper _sideStr, _groupText, count _units, count _vehicles, count _groupWaypoint, _cacheCount];
+	systemChat _copyText;
+	[_copyText, 0, 5, true, 0.5] call BIS_fnc_3DENNotification;
 
 	TRACE_1("Units", _units);
 	TRACE_1("Waypoints", _groupWaypoint);

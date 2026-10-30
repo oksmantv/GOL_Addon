@@ -3,13 +3,13 @@
 #ifdef DISABLE_COMPILE_CACHE
 	#undef PREP
 	#undef PREPMAIN
-	#define PREP(fncName) QFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
-	#define PREPMAIN(fncName) QFUNCMAIN(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
+	#define PREP(fncName) diag_log format ["[GW][PREP] %1 :: %2", #COMPONENT, QUOTE(DOUBLES(fnc,fncName))]; QFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
+	#define PREPMAIN(fncName) diag_log format ["[GW][PREP] MAIN :: %1", QUOTE(DOUBLES(fnc,fncName))]; QFUNCMAIN(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
 #else
 	#undef PREP
 	#undef PREPMAIN
-	#define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
-	#define PREPMAIN(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNCMAIN(fncName)] call CBA_fnc_compileFunction
+	#define PREP(fncName) diag_log format ["[GW][PREP] %1 :: %2", #COMPONENT, QUOTE(DOUBLES(fnc,fncName))]; [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
+	#define PREPMAIN(fncName) diag_log format ["[GW][PREP] MAIN :: %1", QUOTE(DOUBLES(fnc,fncName))]; [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNCMAIN(fncName)] call CBA_fnc_compileFunction
 #endif
 
 #define	ISADMIN	(GVARMAIN(isAdmin) || (serverCommandAvailable "#logout"))
