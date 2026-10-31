@@ -25,6 +25,7 @@ PREP(isNightSoon);
 PREP(lowerWeapon);
 PREP(loadSettingsFile);
 PREP(normalizeSpawnUnitRow);
+PREP(applyEnhAttribute);
 PREP(setAIStatic);
 PREP(setAttributes);
 PREP(setAttributes3DEN);

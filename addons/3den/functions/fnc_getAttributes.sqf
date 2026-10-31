@@ -152,8 +152,15 @@ if (_isMan) then {
 
 	// Enhanced Eden: Ambient Animations, value [animSet, anims, canExit, attach]; default animSet is ""
 	private _ambientAnims = (_object get3DENAttribute "ENH_AmbientAnimations") param [0, []];
+	if (!(_ambientAnims isEqualType []) || {count _ambientAnims < 1} || {(_ambientAnims select 0) isEqualTo ""}) then {
+		// Fallback storage written by setAttributes3DEN
+		private _gwAnims = (_object get3DENAttribute "GW_AmbientAnimations") param [0, ""];
+		if (_gwAnims isEqualType "" && {_gwAnims != ""}) then {
+			_ambientAnims = parseSimpleArray _gwAnims;
+		};
+	};
 	if (_ambientAnims isEqualType [] && {count _ambientAnims >= 4} && {(_ambientAnims select 0) isEqualType ""} && {!((_ambientAnims select 0) isEqualTo "")}) then {
-		_array pushBack [402, _ambientAnims];
+		_array pushBack [402, _ambientAnims select [0, 4]];
 	};
 } else {	
 	// Starts from 320

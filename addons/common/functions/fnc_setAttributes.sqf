@@ -24,19 +24,7 @@ if !(_specials isEqualType []) exitWith {
 // Enhanced Eden mod's own expression (looked up from Cfg3DEN). Expression sees _this = object and _value.
 private _runEnhAttribute = {
 	params ["_target", "_class", "_attrValue"];
-	private _expr = "";
-	{
-		private _cfg = _x >> "Attributes" >> _class;
-		if (isClass _cfg) exitWith {
-			_expr = getText (_cfg >> "expression");
-		};
-	} forEach ("true" configClasses (configFile >> "Cfg3DEN" >> "Object" >> "AttributeCategories"));
-
-	if (_expr isEqualTo "") then {
-		WARNING(FORMAT_1("setAttributes: %1 attribute expression not found (Enhanced Eden not loaded?); entry skipped", _class));
-	} else {
-		_target call compile (format ["private _value = %1; %2", str _attrValue, _expr]);
-	};
+	[_target, _class, _attrValue] call FUNC(applyEnhAttribute);
 };
 
 {

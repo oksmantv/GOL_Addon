@@ -235,7 +235,25 @@ private _hasACE = isClass (configFile >> "CfgPatches" >> "ace_main");
 			_object set3DENAttribute ["ENH_makeHostage", _value];
 		};
 		case 402: {	// Enhanced Eden: Ambient Animations, value [animSet, anims, canExit, attach]
-			_object set3DENAttribute ["ENH_AmbientAnimations", _value];
+			// Eden silently ignores script-written arrays with 4+ elements for ENH_AmbientAnimations (tested), so it cannot be written
+			// directly. Store the value in a GW string attribute that re-applies the Enhanced expression at mission start.
+			if (_value isEqualType [] && {count _value >= 4}) then {
+				_object set3DENAttribute ["GW_AmbientAnimations", str (_value select [0, 4])];
+			};
+
+			// Enhanced only plays the editor preview animation on mission load / attribute dialog save, so do it here as well.
+			if (_value isEqualType [] && {count _value >= 2} && {(_value select 1) isEqualType []} && {!((_value select 1) isEqualTo [])}) then {
+				private _anim = selectRandom (_value select 1);
+				_object switchMove _anim;
+				// Re-apply once shortly after, in case the freshly created unit resets its pose.
+				[_object, _anim] spawn {
+					params ["_unit", "_anim"];
+					uiSleep 0.5;
+					if (!isNull _unit) then {
+						_unit switchMove _anim;
+					};
+				};
+			};
 		};
 		};
 	};

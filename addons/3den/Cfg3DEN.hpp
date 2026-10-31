@@ -629,6 +629,16 @@ class Cfg3DEN {
 						expression = "_this setVariable ['GW_Gear_Loadout', _value, true];";
 						condition = "objectBrain";
 					};
+					class GW_AmbientAnimations {
+						displayName = "Ambient Animations (GW data)";
+						tooltip = "Fallback storage used when ambient animations are spawned by script. Format: [animSet, [anims], canExit, attach]. Prefer the Enhanced Eden Ambient Animations attribute when editing by hand.";
+						property = "GW_AmbientAnimations";
+						control = "Edit";
+						typeName = "STRING";
+						expression = "if (_value != '' && {isNil {_this getVariable 'ENH_ambientAnimations_anims'}}) then {[_this, 'ENH_AmbientAnimations', parseSimpleArray _value] call GW_Common_fnc_applyEnhAttribute};";
+						defaultValue = "''";
+						condition = "objectBrain";
+					};
 				};
 			};
 		};
