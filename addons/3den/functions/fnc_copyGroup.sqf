@@ -94,6 +94,8 @@ if ((count _grps) > 1) then {
 		 if (_x isKindOf "CAManBase") then {
 			// Infantry only
 			if ((isNull (objectParent _x)) || !((objectParent _x) in (get3DENSelected "object"))) then {
+				private _unitPosIndex = (_x get3DENAttribute "UnitPos") param [0, 3];
+				private _stance = ["Up", "Middle", "Down", "Auto"] param [_unitPosIndex, "Auto"];
 				if ((count _units) isEqualTo 0) then {
 					_special = ([_x, true] call FUNC(getAttributes));
 				} else {
@@ -101,10 +103,10 @@ if ((count _grps) > 1) then {
 				};
 				if ("Preferences" get3DENMissionAttribute "GW_CopyRoles") then {
 					_role = [_x] call FUNC(getLoadoutClass);
-					_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _special, _role];
+					_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special, _role];
 				} else {
-					_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _special];
-				}
+					_units pushBack [GETATTRIBUTE("position"), round(GETATTRIBUTE("rotation") select 2), _stance, _special, ""];
+				};
 			};
 		};
 	};
@@ -153,12 +155,13 @@ if ((count _grps) > 1) then {
 		_waypointSettings pushBack [6, GETATTRIBUTE("timeout")];
 	};
 
-	// if (!(GETATTRIBUTE("condition") isEqualTo "true") || !(GETATTRIBUTE("onActivation") isEqualTo "")) then {
-		if ((!(GETATTRIBUTE("condition") isEqualTo "call{
-			true
-		}") || !(GETATTRIBUTE("condition") isEqualTo "true")) && !(GETATTRIBUTE("onActivation") isEqualTo "")) then {
-			_waypointSettings pushBack [7, [GETATTRIBUTE("condition"), GETATTRIBUTE("onActivation")]];
-		};
+	private _wpCondition = GETATTRIBUTE("condition");
+	private _wpOnActivation = GETATTRIBUTE("onActivation");
+	if !(((_wpCondition isEqualTo "call{
+		true
+	}") || (_wpCondition isEqualTo "true")) && (_wpOnActivation isEqualTo "")) then {
+		_waypointSettings pushBack [7, [_wpCondition, _wpOnActivation]];
+	};
 
 		_groupWaypoint pushBack ([(GETATTRIBUTE("position"))] + [_waypointSettings]);
 	} forEach _waypoints;

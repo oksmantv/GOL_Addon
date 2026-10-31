@@ -94,24 +94,37 @@ if !(GETATTRIBUTE("objectIsSimple") isEqualTo false) then {
 
 //	GW - Addons
 
-if (GETATTRIBUTEGROUP("GW_DisableHC")) then {
-	_array pushBack [201, GETATTRIBUTEGROUP("GW_DisableHC")];
+private _disableHC = GETATTRIBUTE("GW_DisableHC");
+if !(_disableHC isEqualType true) then {
+	_disableHC = false;
 };
-if (GETATTRIBUTEGROUP("GW_DisableGearInit")) then {
-	_array pushBack [202, GETATTRIBUTEGROUP("GW_DisableGearInit")];
-};
-if !(GETATTRIBUTEGROUP("GW_LoadoutSelector") isEqualTo "") then {
-	_array pushBack [203, GETATTRIBUTEGROUP("GW_LoadoutSelector")];
+if (_disableHC) then {
+	_array pushBack [201, true];
 };
 
+private _disableGearRaw = GETATTRIBUTE("GW_DisableGearInit");
+private _disableGear = false;
+if (_disableGearRaw isEqualType true) then {
+	_disableGear = _disableGearRaw;
+} else {
+	if (_disableGearRaw isEqualType 0) then {
+		_disableGear = (_disableGearRaw > 0);
+	};
+};
+if (_disableGear) then {
+	_array pushBack [202, true];
+	if (_isMan) then {
+		// Preserve exact editor loadout only when auto gear is explicitly disabled.
+		_array pushBack [204, getUnitLoadout _object];
+	};
+};
 
-
-
-
-
+private _loadoutSelector = GETATTRIBUTE("GW_LoadoutSelector");
+if (_loadoutSelector isEqualType "" && !(_loadoutSelector isEqualTo "")) then {
+	_array pushBack [203, _loadoutSelector];
+};
 
 //	ACE
-
 if (_isMan) then {
 	if !(GETATTRIBUTE("ace_isMedic") isEqualTo -1) then {
 		_array pushBack [301, GETATTRIBUTE("ace_isMedic")];
@@ -128,7 +141,22 @@ if (_isMan) then {
 	if !(GETATTRIBUTE("ace_isSurrendered") isEqualTo false) then {
 		_array pushBack [305, GETATTRIBUTE("ace_isSurrendered")];
 	};
-} else {	// Starts from 320
+	// Enhanced Eden: Make Hostage (attribute ENH_makeHostage; only exists when that mod is loaded)
+	private _isHostage = (_object get3DENAttribute "ENH_makeHostage") param [0, false];
+	if (_isHostage isEqualType 0) then {
+		_isHostage = (_isHostage > 0);
+	};
+	if (_isHostage isEqualTo true) then {
+		_array pushBack [401, true];
+	};
+
+	// Enhanced Eden: Ambient Animations, value [animSet, anims, canExit, attach]; default animSet is ""
+	private _ambientAnims = (_object get3DENAttribute "ENH_AmbientAnimations") param [0, []];
+	if (_ambientAnims isEqualType [] && {count _ambientAnims >= 4} && {(_ambientAnims select 0) isEqualType ""} && {!((_ambientAnims select 0) isEqualTo "")}) then {
+		_array pushBack [402, _ambientAnims];
+	};
+} else {	
+	// Starts from 320
 	if ((_object isKindOf "ReammoBox_F") && !(GETATTRIBUTE("ace_cookoff_enableAmmoCookoff") isEqualTo true)) then {
 		_array pushBack [320, GETATTRIBUTE("ace_cookoff_enableAmmoCookoff")];
 	};

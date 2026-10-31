@@ -76,7 +76,10 @@ if (_unit isKindOf "CAManBase") then {
 
 		if (_mainScope) then {
 			[{
-				_this call FUNC(Handler);
+				params ["_unit", "_role"];
+				if (_unit getVariable ["GW_Gear_BlackList", false]) exitWith { false };
+				if (_unit getVariable ["GW_DisableGearInit", false]) exitWith { false };
+				[_unit, _role] call FUNC(Handler);
 			}, [_unit, _role], 0.5] call CBA_fnc_waitAndExecute;
 		};
 	} else {

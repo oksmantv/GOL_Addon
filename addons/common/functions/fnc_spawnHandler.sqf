@@ -62,13 +62,8 @@ if (_multiplier < 100 && {!_blacklistMultiplier}) then {
 
 if !((count _unitArray) isEqualTo 0) then {
 	{
-		_x params [
-			"_pos",
-			"_dir",
-			["_unitPos", [], [[],""]],
-			["_specials", []],
-			["_role", nil, [""]]
-		];
+		// Runtime uses [] as stance default to avoid forcing static posture logic.
+		([_x, [], ""] call FUNC(normalizeSpawnUnitRow)) params ["_pos", "_dir", "_unitPos", "_specials", "_role"];
 
 		private _unitClass = "";
 		if !(_forEachIndex isEqualTo 0) then {
@@ -76,7 +71,7 @@ if !((count _unitArray) isEqualTo 0) then {
 		} else {
 			_unitClass = (selectRandom _leader);
 		};
-		if(!isNil "_role") then {
+		if !(_role isEqualTo "") then {
 			_unitClass = [_role, _side] call FUNC(getClassnameByRole);
 		};
 
@@ -109,7 +104,7 @@ if !((count _unitArray) isEqualTo 0) then {
 		};
 
 		_unit setPosATL _pos;
-		[_unit, ([_unitPos, _specials] select (_unitPos isEqualType ""))] call FUNC(setAttributes);
+		[_unit, _specials] call FUNC(setAttributes);
 
 		if !(_skipDelays) then {
 			sleep 0.45;
