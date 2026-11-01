@@ -1,82 +1,81 @@
 
+class CfgAmmo {
+	class GrenadeHand;
+	class SmokeShell: GrenadeHand {
+		smokeColor[] = {1,1,1,1};
+		timeToLive = 45;
+	};
+	class SmokeShellRed: SmokeShell {
+		smokeColor[] = SMOKE_COLOR_RED;
+		timeToLive = 45;
+	};
+	class SmokeShellGreen: SmokeShell {
+		smokeColor[] = SMOKE_COLOR_GREEN;
+		timeToLive = 45;
+	};
+	class SmokeShellYellow: SmokeShell {
+		smokeColor[] = SMOKE_COLOR_YELLOW;
+		timeToLive = 45;
+	};
+	class SmokeShellPurple: SmokeShell {
+		smokeColor[] = SMOKE_COLOR_PURPLE;
+		timeToLive = 45;
+	};
+	class SmokeShellBlue: SmokeShell {
+		smokeColor[] = SMOKE_COLOR_BLUE;
+		timeToLive = 45;
+	};
+	class SmokeShellOrange: SmokeShell {
+		smokeColor[] = SMOKE_COLOR_ORANGE;
+		timeToLive = 45;
+	};
+
+	class G_40mm_Smoke: SmokeShell {
+		aiAmmoUsageFlags = "2 + 4 + 64";
+		cost = 10;
+		deflecting = 0;
+		deflectionSlowDown = 0;
+		simulation = "shotSmoke";
+		smokeColor[] = {1,1,1,1};
+		timeToLive = 45;
+	};
+	class G_40mm_SmokeRed: G_40mm_Smoke {
+		smokeColor[] = SMOKE_COLOR_RED;
+		timeToLive = 45;
+	};
+	class G_40mm_SmokeGreen: G_40mm_Smoke {
+		smokeColor[] = SMOKE_COLOR_GREEN;
+		timeToLive = 45;
+	};
+	class G_40mm_SmokeYellow: G_40mm_Smoke {
+		smokeColor[] = SMOKE_COLOR_YELLOW;
+		timeToLive = 45;
+	};
+	class G_40mm_SmokePurple: G_40mm_Smoke {
+		smokeColor[] = SMOKE_COLOR_PURPLE;
+		timeToLive = 45;
+	};
+	class G_40mm_SmokeBlue: G_40mm_Smoke {
+		smokeColor[] = SMOKE_COLOR_BLUE;
+		timeToLive = 45;
+	};
+	class G_40mm_SmokeOrange: G_40mm_Smoke {
+		smokeColor[] = SMOKE_COLOR_ORANGE;
+		timeToLive = 45;
+	};
+
+	class rhs_g_vg40md_white: G_40mm_Smoke {
+		aiAmmoUsageFlags = "2 + 4 + 64";
+		cost = 10;
+		deflecting = 0;
+		deflectionSlowDown = 0;
+		simulation = "shotSmoke";
+		smokeColor[] = {1,1,1,1};
+		timeToLive = 45;
+	};
+};
+
 // class CfgAmmo {
-// 	class GrenadeHand;
-// 	class SmokeShell: GrenadeHand {
-// 		smokeColor[] = {1,1,1,1};
-// 		timeToLive = 45;
-// 	};
-// 	class SmokeShellRed: SmokeShell {
-// 		smokeColor[] = SMOKE_COLOR_RED;
-// 		timeToLive = 45;
-// 	};
-// 	class SmokeShellGreen: SmokeShell {
-// 		smokeColor[] = SMOKE_COLOR_GREEN;
-// 		timeToLive = 45;
-// 	};
-// 	class SmokeShellYellow: SmokeShell {
-// 		smokeColor[] = SMOKE_COLOR_YELLOW;
-// 		timeToLive = 45;
-// 	};
-// 	class SmokeShellPurple: SmokeShell {
-// 		smokeColor[] = SMOKE_COLOR_PURPLE;
-// 		timeToLive = 45;
-// 	};
-// 	class SmokeShellBlue: SmokeShell {
-// 		smokeColor[] = SMOKE_COLOR_BLUE;
-// 		timeToLive = 45;
-// 	};
-// 	class SmokeShellOrange: SmokeShell {
-// 		smokeColor[] = SMOKE_COLOR_ORANGE;
-// 		timeToLive = 45;
-// 	};
-
-// 	class G_40mm_Smoke: SmokeShell {
-// 		aiAmmoUsageFlags = "2 + 4 + 64";
-// //		coefGravity = 0.8;
-// 		cost = 10;
-// 		deflecting = 0;
-// 		deflectionSlowDown = 0;
-// 		simulation = "shotSmoke";
-// 		smokeColor[] = {1,1,1,1};
-// 		timeToLive = 45;
-// 	};
-
-// 	class G_40mm_SmokeRed: G_40mm_Smoke {
-// 		smokeColor[] = SMOKE_COLOR_RED;
-// 		timeToLive = 45;
-// 	};
-// 	class G_40mm_SmokeGreen: G_40mm_Smoke {
-// 		smokeColor[] = SMOKE_COLOR_GREEN;
-// 		timeToLive = 45;
-// 	};
-// 	class G_40mm_SmokeYellow: G_40mm_Smoke {
-// 		smokeColor[] = SMOKE_COLOR_YELLOW;
-// 		timeToLive = 45;
-// 	};
-// 	class G_40mm_SmokePurple: G_40mm_Smoke {
-// 		smokeColor[] = SMOKE_COLOR_PURPLE;
-// 		timeToLive = 45;
-// 	};
-// 	class G_40mm_SmokeBlue: G_40mm_Smoke {
-// 		smokeColor[] = SMOKE_COLOR_BLUE;
-// 		timeToLive = 45;
-// 	};
-// 	class G_40mm_SmokeOrange: G_40mm_Smoke {
-// 		smokeColor[] = SMOKE_COLOR_ORANGE;
-// 		timeToLive = 45;
-// 	};
-
-// 	class rhs_g_vg40md_white: G_40mm_Smoke {
-// 		aiAmmoUsageFlags = "2 + 4 + 64";
-// //		coefGravity = 0.8;
-// 		cost = 10;
-// 		deflecting = 0;
-// 		deflectionSlowDown = 0;
-// 		simulation = "shotSmoke";
-// 		smokeColor[] = {1,1,1,1};
-// 		timeToLive = 45;
-// 	};
-
 // 	class FlareCore;
 // 	class FlareBase: FlareCore {
 // //		brightness = 1; == intensity = 3000; ?
