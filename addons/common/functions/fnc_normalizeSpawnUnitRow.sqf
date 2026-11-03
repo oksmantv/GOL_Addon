@@ -46,9 +46,10 @@ if !(_row isEqualType [] && {count _row >= 2}) exitWith {
 _pos = _row param [0, _pos, [[]]];
 _dir = _row param [1, _dir, [0]];
 
-private _p2 = _row param [2, nil];
-private _p3 = _row param [3, nil];
-private _p4 = _row param [4, nil];
+// Sentinel (false) for missing slots; isEqualType on a nil default raises "Undefined variable".
+private _p2 = _row param [2, false];
+private _p3 = _row param [3, false];
+private _p4 = _row param [4, false];
 
 if (_p2 isEqualType []) then {
 	if (_p3 isEqualType "") then {
