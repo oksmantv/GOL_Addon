@@ -163,13 +163,7 @@ force acex_field_rations_waterSourceActions = 2;
 force ace_fire_dropWeapon = 1;
 force ace_fire_enabled = false;
 force ace_fire_enableFlare = false;
-ace_fire_enableScreams = false;
-
-// ACE Fortify
-force ace_fortify_markObjectsOnMap = 2;
-force ace_fortify_timeCostCoefficient = 0.5;
-force ace_fortify_timeMin = 1;
-force acex_fortify_settingHint = 1;
+force ace_fire_enableScreams = false;
 
 // ACE Fragmentation Simulation
 force ace_frag_enabled = true;
@@ -528,14 +522,7 @@ force ace_switchunits_switchToEast = false;
 force ace_switchunits_switchToIndependent = false;
 force ace_switchunits_switchToWest = false;
 
-// ACE Trenches
-force ace_trenches_bigEnvelopeDigDuration = 90;
-force ace_trenches_bigEnvelopeRemoveDuration = 90;
-force ace_trenches_smallEnvelopeDigDuration = 60;
-force ace_trenches_smallEnvelopeRemoveDuration = 30;
-
 // ACE Uncategorized
-force ace_fastroping_autoAddFRIES = true;
 force ace_fastroping_requireRopeItems = false;
 force ace_hitreactions_minDamageToTrigger = -0.898846;
 force ace_hitreactions_weaponDropChanceArmHitAI = 0.01;
@@ -669,29 +656,6 @@ force ace_reload_showCheckAmmoSelf = true;
 ace_reloadlaunchers_displayStatusText = true;
 force ace_weaponselect_displayText = true;
 
-// ACE Weather
-force ace_weather_enabled = true;
-force ace_weather_showCheckAirTemperature = true;
-force ace_weather_updateInterval = 60;
-force ace_weather_windSimulation = false;
-
-// ACE Wind Deflection
-force ace_winddeflection_enabled = false;
-force ace_winddeflection_simulationInterval = 0.05;
-force ace_winddeflection_vehicleEnabled = false;
-
-// ACE Zeus
-force ace_zeus_autoAddObjects = false;
-force ace_zeus_canCreateZeus = -1;
-force ace_zeus_radioOrdnance = false;
-force ace_zeus_remoteWind = false;
-force ace_zeus_revealMines = 0;
-force ace_zeus_zeusAscension = false;
-force ace_zeus_zeusBird = false;
-
-// CMC Missiles intercept
-cmc_intercept_enabled = true;
-
 // Community Base Addons
 cba_diagnostic_ConsoleIndentType = -1;
 force cba_diagnostic_watchInfoRefreshRate = 0.2;
@@ -706,29 +670,29 @@ cba_ui_StorePasswords = 1;
 
 // DUI - Squad Radar - Indicators
 force diwako_dui_indicators_crew_range_enabled = false;
-force diwako_dui_indicators_fov_scale = false;
+diwako_dui_indicators_fov_scale = false;
 force diwako_dui_indicators_icon_buddy = true;
 force diwako_dui_indicators_icon_leader = true;
 force diwako_dui_indicators_icon_medic = true;
 force diwako_dui_indicators_range = 20;
-force diwako_dui_indicators_range_crew = 300;
+force diwako_dui_indicators_range_crew = 10;
 force diwako_dui_indicators_range_scale = false;
 force diwako_dui_indicators_rangeLimit = 100;
 force diwako_dui_indicators_show = false;
 diwako_dui_indicators_size = 1;
 diwako_dui_indicators_style = "standard";
-force diwako_dui_indicators_useACENametagsRange = true;
+force diwako_dui_indicators_useACENametagsRange = false;
 
 // DUI - Squad Radar - Line Compass
 diwako_dui_linecompass_ACEFingeringColor = [1,0.66,0,1];
 diwako_dui_linecompass_AllowNumericDrawBearing = true;
 diwako_dui_linecompass_CompassAvailableShown = true;
-force diwako_dui_linecompass_compassRange = 50;
+diwako_dui_linecompass_compassRange = 50;
 diwako_dui_linecompass_compassRangeLimit = 50;
 diwako_dui_linecompass_CustomWaypointColor = [0,0,0.87,1];
 diwako_dui_linecompass_DefaultIconColor = [0.5,0.87,0.5,1];
 diwako_dui_linecompass_DrawBearing = 2;
-force diwako_dui_linecompass_Enabled = false;
+diwako_dui_linecompass_Enabled = false;
 diwako_dui_linecompass_enableOcclusion = false;
 diwako_dui_linecompass_enableShowCustomWP = true;
 diwako_dui_linecompass_IconOutline = 0;
@@ -793,7 +757,7 @@ diwako_dui_dir_showMildot = false;
 diwako_dui_dir_size = 1;
 diwako_dui_distanceWarning = 3;
 diwako_dui_enable_compass = true;
-force diwako_dui_enable_compass_dir = 1;
+diwako_dui_enable_compass_dir = 1;
 diwako_dui_enable_occlusion = false;
 diwako_dui_enable_occlusion_cone = 360;
 diwako_dui_hudScaling = 1.33333;
@@ -815,9 +779,9 @@ diwako_dui_radar_enable_seat_icons = 2;
 diwako_dui_radar_group_by_vehicle = false;
 diwako_dui_radar_icon_opacity = 1;
 diwako_dui_radar_icon_opacity_no_player = true;
-force diwako_dui_radar_icon_priority_setting = 0;
+diwako_dui_radar_icon_priority_setting = 0;
 diwako_dui_radar_icon_scale_crew = 6;
-force diwako_dui_radar_leadingZeroes = true;
+diwako_dui_radar_leadingZeroes = true;
 diwako_dui_radar_namelist_hideWhenLeader = false;
 diwako_dui_radar_namelist_vertical_spacing = 0.75;
 diwako_dui_radar_occlusion_fade_in_time = 1;
@@ -833,40 +797,6 @@ diwako_dui_radar_sqlFirst = false;
 diwako_dui_radar_syncGroup = false;
 diwako_dui_radar_vehicleCompassEnabled = false;
 diwako_dui_use_layout_editor = false;
-
-// Enhanced Movement Rework
-force emr_main_allowClimbOnStandingUnits = false;
-force emr_main_allowMidairClimbing = true;
-force emr_main_animSpeedCoef = 1.00492;
-force emr_main_animSpeedStaminaCoef = 0.4;
-force emr_main_assistDuty = 1.5;
-force emr_main_assistHeight = 1;
-force emr_main_blacklistStr = "";
-force emr_main_climbingEnabled = true;
-force emr_main_climbOnDuty = 3.4;
-force emr_main_climbOverDuty = 3;
-force emr_main_dropDuty = 0.7;
-force emr_main_dropViewElevation = -0.7;
-force emr_main_enableWalkableSurface = true;
-force emr_main_enableWeightCheck = true;
-force emr_main_hintType = 4;
-force emr_main_interactBehaviorInVehicle = "DISMOUNT";
-force emr_main_jumpDuty = 1;
-force emr_main_jumpForwardVelocity = 1.2;
-force emr_main_jumpingEnabled = true;
-force emr_main_jumpingLoadCoefficient = 1;
-force emr_main_jumpVelocity = 3.5;
-force emr_main_maxClimbHeight = 2.6;
-force emr_main_maxDropHeight = 3.00723;
-force emr_main_maxWeightClimb1 = 130;
-force emr_main_maxWeightClimb2 = 125;
-force emr_main_maxWeightClimb3 = 110;
-force emr_main_maxWeightJump = 100;
-force emr_main_minClimbTerrain = 0.3;
-force emr_main_preventHighVaulting = false;
-force emr_main_staminaCoefficient = 2.99874;
-force emr_main_whitelistStr = "";
-force emr_main_yeetCoefficient = 1.4;
 
 // Fawks' Enhanced NVGs
 PDT_ENVG_ACE = false;
@@ -925,47 +855,6 @@ UA_FPV_ShowFiber = true;
 // FPV UA
 UA_FPV_HUDText = "UA FPV";
 
-// GRAD Trenches
-force grad_trenches_functions_allowBigEnvelope = false;
-force grad_trenches_functions_allowCamouflage = true;
-force grad_trenches_functions_allowDigging = true;
-force grad_trenches_functions_allowEffects = true;
-force grad_trenches_functions_allowGiantEnvelope = false;
-force grad_trenches_functions_allowHitDecay = true;
-force grad_trenches_functions_allowLongEnvelope = false;
-force grad_trenches_functions_allowShortEnvelope = true;
-force grad_trenches_functions_allowSmallEnvelope = true;
-force grad_trenches_functions_allowTextureLock = true;
-force grad_trenches_functions_allowTrenchDecay = false;
-force grad_trenches_functions_allowVehicleEnvelope = false;
-force grad_trenches_functions_bigEnvelopeDamageMultiplier = 2;
-force grad_trenches_functions_bigEnvelopeDigTime = 30;
-force grad_trenches_functions_bigEnvelopeRemovalTime = -1;
-force grad_trenches_functions_buildFatigueFactor = 1;
-force grad_trenches_functions_camouflageRequireEntrenchmentTool = true;
-force grad_trenches_functions_createTrenchMarker = true;
-force grad_trenches_functions_decayTime = 1800;
-force grad_trenches_functions_giantEnvelopeDamageMultiplier = 1;
-force grad_trenches_functions_giantEnvelopeDigTime = 60;
-force grad_trenches_functions_giantEnvelopeRemovalTime = -1;
-force grad_trenches_functions_hitDecayMultiplier = 1;
-force grad_trenches_functions_LongEnvelopeDigTime = 40;
-force grad_trenches_functions_LongEnvelopeRemovalTime = -1;
-force grad_trenches_functions_playersInAreaRadius = 0;
-force grad_trenches_functions_shortEnvelopeDamageMultiplier = 2;
-force grad_trenches_functions_shortEnvelopeDigTime = 60;
-force grad_trenches_functions_shortEnvelopeRemovalTime = -1;
-force grad_trenches_functions_smallEnvelopeDamageMultiplier = 3;
-force grad_trenches_functions_smallEnvelopeDigTime = 60;
-force grad_trenches_functions_smallEnvelopeRemovalTime = -1;
-force grad_trenches_functions_stopBuildingAtFatigueMax = true;
-force grad_trenches_functions_textureLockDistance = 5;
-force grad_trenches_functions_timeoutToDecay = 7200;
-force grad_trenches_functions_vehicleEnvelopeDamageMultiplier = 1;
-force grad_trenches_functions_vehicleEnvelopeDigTime = 60;
-force grad_trenches_functions_vehicleEnvelopeRemovalTime = -1;
-force grad_trenches_functions_vehicleTrenchBuildSpeed = 1;
-
 // GW_Common
 GW_Common_autoDelete = true;
 force GW_Common_AutoLock = false;
@@ -975,17 +864,8 @@ force GW_Common_disableThermals = 2;
 force GW_Common_radioDistnace = 1.9;
 force GW_Common_slingloadEnabled = true;
 
-// GW_GameLoop
-force GW_GameLoop_civiKillTracker = false;
-force GW_GameLoop_event = 1;
-force GW_GameLoop_SafeMode_blockVeh = false;
-force GW_GameLoop_SafeMode_Timer = 3;
-force GW_GameLoop_SafeMode_useType = 1;
-force GW_UI_allowSpectator = false;
-
 // GW_Gear
 GW_Gear_Auto_Assign = 1;
-force GW_Gear_autoRemoveCargo = true;
 GW_Gear_DlcValidation = true;
 GW_Gear_DlcValidationBlocked = "Contact,Enoch,GM,SOGPF,CSLA,WS,Spearhead1944,ExpeditionaryForces";
 GW_Gear_DlcValidationBlockedPrefixes = "HLC_,LOP_";
@@ -994,9 +874,6 @@ GW_Gear_randomGear = true;
 GW_Gear_Stamina = true;
 GW_Gear_StaminaCoef = 0.5;
 
-
-
-
 // Simple Suppress
 simplesuppress_suppress_checkLOS = false;
 simplesuppress_suppress_overlayFadeoutTime = 8;
@@ -1004,7 +881,6 @@ simplesuppress_suppress_overlayOpacity = 0.50254;
 simplesuppress_suppress_overlayTexture = 1;
 simplesuppress_suppress_projectileMaxDistance = 9;
 simplesuppress_suppress_shooterMinDistance = 20;
-
 
 // TFAR Scribbles
 force Rev_TFAR_148 = true;
@@ -1025,38 +901,3 @@ force Rev_TFAR_settings_LR_O = "1st Squad,2nd Squad, , ,Platoon Net,Support Net,
 force Rev_TFAR_settings_SR_B = "1st Squad,2nd Squad, , ,Platoon Net,Support Net,Air Net, ";
 force Rev_TFAR_settings_SR_I = "1st Squad,2nd Squad, , ,Platoon Net,Support Net,Air Net, ";
 force Rev_TFAR_settings_SR_O = "1st Squad,2nd Squad, , ,Platoon Net,Support Net,Air Net, ";
-
-// Turret Enhanced
-force Fat_Lurch_Grid = true;
-force Fat_Lurch_GridNum = 10;
-force Fat_Lurch_MapSlew = true;
-force Fat_Lurch_Markers = true;
-force Fat_Lurch_Measure = true;
-force Fat_Lurch_ShowAz = true;
-force Fat_Lurch_ShowEl = true;
-force Fat_Lurch_ShowNorth = true;
-force Fat_Lurch_ShowTarget = true;
-
-// UK3CB Factions
-uk3cb_pipstretchfactor = 0;
-uk3cb_preferedOptic = 1;
-uk3cb_preferedOpticHighMag = 0;
-
-// USAF
-force usaf_afterburner_setting_allow_ai = true;
-force USAF_allowNuke = false;
-force usaf_debug_setting_enabled_clients = false;
-force usaf_debug_setting_enabled_server = false;
-force usaf_f35a_allow_das_coverage = true;
-force usaf_f35a_allow_sar_imagery = true;
-force usaf_serviceMenu_setting_allowHangarRearm = true;
-force usaf_serviceMenu_setting_allowHangarRefuel = true;
-force usaf_serviceMenu_setting_allowHangarRepair = true;
-force usaf_serviceMenu_setting_allowLoadoutModification = true;
-force usaf_serviceMenu_setting_enabled = true;
-force usaf_serviceMenu_setting_refuelTime = "100";
-force usaf_serviceMenu_setting_reloadTime = "2";
-force usaf_serviceMenu_setting_repairTime = "100";
-force usaf_serviceMenu_setting_replaceSources = false;
-force usaf_serviceMenu_setting_selectorSearchRadius = "15";
-force usaf_setting_allow_aiFormlights = true;
