@@ -32,6 +32,11 @@ if (fileExists "Gear\preInit.sqf") then {
 		GW_Gear_fnc_DefaultCode = compile preProcessFileLineNumbers _defaultCodePath;
 	};
 
+	if (isNil "GW_Gear_fnc_Handler") then {
+		diag_log "[GW_Gear] fallback compile Handler from addon";
+		GW_Gear_fnc_Handler = compile preProcessFileLineNumbers "\x\gw\addons\gear\functions\fnc_Handler.sqf";
+	};
+
 	if (isNil "GW_Gear_fnc_DefaultAICode") then {
 		private _defaultAICodePath = if (_useLocalDefaultAI && fileExists "Gear\Functions\fnc_DefaultAICode_Local.sqf") then {
 			"Gear\Functions\fnc_DefaultAICode_Local.sqf"

@@ -14,7 +14,9 @@
 
 */
 
-private _settingsFile = "CurrentAddonOptionsImportSettings.txt";
+// Settings are owned by the addon and apply to every mission. Missions do not ship a local copy.
+// Anything set in the file is enforced; remove a value from the file to stop enforcing it.
+private _settingsFile = "\x\gw\addons\3den\Data\cba_settings_mission.sqf";
 
 if (fileExists _settingsFile) then {
 	// Read settings file
@@ -44,6 +46,9 @@ if (fileExists _settingsFile) then {
 		// Save the imported settings
 		[] call CBA_settings_fnc_gui_saveTempData;
 		LOG("CBA Settings saved to mission");
+
+		// Stamp the mission with the settings version it now carries
+		"GW_MissionPreferences" set3DENMissionAttribute ["GW_settingsVersion", [] call FUNC(getSettingsVersion)];
 		
 		uiSleep 0.1;
 		(uiNamespace getVariable "RscDisplayGameOptions") closeDisplay 1;

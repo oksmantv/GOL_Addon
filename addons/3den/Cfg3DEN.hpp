@@ -307,6 +307,16 @@ class Cfg3DEN {
 							defaultValue = "false";
 							expression = "true";
 						};
+						class GW_settingsVersion {
+							displayName = "CBA Settings Version";
+							tooltip = "Version of the GW default CBA settings this mission carries. Updated automatically when the mission is opened in 3DEN";
+							property = "GW_settingsVersion";
+							value = 1;
+							control = "Edit";
+							typeName = "NUMBER";
+							defaultValue = "0";
+							expression = "true";
+						};
 						class GW_isConfigured_ACE {
 							displayName = "is ACE Configured";
 							tooltip = "Checks if mission is given default values, Uncheck this if you need to reset settings";
@@ -647,9 +657,10 @@ class Cfg3DEN {
 	class EventHandlers {
 		class GW {
 			OnMessage = QUOTE(call FUNC(addEH_onMessage));
-			onMissionLoad = QUOTE(call FUNC(addEH_onMessage));
+			onMissionLoad = QUOTE(call FUNC(addEH_onMessage); [] call FUNC(updateMaxPlayers); [] spawn FUNC(checkSettingsVersion));
 			onMissionNew = QUOTE(call FUNC(addEH_onMessage));
-			onMissionSave = QUOTE([] call FUNC(refreshPlayerGearPreview));
+			onMissionSave = QUOTE([] call FUNC(updateMaxPlayers); [] call FUNC(refreshPlayerGearPreview));
+			onMissionAutosave = QUOTE([] call FUNC(updateMaxPlayers));
 			onMissionPreviewEnd = QUOTE(call FUNC(addEH_onMessage));
 			onTerrainNew = QUOTE(call FUNC(addEH_onMessage));
 		};

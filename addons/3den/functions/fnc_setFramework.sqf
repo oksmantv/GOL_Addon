@@ -45,7 +45,14 @@ collect3DENHistory {
 			};
 		};
 
-		_allPlayers = {((_x get3DENAttribute "ControlMP") select 0) || ((_x get3DENAttribute "ControlSP") select 0)} count ((all3DENEntities select 0) + (all3DENEntities select 3));
+		// Framework 4+: MaxPlayers is owned by the addon, see GW_3DEN_fnc_updateMaxPlayers
+		// Framework 3.x: legacy behaviour, count of all playable slots at configure time
+		if ([] call FUNC(isFW4)) then {
+			[] call FUNC(updateMaxPlayers);
+		} else {
+			_allPlayers = {((_x get3DENAttribute "ControlMP") select 0) || ((_x get3DENAttribute "ControlSP") select 0)} count ((all3DENEntities select 0) + (all3DENEntities select 3));
+			"Multiplayer" set3DENMissionAttribute ["MaxPlayers", _allPlayers];
+		};
 
 		set3DENMissionAttributes [
 			["GarbageCollection", "DynSimEnabled", false],
@@ -54,13 +61,11 @@ collect3DENHistory {
 			["Multiplayer", "DisabledAI", true],
 			["Multiplayer", "EnableTeamSwitch", false],
 			["Multiplayer", "JoinUnassigned", true],
-//			["Multiplayer", "MaxPlayers", 129],	// Framework count including headless + spectator
-			["Multiplayer", "MaxPlayers", _allPlayers],
 			["Multiplayer", "MinPlayers", 1],
 			["Multiplayer", "Respawn", 3],
-			["Multiplayer", "RespawnDelay", 120],
+			["Multiplayer", "RespawnDelay", 20],
 			["Multiplayer", "RespawnDialog", false],
-			["Multiplayer", "RespawnTemplates", ["Counter","Wave"]],
+			["Multiplayer", "RespawnTemplates", ["Counter"]],
 			["Scenario", "Saving", false]
 		];
 
