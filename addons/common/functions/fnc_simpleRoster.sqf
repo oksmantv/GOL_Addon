@@ -51,8 +51,10 @@ if !(player diarySubjectExists QGVAR(simpleRoster)) then {
 };
 
 private _recordTitle = "Platoon Roster";
-if (player diaryRecordExists [QGVAR(simpleRoster), _recordTitle]) then {
-	player removeDiaryRecord [QGVAR(simpleRoster), _recordTitle];
+private _oldRecord = player getVariable [QGVAR(simpleRosterRecord), diaryRecordNull];
+if (!isNull _oldRecord) then {
+	player removeDiaryRecord [QGVAR(simpleRoster), _oldRecord];
 };
 
-player createDiaryRecord [QGVAR(simpleRoster), [_recordTitle, format ["Updated: %1<br/>%2", [time, "H:MM:SS"] call CBA_fnc_formatElapsedTime, _strFinal]]];
+private _newRecord = player createDiaryRecord [QGVAR(simpleRoster), [_recordTitle, format ["Updated: %1<br/>%2", [time, "H:MM:SS"] call CBA_fnc_formatElapsedTime, _strFinal]]];
+player setVariable [QGVAR(simpleRosterRecord), _newRecord];

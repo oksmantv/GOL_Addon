@@ -24,7 +24,7 @@
 	[[0,1,2], ["Disabled","All Vehicles","Only Ground"], 0], CBA_SERVEROVERWRITE
 ] call CBA_settings_fnc_init;
 
-[QGVAR(radioDistnace), "SLIDER", ["Radio Distance", "Multiplier for radio distance, default is 1"], [QUOTE(ADDON), "#0 General"], [0.5, 4.0, 2.0, 1], CBA_SERVEROVERWRITE, {
+[QGVAR(radioDistnace), "SLIDER", ["Radio Distance", "Multiplier for radio distance, default is 1"], [QUOTE(ADDON), "#0 General"], [0.5, 4.0, 0.7, 1], CBA_SERVEROVERWRITE, {
 	GVAR(radioDistnace) = (parseNumber (_this toFixed 1));
 }] call cba_settings_fnc_init;
 

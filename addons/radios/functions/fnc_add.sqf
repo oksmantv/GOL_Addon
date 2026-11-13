@@ -31,7 +31,7 @@ if (true) then {
 	};
 
 	if (_role in _radioSmall) then {
-		_unit linkItem "TFAR_anprc148jem";
+		_unit linkItem "TFAR_pnr1000a";
 	};
 	if (_role in _radioMedium) then {
 		if (_role in _radioSmall) then {
