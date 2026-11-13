@@ -17,8 +17,8 @@
 
 params ["_unit","_role"];
 
-private _radioSmall = ["sl","sm","ftl","r","g","ag","ar","mat","amat","ammg","mmg","lr","ab","aa","atab","engineer"];
-private _radioMedium = ["pl","fac","ftl","p","crew","marksman","pj","jetp","dragon","uav","pm","mortar","drone","lightdragon"];
+private _radioSmall = ["sm","ftl","r","g","ag","ar","mat","amat","ammg","mmg","lr","ab","aa","atab","engineer"];
+private _radioMedium = ["pl","sl","fac","ftl","p","crew","marksman","pj","jetp","dragon","uav","pm","mortar","drone","lightdragon"];
 
 if (true) then {
 	if ({_x call TFAR_fnc_isRadio} count (items _unit + assignedItems _unit) > 0) then {

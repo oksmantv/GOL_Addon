@@ -1,7 +1,7 @@
 // GW mission CBA settings. Owned by the addon; applied by GW_3DEN_fnc_importCBASettings when "Configure Mission" is used.
 // Missions must not carry a local copy of this file.
 // Bump the number below whenever this file changes. Configured missions re-import on next load in 3DEN.
-// GW_SETTINGS_VERSION: 1
+// GW_SETTINGS_VERSION: 4
 
 // A3TI
 force A3TI_ACE_JAVELIN = true;
@@ -861,7 +861,7 @@ force GW_Common_AutoLock = false;
 GW_Common_autoQueue = true;
 GW_Common_BlockAIGear = true;
 force GW_Common_disableThermals = 2;
-force GW_Common_radioDistnace = 1.9;
+force GW_Common_radioDistnace = 2;
 force GW_Common_slingloadEnabled = true;
 
 // GW_Gear
@@ -881,6 +881,16 @@ simplesuppress_suppress_overlayOpacity = 0.50254;
 simplesuppress_suppress_overlayTexture = 1;
 simplesuppress_suppress_projectileMaxDistance = 9;
 simplesuppress_suppress_shooterMinDistance = 20;
+
+// TFAR Range
+// Effective range = tf_range * GW_Common_radioDistnace * TFAR_globalRadioRangeCoef
+// TFAR signal error = distance / range (mapped through a steep curve: 0.1 = light, 0.3 = heavy distortion)
+// Multiplier 2 gives PNR-1000A (2000m) 4km max, ANPRC-152 (5000m) 10km max and rt1523g/anprc155 (20000m) 40km max.
+// Target distances of 1km / 3km / 10km then sit at 25-30% of range = about 2.5 by 5 readability.
+force TFAR_globalRadioRangeCoef = 1;
+force TFAR_objectInterceptionEnabled = true;
+force TFAR_objectInterceptionStrength = 400;
+force tfar_terrain_interception_coefficient = 10;
 
 // TFAR Scribbles
 force Rev_TFAR_148 = true;

@@ -17,7 +17,7 @@ if (true) then {
 
 	[QGVARMAIN(playerReady), {
 		player setVariable ["TF_receivingDistanceMultiplicator", 1];
-		player setVariable ["TF_sendingDistanceMultiplicator", 0.7];
+		player setVariable ["TF_sendingDistanceMultiplicator", EGVAR(Common,radioDistnace)];
 		player setVariable [QGVAR(receiving), (player getVariable "TF_receivingDistanceMultiplicator")];
 
 		private _group = (group player);
