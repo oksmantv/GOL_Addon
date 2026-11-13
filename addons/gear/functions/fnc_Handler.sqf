@@ -309,7 +309,8 @@ if (_isMan) then {
 			if(_role == "lightdragon") then {
 				_unit addWeapon "UK3CB_BAF_M6";
 			};
-			if (isClass ((missionConfigFile >> "GW_Modules" >> "Radios"))) then {
+			// FW4: Radios is an addon, not a mission module - do not require GW_Modules >> Radios
+			if (!isNil "GW_Radios_fnc_add") then {
 				[{
 					_this call EFUNC(Radios,add);
 				}, [_unit, _role], 0.1] call CBA_fnc_waitAndExecute;
