@@ -83,17 +83,16 @@ if !((count _unitArray) isEqualTo 0) then {
 		TRACE_1("Created", _unit);
 
 		if (_unitPos isEqualType "") then {
-			diag_log format ["[GW][Common][Static] unit=%1 unitPosType=STRING unitPos=%2 waypoints=%3 -> firing disableAICommand", _unit, _unitPos, (count _waypointArray)];
-			[QGVAR(disableAICommand), _unit] call CBA_fnc_localEvent;
+			// Only freeze (setAIStatic) units that have no waypoints; patrols with a stance must stay mobile.
+			if (_waypointArray isEqualTo []) then {
+				diag_log format ["[GW][Common][Static] unit=%1 unitPosType=STRING unitPos=%2 waypoints=0 -> firing disableAICommand", _unit, _unitPos];
+				[QGVAR(disableAICommand), _unit] call CBA_fnc_localEvent;
+			};
 
 			_unit setFormDir _dir;
 			_unit setDir _dir;
 
-			if (_unitPos isEqualTo "Auto") then {
-				_unit setUnitPos (selectRandom ["Up","Middle"]);
-			} else {
-				_unit setUnitPos _unitPos;
-			};
+			_unit setUnitPos (toUpper _unitPos);
 
 			if(_waypointArray isEqualTo []) then {
 				[[_unit],{ Params ["_unit"]; _unit disableAI "PATH"; doStop _unit; }] remoteExec ["BIS_FNC_CALL",0];
