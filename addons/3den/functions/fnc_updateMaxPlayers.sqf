@@ -57,16 +57,16 @@ private _value = _total min MAX_PLAYERS_CAP;
 if (("Multiplayer" get3DENMissionAttribute "MaxPlayers") isNotEqualTo _value) then {
 	"Multiplayer" set3DENMissionAttribute ["MaxPlayers", _value];
 	LOG_1("MaxPlayers updated to %1", _value);
-	[format ["GW: Max players updated to %1", _value], 0, 4, true] call BIS_fnc_3DENNotification;
+	systemChat format ["GW: Max players updated to %1", _value];
 };
 
 if (_total > MAX_PLAYERS_CAP) then {
-	[format ["GW: %1 playable slots exceeds the server limit of %2. Max players capped, remove slots before uploading", _total, MAX_PLAYERS_CAP], 1, 10, true] call BIS_fnc_3DENNotification;
+	systemChat format ["GW: %1 playable slots exceeds the server limit of %2. Max players capped, remove slots before uploading", _total, MAX_PLAYERS_CAP];
 };
 
 {
 	if (_x > MAX_SLOTS_PER_SIDE) then {
-		[format ["GW: %1 has %2 slots, the limit is %3 per side", ["West", "East", "Independent", "Civilian"] select _forEachIndex, _x, MAX_SLOTS_PER_SIDE], 1, 10, true] call BIS_fnc_3DENNotification;
+		systemChat format ["GW: %1 has %2 slots, the limit is %3 per side", ["West", "East", "Independent", "Civilian"] select _forEachIndex, _x, MAX_SLOTS_PER_SIDE];
 	};
 } forEach _sideCount;
 

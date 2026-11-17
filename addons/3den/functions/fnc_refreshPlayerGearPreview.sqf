@@ -94,7 +94,7 @@ private _mapUnits = (all3DENEntities select 0) select {
 };
 
 if (_mapUnits isEqualTo []) exitWith {
-	["Gear preview: no units found.", 1, 5, true] call BIS_fnc_3DENNotification;
+	["Gear preview: no units found.", 0, 5, true] call BIS_fnc_3DENNotification;
 	[0, 0]
 };
 
@@ -172,6 +172,11 @@ collect3DENHistory {
 
 missionNamespace setVariable [_suppressionKey, _previousSuppression];
 missionNamespace setVariable [_previewKey, _previousPreviewState];
-[format ["Gear preview refreshed for %1 map unit(s)%2%3.", _previewed, if (_unchanged > 0) then {format ["; %1 unchanged", _unchanged]} else {""}, if (_skipped > 0) then {format ["; skipped %1", _skipped]} else {""}], 0, 5, true] call BIS_fnc_3DENNotification;
+[
+	format ["Gear preview refreshed for %1 map unit(s)%2%3.", _previewed, if (_unchanged > 0) then {format ["; %1 unchanged", _unchanged]} else {""}, if (_skipped > 0) then {format ["; skipped %1", _skipped]} else {""}],
+	0,
+	5,
+	true
+] call BIS_fnc_3DENNotification;
 
 [_previewed, _unchanged, _skipped]
