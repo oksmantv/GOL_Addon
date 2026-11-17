@@ -322,7 +322,18 @@ if (_isMan) then {
 			} else {
 				[_unit,_insignia] call BIS_fnc_setUnitInsignia;
 			}
-		};		
+		};
+
+		// BettIR Patches: whitelist is the addon's own config. Only slots the worn gear defines get a patch.
+		if (_isPlayer && {!isNil "BettIR_Patches_fnc_setPatch"} && {!isNil "BettIR_Patches_categories"}) then {
+			{
+				private _patchCategory = _x;
+				private _patchGear = [_unit, _patchCategory] call BettIR_Patches_fnc_getGearClass;
+				{
+					[_unit, _patchCategory, _x, "BettIR"] call BettIR_Patches_fnc_setPatch;
+				} forEach ([_patchCategory, _patchGear] call BettIR_Patches_fnc_getSlotNames);
+			} forEach (keys BettIR_Patches_categories);
+		};
 
 		if (isMultiplayer || isDedicated) then
 		{
@@ -483,6 +494,15 @@ if (_isMan) then {
 					} else {
 						 if !(_X in _compatibleItems) then {_compatibleItems pushBack _backpackRadio}
 					};		
+
+					// Always offer the defined NVG(s) in the Attachment Menu
+					private _forcedNvg = missionNamespace getVariable ["ForceNVGClassname", ""];
+					{
+						private _nvgCandidates = if (isNil "_x") then {[]} else {if (_x isEqualType []) then {_x} else {[_x]}};
+						{
+							if (_x isEqualType "" && {_x != ""} && {!(_x in _compatibleItems)}) then {_compatibleItems pushBack _x};
+						} forEach _nvgCandidates;
+					} forEach [_nvg, _nvgPilot, _forcedNvg];
 
 					_blackList = ["rhsusf_acc_SpecterDR_pvs27","JCA_optic_IHO_black_magnifier","JCA_optic_IHO_olive_magnifier","JCA_optic_IHO_sand_magnifier","JCA_optic_MROS_sand_magnifier","JCA_optic_MROS_olive_magnifier","JCA_optic_MROS_black_magnifier","rhsusf_acc_su230","rhsusf_acc_g33_T1","rhsusf_acc_g33_T1_flip","rhsusf_acc_g33_xps3","rhsusf_acc_g33_xps3_flip","rhsusf_acc_g33_xps3_tan","rhsusf_acc_g33_xps3_tan_flip","ACE_acc_pointer_green","ACE_acc_pointer_green_ir","ACE_acc_pointer_red","acc_pointer_ir","acc_pointer_ir_broken","rhsusf_acc_anpeq15_top_h","rhsusf_acc_anpeq15_top_sc","rhsusf_acc_anpeq15_wmx_sc","rhsusf_acc_anpeq15_wmx_h","rhsusf_acc_anpeq15_wmx_light_sc","rhsusf_acc_anpeq15_wmx_light_h","rhsusf_acc_anpeq15_bk_top_h","rhsusf_acc_anpeq15_bk_top_sc","rhsusf_acc_anpeq15_h","rhsusf_acc_anpeq15_sc","rhsusf_acc_anpeq15_light_sc","rhsusf_acc_anpeq15_light_h","rhsusf_acc_anpeq15_bk_h","rhsusf_acc_anpeq15_bk_sc","rhsusf_acc_anpeq15_bk_light_sc","rhsusf_acc_anpeq15_bk_light_h","rhsusf_acc_anpeq16a_top_sc","rhsusf_acc_anpeq16a_top_h","rhsusf_acc_anpeq16a_light_top_sc","rhsusf_acc_anpeq16a_light_top_h","rhsusf_acc_anpas13gv1"];
 					_whiteList = ["rhs_weap_optic_smaw","OKS_Disruptor_Antenna"];                            
