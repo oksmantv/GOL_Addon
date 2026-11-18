@@ -84,12 +84,14 @@ private _parts = _varName splitString "_";
 private _xNum = parseNumber (_parts select ((count _parts) - 1));
 if (_xNum <= 0) then { _xNum = 1; };
 
-private _condition = "call{!({(isNull (objectParent _x))} count thislist isEqualTo 0) && isServer}";
+private _condition = "isServer
+&& ([thisList] call GW_Common_Fnc_hasGroundPlayer
+|| [thisList] call GW_Common_Fnc_hasAircraftPlayer)";
 private _onActivation = format ["call{null = [%1] spawn GW_Fnc_spawnList;}", _xNum];
 
 collect3DENHistory {
 	_trg set3DENAttribute ["text", format ["Spawn Trigger %1", _xNum]];
-	_trg set3DENAttribute ["size3", [100, 100, 25]];
+	_trg set3DENAttribute ["size3", [100, 100, -1]];
 	_trg set3DENAttribute ["IsRectangle", false];
 
 	_trg set3DENAttribute ["activationBy", "ANYPLAYER"];

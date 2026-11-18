@@ -402,7 +402,7 @@ while { _pass < _maxPasses } do {
 		private _respawnMarkerName = switch (_x) do {
 			case west: { "respawn_west" };
 			case east: { "respawn_east" };
-			case independent: { "respawn_guerrila" };
+			case independent: { "respawn_independent" };
 			default { "respawn_west" };
 		};
 		private _respawnMarkerType = switch (_x) do {

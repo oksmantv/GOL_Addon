@@ -86,8 +86,8 @@ if (_xNum <= 0) then { _xNum = 1; };
 
 private _condition = "call{
 	if (!isServer) exitWith {false};
-	private _players = thisList select {isPlayer _x};
-	if (_players isEqualTo []) exitWith {false};
+	if !([thisList] call GW_Common_Fnc_hasGroundPlayer || [thisList] call GW_Common_Fnc_hasAircraftPlayer) exitWith {false};
+	private _players = [thisList] call GW_Common_Fnc_getPlayersInList;
 	private _ps = side group (_players # 0);
 	({ ((side group _x) getFriend _ps) < 0.6 && {[_x] call ace_common_fnc_isAwake} } count thisList) == 0
 }";
@@ -96,7 +96,7 @@ private _onActivation = format ["call{null = [%1] spawn GW_Fnc_spawnList;}", _xN
 
 collect3DENHistory {
 	_trg set3DENAttribute ["text", format ["Reaction Trigger %1", _xNum]];
-	_trg set3DENAttribute ["size3", [100, 100, 25]];
+	_trg set3DENAttribute ["size3", [100, 100, -1]];
 	_trg set3DENAttribute ["IsRectangle", false];
 
 	_trg set3DENAttribute ["activationBy", "ANY"];

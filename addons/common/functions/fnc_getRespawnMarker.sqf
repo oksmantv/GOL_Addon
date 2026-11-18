@@ -22,5 +22,5 @@ private _side = (getNumber(configfile >> "CfgVehicles" >> typeOf player >> "side
 if ((_side < 0) || (_side > 2)) then {
 	"respawn_civilian"
 } else {
-	["respawn_east","respawn_west","respawn_resistance"] select _side
+	["respawn_east","respawn_west","respawn_independent"] select _side
 };
